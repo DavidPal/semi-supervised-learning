@@ -4,17 +4,19 @@
 \usepackage{natbib}
 \usepackage{amssymb,amsthm,amsmath}
 
-\newtheorem{lemma}{Lemma}
-\newtheorem{theorem}[lemma]{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}[proposition]{Lemma}
+\newtheorem{theorem}[proposition]{Theorem}
 
 \renewcommand{\P}{\mathcal{P}}
 \newcommand{\indicator}[1]{\mathbf{1}[{#1}]}
+\newcommand{\x}{\mathbf{x}}
 
 \DeclareMathOperator{\argmin}{argmin}
 \DeclareMathOperator{\Exp}{\mathbf{E}}
 
 \title{Semi-supervised learning}
-\author{D\'avid P\'al}
+\author{Alexandr Golovenv \and D\'avid P\'al}
 
 \begin{document}
 
@@ -22,23 +24,55 @@
 
 \section{Realizable Case: Projections}
 
-We construct a concept class $C_n$ with Vapnik-Chervonenkis dimension $n$ on the
-domain $D_n = \{0,1\}^n$ and a family of probability distributions $\P_n$ over
-$D_n$ such that
+Let $C_n$ be the class of projections over the domain $\{0,1\}^n$. The concept
+class $C_n$ consists of $n+1$ functions $c_0, c_1, c_2, \dots, c_n$ from
+$\{0,1\}^n$ to ${0,1}$. The function $c_0$ is the constant zero function. For $i
+\ge 1$, the function $c_i$ is defined by $c_i((x_1, x_2, \dots, x_n)) = x_i$.
+The Vapnik-Chervonenkis dimension of $C_n$ is $d = \lfloor \log_2(n+1) \rfloor$;
+see Proposition~\ref{proposition:vc-dimension-projections} below.
+
+\begin{proposition}
+\label{proposition:vc-dimension-projections}.
+Vapnik-Chervonenkis dimension of $C_n$ is $\lfloor \log_2(n+1) \rfloor$.
+\end{proposition}
+
+\begin{proof}
+Vapnik-Chervonenkis dimension is the size of the largest shattered set; let us
+denote it by $d$. Let $S$ be a shattered set of size $d$. Then, there must be at
+least $2^d$ distinct functions in $C_n$. Hence, $d \le \log_2 |C_n| =
+\log_2(n+1)$. Since $d$ is an integer, we conclude that $d \le \lfloor \log_2(n+1)
+\rfloor$.
+
+On the other hand, we construct a shattered set of size $\lfloor \log_2(n+1)
+\rfloor$. The set will consists of points $x_1, x_2, \dots, x_{\lfloor
+\log_2(n+1) \rfloor} \in \{0,1\}^n$. We define $x_{i,j}$ to be the $j$-th bit of
+the number $i$ in its binary representation. (The first bit is the least
+significant bit, and $\lfloor \log_2(n+1) \rfloor$-th bit is the most significant
+bit.) It is not hard to see that for any $v \in \{0,1\}^{\lfloor \log_2(n+1)
+\rfloor}$, there exists $c \in C_n$ such that $v = (c(x_1), c(x_2), \dots,
+c(x_d))$. Indeed, let $i \in \{0,1,\dots,n\}$ be the number with binary
+representation $v$, then we have $v = (c_i(x_1), c_i(x_2), \dots, c_i(x_d))$.
+\end{proof}
+
+\cite{Hanneke-2016} showed that for any class of $C$ of Vapnik-Chervonenkis
+dimension $d$ there exists an algorithm that $\epsilon$-learns any from
+$O\left(\frac{d + \log(1/\delta)}{\epsilon}\right)$ examples under any
+distribution with probability at least $1-\delta$. Futhermore, for any algorithm
+and any class $C$ of Vapnik-Chervonenkis dimension $d$ there exists a
+distribution over the domain and a concept which requires at least $\Omega
+\left(\frac{d + \log(1/\delta)}{\epsilon}\right)$ samples to $\epsilon$-learn
+with at least probability $1 - \delta$.
+
+We construct a family of probability distributions $\P_n$ over ${0,1}^n$ such that:
 \begin{itemize}
 \item For any $P \in \P_n$ there exists an algorithm that learns
 any target function $c \in C_n$ from $O(1/\epsilon^2 + \log(1/\delta)/\epsilon)$ examples.
-\item For any learning algorithm, there exists
+\item For any algorithm, there exists
 a probability distribution $P \in \P_n$ and a target function $c \in C_n$
-that requires at least $\Omega(\log n)$ examples to learn the target function.
+that requires at least $\Omega(\log n)$ examples to $\epsilon$-learn the target function.
 \end{itemize}
 
-The concept class $C_n$ consists of $n+1$ functions $c_0, c_1, c_2, \dots, c_n$.
-The function $c_0$ is constant zero function. For $i \ge 1$, the function $c_i$
-is defined by $c_i(x) = x_i$. Note that Vapnik-Chervonenkis
-dimension of $C_n$ is $\lfloor \log_2(n) \rfloor$ and thus
-for \text{any} distribution ERM algorithm learns
-$C_n$ from $O(\log (n/\delta)/\epsilon)$ examples.
+
 
 The family $\P_n$ consists of $n!$ probability distributions. Each distribution
 corresponds to a permutation $\sigma:\{1,2,\dots,n\} \to \{1,2,\dots,n\}$. Given
