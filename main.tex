@@ -1,0 +1,153 @@
+\documentclass[12pt]{article}
+
+\usepackage{fullpage}
+\usepackage{natbib}
+\usepackage{amssymb,amsthm,amsmath}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}[lemma]{Theorem}
+
+\renewcommand{\P}{\mathcal{P}}
+\newcommand{\indicator}[1]{\mathbf{1}[{#1}]}
+
+\DeclareMathOperator{\argmin}{argmin}
+\DeclareMathOperator{\Exp}{\mathbf{E}}
+
+\title{Semi-supervised learning}
+\author{D\'avid P\'al}
+
+\begin{document}
+
+\maketitle
+
+\section{Realizable Case: Projections}
+
+We construct a concept class $C_n$ with Vapnik-Chervonenkis dimension $n$ on the
+domain $D_n = \{0,1\}^n$ and a family of probability distributions $\P_n$ over
+$D_n$ such that
+\begin{itemize}
+\item For any $P \in \P_n$ there exists an algorithm that learns
+any target function $c \in C_n$ from $O(1/\epsilon^2 + \log(1/\delta)/\epsilon)$ examples.
+\item For any learning algorithm, there exists
+a probability distribution $P \in \P_n$ and a target function $c \in C_n$
+that requires at least $\Omega(\log n)$ examples to learn the target function.
+\end{itemize}
+
+The concept class $C_n$ consists of $n+1$ functions $c_0, c_1, c_2, \dots, c_n$.
+The function $c_0$ is constant zero function. For $i \ge 1$, the function $c_i$
+is defined by $c_i(x) = x_i$. Note that Vapnik-Chervonenkis
+dimension of $C_n$ is $\lfloor \log_2(n) \rfloor$ and thus
+for \text{any} distribution ERM algorithm learns
+$C_n$ from $O(\log (n/\delta)/\epsilon)$ examples.
+
+The family $\P_n$ consists of $n!$ probability distributions. Each distribution
+corresponds to a permutation $\sigma:\{1,2,\dots,n\} \to \{1,2,\dots,n\}$. Given
+a permutation $\sigma$, the corresponding distribution is $P_\sigma$.
+A sample $x = (x_1, x_2, \dots, x_n)$ from $P_\sigma$ is drawn as follows:
+$x_1, x_2, \dots, x_n$ are independent Bernoulli random variables
+where
+$$
+\Pr[x_{\sigma(i)} = 1] = p_i = 1/\log_2(3 + i) \; .
+$$
+
+\begin{lemma}[Fixed distribution learning]
+For any distribution $P \in \P_n$ there exists an algorithm that
+learns any target function $c \in C_n$ from $O(1/\epsilon^2 + \log(1/\delta)/\epsilon)$
+examples.
+\end{lemma}
+
+\begin{proof}
+The proof relies on a result of \cite{Benedek-Itai-1991}. The result states that
+$(C_n,P)$ has $\tfrac{\epsilon}{2}$-cover of size $N$, then any target function
+$c \in C_n$ is learnable from $O(\log(N/\delta)/\epsilon)$ examples. We show
+that $(C_n,P)$ has $\tfrac{\epsilon}{2}$-cover of size $N = O(2^{2/\epsilon})$
+with respect to the pseudometric $d_P(c,c') = \Pr_{x \sim P}[c(x) \neq c'(x)]$.
+
+Since $P \in \P_n$ we know that there exists $\sigma \in S_n$
+such that $P = P_\sigma$. Let $N = \lceil 2^{2/\epsilon} - 3 \rceil$.
+We show that $S = \{c_0, c_{\sigma(1)}, \dots, c_{\sigma(N-1)}\}$ is
+an $\tfrac{\epsilon}{2}$-cover of $C_n$. Indeed, for any $i \ge N$,
+\begin{align*}
+d_P(c_0, c_{\sigma(i)})
+& = \Pr_{x \sim P}[c_0(x) \neq c_{\sigma(i)}(x)] \\
+& = \Pr_{x \sim P}[c_{\sigma(i)}(x) = 1] \\
+& = \Pr_{x \sim P}[x_{\sigma(i)} = 1] \\
+& = p_i \\
+& = \frac{1}{\log_2(3+i)} \\
+& \le \frac{1}{\log_2(3+N)} \\
+& \le \epsilon/2 \; .
+\end{align*}
+Hence, for any $c \in C_n$ there exists $c' \in S$ such that $d_P(c,c') \le \epsilon/2$
+and thus $S$ is an $\tfrac{\epsilon}{2}$-cover of $C_n$.
+\end{proof}
+
+For $i \neq j$,
+\begin{align*}
+d_{P_\sigma}(c_{\sigma(i)}, c_{\sigma(j)})
+& = \Pr_{x \sim P_{\sigma}}[c_{\sigma(i)}(x) \neq c_{\sigma(j)}(x)] \\
+& = \Pr_{x \sim P_{\sigma}}[x_{\sigma(i)} \neq x_{\sigma(j)}] \\
+& = p_i (1 - p_j) + (1 - p_i) p_j \\
+& \ge (p_i + p_j) / 2
+\end{align*}
+
+\begin{lemma}
+For any algorithm, there exists a distribution $P \in \P_n$
+and a target concept $c \in C_n$ that requires at least $\Omega(\log n)$
+examples to learn the target.
+\end{lemma}
+
+\begin{proof}
+We demostrate the existence of a pair $(P,c) \in \P_n \times C_n$ by
+probabilistic method. Let $\sigma \in S_n$ be chosen independently at random
+from $S_n$. We consider distribution $P = P_\sigma$ and target concept $c =
+c_\sigma(1)$.
+
+We can formalize any (possibly improper) learning algorithm as a function $f:D_n
+\times \bigcup_{m=0}^\infty (D_n \times \{0,1\})^m \to \{0,1\}$.
+
+TODO
+\end{proof}
+
+\section{Realizable Case: Monotone Disjuctions}
+
+Consider the class $C_n$ of monotone disjuctions over $D_n = \{0,1\}^n$.
+There are $2^n$ functions in $C_n$. For each subset $I \subseteq \{1,2,\dots,n\}$
+there is monotone disjuction $c_I:D_n \to \{0,1\}$ defined by
+$$
+c_I(x) = \bigvee_{i \in I} x_i \; .
+$$
+We define $c_\emptyset$ to be constant zero function.
+
+We consider the same family of distributions $\P_n$ as in the previous section.
+Let $P = P_{Identity} \in \P_n$. We compute the distance $d_P(c_I, c_J)$
+between any two monotone disjuctions. For any subset
+$K \subseteq \{1,2,\dots,n\}$, let $A_K$ be the event that all for all $i \in K$, $x_i = 0$.
+\begin{align*}
+d_P(c_I, c_J)
+& = \Pr_{x \sim P}[c_I(x) \neq c_J(x)] \\
+& = \Pr_{x \sim P}[A_{I \cap J} \wedge ((A_{I \setminus J} \wedge \overline{A_{J \setminus I}}) \vee (\overline{A_{I \setminus J}} \wedge A_{J \setminus I} )) ] \\
+& = \Pr[A_{I \cap J}] \cdot \left\{ \Pr[A_{I \setminus J}] (1 - \Pr[A_{J \setminus I}]) + (1 - \Pr[A_{I \setminus J}]) \Pr[A_{J \setminus I}] \right\} \\
+& = \Pr[A_{I \cap J}] \cdot \left\{ \Pr[A_{I \setminus J}] + \Pr[A_{J \setminus I}] - 2 \Pr[A_{I \setminus J}] \Pr[A_{J \setminus I}] \right\} \\
+& = \Pr[A_I] + \Pr[A_J] - 2 \Pr[A_{I \cup J}] \\
+& = \prod_{i \in I} (1 - p_i) + \prod_{j \in J} (1 - p_j) - 2 \prod_{k \in I \cup J} (1 - p_k) \; . \\
+\end{align*}
+
+\section{Agnostic Model}
+
+Let $C$ be a concept class over a domain $X$. Let $P$ be any distribution over
+$X$. We define the ``disagreement'' pseudometric $d_P(c,c') = \Pr_{(x,y) \sim
+P}[c(x) = c'(x)]$ on $C$. We denote by $N(C,P,\epsilon,)$ be the size of the
+smallest $\epsilon$-cover of $C$ with respect to $d_P$.
+
+Let $R(c) = \Pr_{(x,y) \sim P}[c(x) \neq y]$ be the risk.
+For an i.i.d. sample $(X_1, Y_1), \dots, (X_n, Y_n)$ be an i.i.d. sample
+from $P$, we define the empirical risk
+$$
+R_n(c) = \sum_{i=1}^n \indicator{c(X_i) \neq Y_i} \; .
+$$
+Finally, let $c_n = \argmin_{c \in C} R_n(c)$.
+
+\bibliography{biblio}
+\bibliographystyle{plainnat}
+
+\end{document}

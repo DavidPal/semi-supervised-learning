@@ -1,0 +1,14 @@
+# LaTeX and BibTex temporary files
+*.aux
+*.bbl
+*.blg
+*.log
+*.nav
+*.out
+*.toc
+*.spl
+main.pdf
+
+# Vim temporary files
+*.swp
+*.swo
