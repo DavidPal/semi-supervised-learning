@@ -9,10 +9,11 @@
 \newtheorem{theorem}[proposition]{Theorem}
 
 \renewcommand{\P}{\mathcal{P}}
-\newcommand{\indicator}[1]{\mathbf{1}[{#1}]}
+\newcommand{\indicator}[1]{\mathbf{1}\left[{#1}\right]}
 \newcommand{\x}{\mathbf{x}}
 
 \DeclareMathOperator{\argmin}{argmin}
+\DeclareMathOperator{\err}{err}
 \DeclareMathOperator{\Exp}{\mathbf{E}}
 
 \title{Semi-supervised learning}
@@ -25,45 +26,49 @@
 \section{Realizable Case: Projections}
 
 Let $C_n$ be the class of projections over the domain $\{0,1\}^n$. The concept
-class $C_n$ consists of $n+1$ functions $c_0, c_1, c_2, \dots, c_n$ from
-$\{0,1\}^n$ to ${0,1}$. The function $c_0$ is the constant zero function. For $i
-\ge 1$, the function $c_i$ is defined by $c_i((x_1, x_2, \dots, x_n)) = x_i$.
-The Vapnik-Chervonenkis dimension of $C_n$ is $d = \lfloor \log_2(n+1) \rfloor$;
-see Proposition~\ref{proposition:vc-dimension-projections} below.
+class $C_n$ consists of $n+1$ functions $c_1, c_2, \dots, c_n$ from $\{0,1\}^n$
+to ${0,1}$. For any $i \in \{1,2,\dots,n\}$, the function $c_i$ is defined by $c_i((x_1, x_2,
+\dots, x_n)) = x_i$. The Vapnik-Chervonenkis dimension of $C_n$ is $d = \lfloor
+\log_2 n \rfloor$; see Proposition~\ref{proposition:vc-dimension-projections}
+below.
 
 \begin{proposition}
-\label{proposition:vc-dimension-projections}.
-Vapnik-Chervonenkis dimension of $C_n$ is $\lfloor \log_2(n+1) \rfloor$.
+\label{proposition:vc-dimension-projections}
+Vapnik-Chervonenkis dimension of $C_n$ is $\lfloor \log_2 n \rfloor$.
 \end{proposition}
 
 \begin{proof}
 Vapnik-Chervonenkis dimension is the size of the largest shattered set; let us
 denote it by $d$. Let $S$ be a shattered set of size $d$. Then, there must be at
 least $2^d$ distinct functions in $C_n$. Hence, $d \le \log_2 |C_n| =
-\log_2(n+1)$. Since $d$ is an integer, we conclude that $d \le \lfloor \log_2(n+1)
+\log_2 n$. Since $d$ is an integer, we conclude that $d \le \lfloor \log_2 n
 \rfloor$.
 
-On the other hand, we construct a shattered set of size $\lfloor \log_2(n+1)
+On the other hand, we construct a shattered set of size $\lfloor \log_2 n
 \rfloor$. The set will consists of points $x_1, x_2, \dots, x_{\lfloor
-\log_2(n+1) \rfloor} \in \{0,1\}^n$. We define $x_{i,j}$ to be the $j$-th bit of
-the number $i$ in its binary representation. (The first bit is the least
-significant bit, and $\lfloor \log_2(n+1) \rfloor$-th bit is the most significant
-bit.) It is not hard to see that for any $v \in \{0,1\}^{\lfloor \log_2(n+1)
+\log_2 n \rfloor} \in \{0,1\}^n$. For any $i \in \{1,2,\dots,\lfloor \log_2 n \rfloor\}$
+and any $j \in \{1,2,\dots,n\}$, we define $x_{i,j}$ to be the $i$-th bit of
+the number $j-1$ in its binary representation. (The bit at position $i=1$ is the least significant bit.)
+It is not hard to see that for any $v \in \{0,1\}^{\lfloor \log_2 n
 \rfloor}$, there exists $c \in C_n$ such that $v = (c(x_1), c(x_2), \dots,
-c(x_d))$. Indeed, let $i \in \{0,1,\dots,n\}$ be the number with binary
-representation $v$, then we have $v = (c_i(x_1), c_i(x_2), \dots, c_i(x_d))$.
+c(x_{\lfloor \log_2 n \rfloor}))$. Indeed, given $v$, let $k \in \{0,1,\dots,2^{\lfloor \log_2 n
+\rfloor} - 1\}$ be the number with binary representation $v$,
+then we can take $c = c_{k+1}$.
 \end{proof}
 
 \cite{Hanneke-2016} showed that for any class of $C$ of Vapnik-Chervonenkis
 dimension $d$ there exists an algorithm that $\epsilon$-learns any from
 $O\left(\frac{d + \log(1/\delta)}{\epsilon}\right)$ examples under any
 distribution with probability at least $1-\delta$. Futhermore, for any algorithm
-and any class $C$ of Vapnik-Chervonenkis dimension $d$ there exists a
-distribution over the domain and a concept which requires at least $\Omega
-\left(\frac{d + \log(1/\delta)}{\epsilon}\right)$ samples to $\epsilon$-learn
-with at least probability $1 - \delta$.
+and any class $C$ of Vapnik-Chervonenkis dimension $d \ge 2$ and any $\epsilon
+\in (0,1)$ and $\delta \in (0,1)$ there exists a distribution over the domain
+and a concept which requires at least $\Omega \left(\frac{d +
+\log(1/\delta)}{\epsilon}\right)$ examples to $\epsilon$-learn with probability
+at least $1 - \delta$; see~\cite[Theorem 5.3]{Anthony-Bartlett-1999} or
+\cite{Blumer-Ehrenfeucht-Haussler-Warmuth-1989,
+Ehrenfeucht-Haussler-Kearns-Valiant-1989}.
 
-We construct a family of probability distributions $\P_n$ over ${0,1}^n$ such that:
+We construct a family of probability distributions $\P_n$ over $\{0,1\}^n$ such that:
 \begin{itemize}
 \item For any $P \in \P_n$ there exists an algorithm that learns
 any target function $c \in C_n$ from $O(1/\epsilon^2 + \log(1/\delta)/\epsilon)$ examples.
@@ -72,8 +77,6 @@ a probability distribution $P \in \P_n$ and a target function $c \in C_n$
 that requires at least $\Omega(\log n)$ examples to $\epsilon$-learn the target function.
 \end{itemize}
 
-
-
 The family $\P_n$ consists of $n!$ probability distributions. Each distribution
 corresponds to a permutation $\sigma:\{1,2,\dots,n\} \to \{1,2,\dots,n\}$. Given
 a permutation $\sigma$, the corresponding distribution is $P_\sigma$.
@@ -81,65 +84,90 @@ A sample $x = (x_1, x_2, \dots, x_n)$ from $P_\sigma$ is drawn as follows:
 $x_1, x_2, \dots, x_n$ are independent Bernoulli random variables
 where
 $$
-\Pr[x_{\sigma(i)} = 1] = p_i = 1/\log_2(3 + i) \; .
+\Pr[x_{\sigma(i)} = 1] = p_i = \frac{1}{i + 1} \; .
 $$
 
 \begin{lemma}[Fixed distribution learning]
 For any distribution $P \in \P_n$ there exists an algorithm that
-learns any target function $c \in C_n$ from $O(1/\epsilon^2 + \log(1/\delta)/\epsilon)$
+learns any target function $c \in C_n$ from $O \left( \frac{\log(1/\epsilon) + \log(1/\delta)}{\epsilon} \right)$
 examples.
 \end{lemma}
 
 \begin{proof}
-The proof relies on a result of \cite{Benedek-Itai-1991}. The result states that
-$(C_n,P)$ has $\tfrac{\epsilon}{2}$-cover of size $N$, then any target function
-$c \in C_n$ is learnable from $O(\log(N/\delta)/\epsilon)$ examples. We show
-that $(C_n,P)$ has $\tfrac{\epsilon}{2}$-cover of size $N = O(2^{2/\epsilon})$
-with respect to the pseudometric $d_P(c,c') = \Pr_{x \sim P}[c(x) \neq c'(x)]$.
+The proof relies on a result of \cite{Benedek-Itai-1991} that for any fixed
+distribution $P$, any $\epsilon \in (0,1)$, and concept class $C$, any any
+target function from the concept class, is $\epsilon$-learnable from
+$O \left( \frac{\log |C_\epsilon| + \log (1/\delta)}{\epsilon}\right)$ examples with probability at least
+$1-\delta$. Here, $C_\epsilon$ is any $\epsilon$-cover of $C$ with respect
+to the pseudometric $d_P(c,c') = \Pr_{x \sim P}[c(x) \neq c'(x)]$.
 
-Since $P \in \P_n$ we know that there exists $\sigma \in S_n$
-such that $P = P_\sigma$. Let $N = \lceil 2^{2/\epsilon} - 3 \rceil$.
-We show that $S = \{c_0, c_{\sigma(1)}, \dots, c_{\sigma(N-1)}\}$ is
-an $\tfrac{\epsilon}{2}$-cover of $C_n$. Indeed, for any $i \ge N$,
+We show that any $P \in \P_n$ has an $\epsilon$-cover of size
+$O(\log(1/\epsilon))$. For any $P \in \P_n$ there exists $\sigma \in S_n$ such that
+$P = P_\sigma$. Let $K = \lceil \frac{2}{\epsilon} \rceil - 1$. We show that
+$C_\epsilon = \{c_{\sigma(1)}, \dots, c_{\sigma(K)}\}$ is an $\epsilon$-cover of
+$C_n$. In particular, we show that any $c \in C \setminus C_\epsilon$ is
+$\epsilon$-close to $c_{\sigma(K)}$. Indeed, for any $i > K$,
 \begin{align*}
-d_P(c_0, c_{\sigma(i)})
-& = \Pr_{x \sim P}[c_0(x) \neq c_{\sigma(i)}(x)] \\
-& = \Pr_{x \sim P}[c_{\sigma(i)}(x) = 1] \\
-& = \Pr_{x \sim P}[x_{\sigma(i)} = 1] \\
-& = p_i \\
-& = \frac{1}{\log_2(3+i)} \\
-& \le \frac{1}{\log_2(3+N)} \\
-& \le \epsilon/2 \; .
+d_P(c_{\sigma(K)}, c_{\sigma(i)})
+& = \Pr_{x \sim P}[c_{\sigma(K)}(x) \neq c_{\sigma(i)}(x)] \\
+& = \Pr_{x \sim P}[x_{\sigma(K)} \neq x_{\sigma(i)}] \\
+& = \Pr_{x \sim P}[x_{\sigma(K)} = 1 \wedge x_{\sigma(i)} = 0] + \Pr_{x \sim P}[x_{\sigma(K)} = 0 \wedge x_{\sigma(i)} = 1] \\
+& = p_K(1 - p_i) + (1-p_K) p_i \\
+& \le p_K + p_i \\
+& \le 2 p_K \\
+& = \frac{2}{K + 1} \\
+& \le \epsilon \; .
 \end{align*}
-Hence, for any $c \in C_n$ there exists $c' \in S$ such that $d_P(c,c') \le \epsilon/2$
-and thus $S$ is an $\tfrac{\epsilon}{2}$-cover of $C_n$.
 \end{proof}
 
-For $i \neq j$,
-\begin{align*}
-d_{P_\sigma}(c_{\sigma(i)}, c_{\sigma(j)})
-& = \Pr_{x \sim P_{\sigma}}[c_{\sigma(i)}(x) \neq c_{\sigma(j)}(x)] \\
-& = \Pr_{x \sim P_{\sigma}}[x_{\sigma(i)} \neq x_{\sigma(j)}] \\
-& = p_i (1 - p_j) + (1 - p_i) p_j \\
-& \ge (p_i + p_j) / 2
-\end{align*}
 
-\begin{lemma}
-For any algorithm, there exists a distribution $P \in \P_n$
+\begin{lemma}[Learning without knowledge of the distribution]
+For any algorithm, and any $\epsilon \in (0,\tfrac{1}{4})$ there exists a distribution $P \in \P_n$
 and a target concept $c \in C_n$ that requires at least $\Omega(\log n)$
-examples to learn the target.
+examples to $\epsilon$-learn the target $c$.
 \end{lemma}
 
 \begin{proof}
 We demostrate the existence of a pair $(P,c) \in \P_n \times C_n$ by
 probabilistic method. Let $\sigma \in S_n$ be chosen independently at random
 from $S_n$. We consider distribution $P = P_\sigma$ and target concept $c =
-c_\sigma(1)$.
+c_{\sigma(1)}$.
 
-We can formalize any (possibly improper) learning algorithm as a function $f:D_n
-\times \bigcup_{m=0}^\infty (D_n \times \{0,1\})^m \to \{0,1\}$.
+Note that for $i > 1$,
+\begin{align*}
+\err_{P,c}(c_{\sigma(i)})
+& = d_P(c, c_{\sigma(i)})
+& = \Pr_{x \sim P_{\sigma}}[c_{\sigma(1)}(x) \neq c_{\sigma(i)}(x)] \\
+& = \Pr_{x \sim P_{\sigma}}[x_{\sigma(1)} \neq x_{\sigma(i)}(x)] \\
+& = \Pr_{x \sim P_{\sigma}}[x_{\sigma(1)} = 1 \wedge x_{\sigma(i)} = 0] + \Pr_{x \sim P_{\sigma}}[x_{\sigma(1)} = 0 \wedge x_{\sigma(i)} = 1] \\
+& = p_i (1 - p_j) + (1 - p_i) p_j \\
+& = \frac{1}{2} (1 - p_j) + \frac{1}{2} p_j \\
+& = \frac{1}{2} \; .
+\end{align*}
+Now, let $f:\{0,1\}^n \to \{0,1\}$ the output the algorithm. Note that $f$
+does \emph{not} have to lie in $C$. Consider concept $g \in C$ that is closest to $f$.
+That is, $g = \argmin_{h \in C} d_P(g,h)$. Since $d_P(c,g) = 1/2$ or $d_P(c,g) =
+0$, $g$ is $0$-close to the target $c$ if and only $f$ is $\epsilon$-close.
 
-TODO
+A (possibly improper) learning algorithm is a function $A:\bigcup_{m=0}^\infty (\{0,1\}^n \times \{0,1\})^m \to \{0,1\}^{\{0,1\}^n}$.
+
+Let $X_1, X_2, \dots, X_m$ be an i.i.d. sample from $P_\sigma$ and
+let $Y_1, Y_2, \dots, Y_m$ be the target labels, $Y_i = c_{\sigma(1)}(X_i)$.
+We denote by $S = ((X_1, Y_1), (X_2, Y_2), \dots (X_m, Y_m))$ the input examples. We will show that
+$$
+\Exp_{\sigma} \left[ \Pr_S \left[\err_{P_\sigma,c_{\sigma(1)}}(P(A(S)) \ge \frac{1}{4} \right] \right] > \delta \; .
+$$
+For any $j = 2,3,\dots,n$, let $B_j$ be the event that $X_{i,\sigma(1)} = X_{i,\sigma(j)}$ for all $i=1,2,\dots,m$.
+Let $B$ be the event that at least one of $B_2, B_3, \dots, B_n$ happens.
+
+We have
+\begin{align*}
+\Exp_{\sigma} \left[ \Pr_S \left[\err_{P_\sigma,c_{\sigma(1)}}(P(A(S)) \ge \frac{1}{4} \right] \right]
+& = \Exp_{\sigma, S} \left[ \indicator{\err_{P_\sigma,c_{\sigma(1)}}(P(A(S)) \ge \frac{1}{4} } \right] \\
+& \ge \Exp_{\sigma, S} \left[ \indicator{B \wedge \left( \err_{P_\sigma,c_{\sigma(1)}}(P(A(S)) \ge \frac{1}{4} \right) } \right] \\
+& = \Pr[B] \cdot \Exp_{\sigma, S} \left[  \indicator{\err_{P_\sigma,c_{\sigma(1)}}(P(A(S)) \ge \frac{1}{4} } \middle| B \right] \\
+& = \Pr[B] \cdot \Pr_{\sigma, S} \left[  \err_{P_\sigma,c_{\sigma(1)}}(P(A(S)) \ge \frac{1}{4}  \middle| B \right] \\
+\end{align*}
 \end{proof}
 
 \section{Realizable Case: Monotone Disjuctions}
