@@ -68,70 +68,164 @@ at least $1 - \delta$; see~\cite[Theorem 5.3]{Anthony-Bartlett-1999} or
 \cite{Blumer-Ehrenfeucht-Haussler-Warmuth-1989,
 Ehrenfeucht-Haussler-Kearns-Valiant-1989}.
 
-We construct a family of probability distributions $\P_n$ over $\{0,1\}^n$ such that:
+For any $\epsilon \in (0,\frac{1}{2})$,
+we construct a family of probability distributions $\P_{n,\epsilon}$ over $\{0,1\}^n$ such that:
 \begin{itemize}
-\item For any $P \in \P_n$ there exists an algorithm that learns
-any target function $c \in C_n$ from $O(1/\epsilon^2 + \log(1/\delta)/\epsilon)$ examples.
+\item For any $P \in \P_{n,\epsilon}$ there exists an algorithm that $\epsilon$-learns
+any target function $c \in C_n$ from $O \left( \frac{\log(1/\delta)}{\epsilon} \right)$ examples.
 \item For any algorithm, there exists
-a probability distribution $P \in \P_n$ and a target function $c \in C_n$
+a probability distribution $P \in \P_{n,\epsilon}$ and a target function $c \in C_n$
 that requires at least $\Omega(\log n)$ examples to $\epsilon$-learn the target function.
 \end{itemize}
 
-The family $\P_n$ consists of $n!$ probability distributions. Each distribution
-corresponds to a permutation $\sigma:\{1,2,\dots,n\} \to \{1,2,\dots,n\}$. Given
-a permutation $\sigma$, the corresponding distribution is $P_\sigma$.
-A sample $x = (x_1, x_2, \dots, x_n)$ from $P_\sigma$ is drawn as follows:
-$x_1, x_2, \dots, x_n$ are independent Bernoulli random variables
-where
+The family $\P_{n,\epsilon}$ consists of $n$ probability distributions $P_1, P_2, \dots, P_n$.
+If $X = (X_1, X_2, \dots, X_n)$ is a sample drawn $P_i$ then $X_1, X_2, \dots, X_n$
+are independent Bernoulli random variables
 $$
-\Pr[x_{\sigma(i)} = 1] = p_i = \frac{1}{i + 1} \; .
+\Pr_{X \sim P_i}[X_j = 1] =
+\begin{cases}
+\frac{1}{2} & \text{if $i = j$,} \\
+\epsilon & \text{if $i \neq j$.} \\
+\end{cases}
 $$
 
 \begin{lemma}[Fixed distribution learning]
-For any distribution $P \in \P_n$ there exists an algorithm that
-learns any target function $c \in C_n$ from $O \left( \frac{\log(1/\epsilon) + \log(1/\delta)}{\epsilon} \right)$
-examples.
+For any $\epsilon \in (0,\frac{1}{2})$ and any distribution $P \in
+\P_{n,\epsilon}$ there exists an algorithm that $\epsilon$-learns any target
+function $c \in C_n$ from $O \left( \frac{\log(1/\delta)}{\epsilon} \right)$
+examples with probability at least $1 - \delta$.
 \end{lemma}
 
 \begin{proof}
-The proof relies on a result of \cite{Benedek-Itai-1991} that for any fixed
-distribution $P$, any $\epsilon \in (0,1)$, and concept class $C$, any any
-target function from the concept class, is $\epsilon$-learnable from
-$O \left( \frac{\log |C_\epsilon| + \log (1/\delta)}{\epsilon}\right)$ examples with probability at least
-$1-\delta$. Here, $C_\epsilon$ is any $\epsilon$-cover of $C$ with respect
-to the pseudometric $d_P(c,c') = \Pr_{x \sim P}[c(x) \neq c'(x)]$.
+The proof relies on a result of \cite{Benedek-Itai-1991} that for any ``fixed''
+distribution $P$, any $\epsilon \in (0,1)$, and any concept class $C$, any
+target function from the concept class is $\epsilon$-learnable from $O \left(
+\frac{\log |C_\epsilon| + \log (1/\delta)}{\epsilon}\right)$ examples with
+probability at least $1-\delta$. Here, $C_\epsilon$ is any $\epsilon$-cover of
+$C$ with respect to the pseudometric $d_P(c,c') = \Pr_{x \sim P}[c(x) \neq
+c'(x)]$.
 
-We show that any $P \in \P_n$ has an $\epsilon$-cover of size
-$O(\log(1/\epsilon))$. For any $P \in \P_n$ there exists $\sigma \in S_n$ such that
-$P = P_\sigma$. Let $K = \lceil \frac{2}{\epsilon} \rceil - 1$. We show that
-$C_\epsilon = \{c_{\sigma(1)}, \dots, c_{\sigma(K)}\}$ is an $\epsilon$-cover of
-$C_n$. In particular, we show that any $c \in C \setminus C_\epsilon$ is
-$\epsilon$-close to $c_{\sigma(K)}$. Indeed, for any $i > K$,
+We show that any $P \in \P_{n,\epsilon}$ has an $(2\epsilon)$-cover of size $2$.
+If $P = P_i$, choose an arbitrary $j \in \{1,2,\dots,n\} \setminus \{i\}$. We
+claim that $\{c_i, c_j\}$ is an $(2\epsilon)$-cover of $C_n$. That is, we claim
+that for any $k \in \{1,2,\dots,n\}$, either $d_P(c_k,c_i) < 2\epsilon$ or
+$d_P(c_k,c_j) < 2\epsilon$.
+
+Indeed, if $k \in \{i,j\}$, trivially $d_P(c_k,c_i) = 0$ or $d_P(c_k,c_j) = 0$.
+Otherwise, if  $k \in \{1,2,\dots,n\} \setminus \{i,j\}$,
 \begin{align*}
-d_P(c_{\sigma(K)}, c_{\sigma(i)})
-& = \Pr_{x \sim P}[c_{\sigma(K)}(x) \neq c_{\sigma(i)}(x)] \\
-& = \Pr_{x \sim P}[x_{\sigma(K)} \neq x_{\sigma(i)}] \\
-& = \Pr_{x \sim P}[x_{\sigma(K)} = 1 \wedge x_{\sigma(i)} = 0] + \Pr_{x \sim P}[x_{\sigma(K)} = 0 \wedge x_{\sigma(i)} = 1] \\
-& = p_K(1 - p_i) + (1-p_K) p_i \\
-& \le p_K + p_i \\
-& \le 2 p_K \\
-& = \frac{2}{K + 1} \\
-& \le \epsilon \; .
+d_P(c_k, c_j)
+& = \Pr_{X \sim P_i}[c_k(X) \neq c_j(X)] \\
+& = \Pr_{X \sim P_i}[X_k \neq X_j] \\
+& = \Pr_{X \sim P}[X_k = 1 \wedge X_j = 0] + \Pr_{X \sim P}[X_k = 0 \wedge X_j = 1] \\
+& = p_k(1 - p_i) + (1 - p_k) p_i \\
+& = 2 \epsilon (1-\epsilon) \\
+& < 2 \epsilon \; .
 \end{align*}
 \end{proof}
 
+\begin{proposition}
+For any two distict probability distriburions
+$P_i,P_j \in P_{n,\epsilon}$ and any function $h:\{0,1\}^n \to \{0,1\}$,
+$$
+\Pr_{X \sim P_i}[h(X) \neq X_i] + \Pr_{X \sim P_j}[h(X) \neq X_i] \ge \epsilon \; .
+$$
+\end{proposition}
+
+\begin{proof}
+Let $K$ be uniformly chosen from the set $\{i,j\}$ and let $Z \sim P_K$.
+We note that
+\begin{align*}
+\Pr[h(Z) \neq Z_K]
+& = \frac{1}{2} \Pr[h(Z) \neq Z_K ~|~ K = i ] + \frac{1}{2} \Pr[h(Z) \neq Z_K ~|~ K = j ] \\
+& = \frac{1}{2}\Pr_{X \sim P_i}[h(X) \neq X_i] + \frac{1}{2} \Pr_{X \sim P_j}[h(X) \neq X_i] \; .
+\end{align*}
+Thus, it remains to show that $\Pr[h(Z) \neq Z_K] \ge \epsilon/2$. Indeed,
+\begin{align*}
+\Pr[h(Z) \neq Z_K]
+& = \sum_{x \in \{0,1\}^n} \Pr[Z = x \wedge h(x) \neq x_K ] \\
+& \ge \sum_{\substack{x \in \{0,1\}^n \\ x_i \neq x_j}} \Pr[Z = x \wedge h(x) \neq x_K ] \\
+& = \sum_{\substack{x \in \{0,1\}^n \\ x_i \neq x_j}} \left( \prod_{\ell \in \{1,2,\dots, n\} \setminus \{i,j\}} \Pr[Z_\ell = x_\ell] \right)  \Pr[Z_i = x_i \wedge Z_j = x_j \wedge h(x) \neq x_K ] \\
+\end{align*}
+\end{proof}
 
 \begin{lemma}[Learning without knowledge of the distribution]
-For any algorithm, and any $\epsilon \in (0,\tfrac{1}{4})$ there exists a distribution $P \in \P_n$
+For any algorithm there exists a distribution $P \in \P_n$
 and a target concept $c \in C_n$ that requires at least $\Omega(\log n)$
-examples to $\epsilon$-learn the target $c$.
+examples to $\frac{1}{4}$-learn the target $c$.
 \end{lemma}
 
 \begin{proof}
+Fix the sample size $m$ to be any integer between $0$ and $\frac{1}{2} \log n$.
 We demostrate the existence of a pair $(P,c) \in \P_n \times C_n$ by
-probabilistic method. Let $\sigma \in S_n$ be chosen independently at random
-from $S_n$. We consider distribution $P = P_\sigma$ and target concept $c =
-c_{\sigma(1)}$.
+probabilistic method. Let $\sigma$ be a uniformly random permutation over
+$\{1,2,\dots,n\}$. We consider distribution $P_\sigma$ and target concept
+$c_{\sigma(1)}$.
+
+Let $A$ be any (possibly improper) learning algorithm. We can formalize
+it is a function $A:\bigcup_{k=0}^\infty (\{0,1\}^n \times \{0,1\})^k \to
+\{0,1\}^{\{0,1\}^n}$.
+
+Let $X_1, X_2, \dots, X_m$ be an i.i.d. sample from $P_\sigma$ and
+let $Y_1, Y_2, \dots, Y_m$ be the target labels, $Y_i = c_{\sigma(1)}(X_i)$.
+We denote by $S = ((X_1, Y_1), (X_2, Y_2), \dots (X_m, Y_m))$ the input examples.
+We will show that,
+\begin{equation}
+\label{equation:expected-failure-probability}
+\Exp \left[ \Pr \left[\err_{P_\sigma,c_{\sigma(1)}}(A(S)) \ge \frac{1}{4} \ \middle| \ \sigma \right] \right] > \delta \; .
+\end{equation}
+The inequality \eqref{equation:expected-failure-probability} will imply that for at least one permutation $\pi$,
+$$
+\Pr \left[\err_{P_\sigma,c_{\sigma(1)}}(A(S)) \ge \frac{1}{4} \ \middle| \ \sigma = \pi \right] > \delta \; .
+$$
+In other words, on $(P_\pi, c_\pi)$, the algorithm $A$ fails to
+$\frac{1}{4}$-learn with probability at least $\delta$.
+
+To prove \eqref{equation:expected-failure-probability}, we first introduce
+necessary notation. Let $M$ be $m \times n$ binary matrix $M$ with entries
+$M_{i,j} = X_{i,\sigma(j)}$. Note that $\Pr[M_{i,j} = 1] = p_j$. Also not that
+the entries $M_{i,j}$ and $\sigma$ are all mutually independent. Let $C_1, C_2,
+\dots, C_n$ be the columns of $M$. Let $J = \{ j ~|~ 1 \le j \le n, \ C_1 = C_j \}$
+be the set of columns matching column $C_1$. Note that we always have $1 \in J$.
+
+Let $\alpha$ be a permutation of chosen uniformly at random from the set $\{ \pi
+\in S_n ~:~ \forall i \in \{1,2,\dots,n\} \setminus J, \pi(i) = i \}$. In other
+words, $\alpha$ uniformly permutes columns in $J$ and keeps all the other
+columns at their position. Note that $\sigma \circ \alpha$ has the same
+distribution as $\sigma$. Futhermore, note that $X_{i,\sigma(j)} =
+X_{i,\sigma(\alpha(j)))}$ for all $i,j$.
+
+For any subset $I \subseteq \{1,2,3,\dots,n\}$, let $L(I)$ bet set all of all $m
+\times n$ binary matrices such that $I$ is the set of indices of columns equal
+to the first column.
+
+\begin{align*}
+& \Exp \left[ \Pr \left[\err_{P_\sigma,c_{\sigma(1)}}(A(S)) \ge \frac{1}{4} \ \middle| \ \sigma \right] \right] \\
+& = \Exp \left[ \Exp \left[ \indicator{ \err_{P_\sigma,c_{\sigma(1)}}(A(S)) \ge \frac{1}{4}} \ \middle| \ \sigma \right] \right] \\
+& = \Exp \left[ \indicator{ \err_{P_\sigma,c_{\sigma(1)}}(A(S)) \ge \frac{1}{4}} \right] \\
+& = \Pr \left[ \err_{P_\sigma,c_{\sigma(1)}}(A(S)) \ge \frac{1}{4} \right] \\
+& \ge \Pr \left[ |J| \ge 2 \wedge \err_{P_\sigma,c_{\sigma(1)}}(A(S)) \ge \frac{1}{4} \right] \\
+& = \sum_{\substack{I \subseteq \{1,2,3,\dots,n\} \\ |I| \ge 2}} \Pr \left[ J = I \wedge \err_{P_\sigma,c_{\sigma(1)}}(A(S)) \ge \frac{1}{4} \right] \\
+& = \sum_{\substack{I \subseteq \{1,2,3,\dots,n\} \\ |I| \ge 2}} \sum_{Q \in L(I)} \Pr \left[ M = Q \wedge \err_{P_\sigma,c_{\sigma(1)}}(A(S)) \ge \frac{1}{4} \right] \\
+& = \sum_{\substack{I \subseteq \{1,2,3,\dots,n\} \\ |I| \ge 2}} \sum_{Q \in L(I)} \sum_{\pi \in S_n} \Pr \left[ M = Q \wedge \sigma = \pi \wedge \err_{P_\sigma,c_{\sigma(1)}}(A(S)) \ge \frac{1}{4} \right] \\
+& = \sum_{\substack{I \subseteq \{1,2,3,\dots,n\} \\ |I| \ge 2}} \sum_{Q \in L(I)} \sum_{\pi \in S_n} \Pr \left[ M = Q \wedge \sigma = \pi \wedge \err_{P_{\alpha \circ \sigma},c_{\alpha(\sigma(1))}}(A(S)) \ge \frac{1}{4} \right] \\
+& = \sum_{\substack{I \subseteq \{1,2,3,\dots,n\} \\ |I| \ge 2}} \sum_{Q \in L(I)} \sum_{\pi \in S_n} \Pr \left[ M = Q \wedge \sigma = \pi \right] \Pr \left[ \err_{P_{\sigma \circ \alpha},c_{\sigma(\alpha(1))}}(A(S)) \ge \frac{1}{4} \middle | M = Q \wedge \pi = \sigma \right] \\
+\end{align*}
+
+$M$ and $\sigma$ determine $S$, $J$ and $A(S)$. The target
+$c_{\sigma(\alpha(1)))}$ is uniformly distributed over $\{ c_{\sigma(j)} ~|~ j \in J\}$.
+
+$$
+\err_{P_{\sigma \circ \alpha},c_{\alpha(\sigma(1))}}(h)
+= d_{P_{\sigma \circ \alpha}} (c_{\alpha(\sigma(1))}, h)
+= \Pr_{X \sim P_{\sigma \circ \alpha}} \left[ h(X) \neq  c_{\alpha(\sigma(1))}(X) \right]
+$$
+
+For any $\pi \in S_n$, any $|I| \ge 2$ and any $Q \in L(I)$,
+$$
+\Pr \left[ \err_{P_{\alpha \circ \sigma},c_{\alpha(\sigma(1))}}(A(S)) \ge \frac{1}{4} \middle | M = Q \wedge \pi = \sigma \right] = \frac{1}{i} \; .
+$$
+
 
 Note that for $i > 1$,
 \begin{align*}
@@ -149,14 +243,9 @@ does \emph{not} have to lie in $C$. Consider concept $g \in C$ that is closest t
 That is, $g = \argmin_{h \in C} d_P(g,h)$. Since $d_P(c,g) = 1/2$ or $d_P(c,g) =
 0$, $g$ is $0$-close to the target $c$ if and only $f$ is $\epsilon$-close.
 
-A (possibly improper) learning algorithm is a function $A:\bigcup_{m=0}^\infty (\{0,1\}^n \times \{0,1\})^m \to \{0,1\}^{\{0,1\}^n}$.
 
-Let $X_1, X_2, \dots, X_m$ be an i.i.d. sample from $P_\sigma$ and
-let $Y_1, Y_2, \dots, Y_m$ be the target labels, $Y_i = c_{\sigma(1)}(X_i)$.
-We denote by $S = ((X_1, Y_1), (X_2, Y_2), \dots (X_m, Y_m))$ the input examples. We will show that
-$$
-\Exp_{\sigma} \left[ \Pr_S \left[\err_{P_\sigma,c_{\sigma(1)}}(P(A(S)) \ge \frac{1}{4} \right] \right] > \delta \; .
-$$
+
+
 For any $j = 2,3,\dots,n$, let $B_j$ be the event that $X_{i,\sigma(1)} = X_{i,\sigma(j)}$ for all $i=1,2,\dots,m$.
 Let $B$ be the event that at least one of $B_2, B_3, \dots, B_n$ happens.
 
