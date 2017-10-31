@@ -18,7 +18,7 @@
 \DeclareMathOperator{\Exp}{\mathbf{E}}
 
 \title{Semi-supervised learning}
-\author{Alexander Golovenv \and D\'avid P\'al}
+\author{Alexander Golovnev \and D\'avid P\'al}
 
 \begin{document}
 
@@ -72,13 +72,13 @@ Ehrenfeucht-Haussler-Kearns-Valiant-1989}.
 For any $\epsilon \in (0,\frac{1}{2})$,
 we construct a family of probability distributions $\P_{n,\epsilon}$ over $\{0,1\}^n$ such that:
 \begin{itemize}
-\item For any $P \in \P_{n,\epsilon}$ there exists an algorithm that $\epsilon$-learns
+\item For any $P \in \P_{n,\epsilon}$ there exists an algorithm that $(4\epsilon)$-learns
 any target function $c \in C_n$ from $O \left( \frac{\log(1/\delta)}{\epsilon} \right)$ examples
 with probability at least $1-\delta$.
 \item For any algorithm, there exists
 a probability distribution $P \in \P_{n,\epsilon}$ and a target function $c \in C_n$
-such that for any $\delta \in (0,\frac{1}{4})$, the algorithm requires
-at least $\Omega(\log(1/\delta) + \log n)$ examples to $\epsilon$-learn
+such that for any $\delta \in (0,\frac{1}{2})$, the algorithm requires
+at least $\Omega(\log(1/\delta) + \log n)$ examples to $(\epsilon/2)$-learn
 the target function with probability at least $1-\delta$.
 \end{itemize}
 
@@ -95,32 +95,31 @@ $$
 
 \begin{lemma}[Fixed distribution learning]
 For any $\epsilon \in (0,\frac{1}{2})$ and any distribution $P \in
-\P_{n,\epsilon}$ there exists an algorithm that $\epsilon$-learns any target
+\P_{n,\epsilon}$ there exists an algorithm that $(4\epsilon)$-learns any target
 function $c \in C_n$ from $O \left( \frac{\log(1/\delta)}{\epsilon} \right)$
 examples with probability at least $1 - \delta$.
 \end{lemma}
 
 \begin{proof}
-\textbf{TODO: Figure out where we need $\epsilon$, $2\epsilon$, $\epsilon/2$.}
-
 The proof relies on a result of \cite{Benedek-Itai-1991} that for any ``fixed''
 distribution $P$, any $\epsilon \in (0,1)$, and any concept class $C$, any
 target function from the concept class is $\epsilon$-learnable from $O \left(
-\frac{\log |C_\epsilon| + \log (1/\delta)}{\epsilon}\right)$ examples with
-probability at least $1-\delta$. Here, $C_\epsilon$ is any $\epsilon$-cover of
-$C$ with respect to the pseudometric $d_P(c,c') = \Pr_{x \sim P}[c(x) \neq
-c'(x)]$.
+\frac{\log |C_{\epsilon/2}| + \log (1/\delta)}{\epsilon}\right)$ examples with
+probability at least $1-\delta$. Here, $C_{\epsilon/2}$ is any
+$(\epsilon/2)$-cover of $C$ with respect to the pseudometric $d_P(c,c') = \Pr_{x
+\sim P}[c(x) \neq c'(x)]$.
 
-We show that any $P \in \P_{n,\epsilon}$ has a $(2\epsilon)$-cover of size $2$.
-If $P = P_i$, choose an arbitrary $j \in \{1,2,\dots,n\} \setminus \{i\}$. We
-claim that $\{c_i, c_j\}$ is an $(2\epsilon)$-cover of $C_n$. That is, we claim
-that for any $k \in \{1,2,\dots,n\}$, either $d_P(c_k,c_i) < 2\epsilon$ or
-$d_P(c_k,c_j) < 2\epsilon$.
+We show that any distribution in $\P_{n,\epsilon}$ has a $(2\epsilon)$-cover of
+size $2$. Consider distribution $P_i \in \P_{n,\epsilon}$ for some $i$. Choose
+an arbitrary $j \in \{1,2,\dots,n\} \setminus \{i\}$. We claim that $\{c_i,
+c_j\}$ is an $(2\epsilon)$-cover of $C_n$. That is, we claim that for any $k \in
+\{1,2,\dots,n\}$, either $d_{P_i}(c_k,c_i) < 2\epsilon$ or $d_{P_i}(c_k,c_j) <
+2\epsilon$.
 
-Indeed, if $k \in \{i,j\}$, trivially $d_P(c_k,c_i) = 0$ or $d_P(c_k,c_j) = 0$.
+Indeed, if $k \in \{i,j\}$, trivially $d_{P_i}(c_k,c_i) = 0$ or $d_{P_i}(c_k,c_j) = 0$.
 Otherwise, if  $k \in \{1,2,\dots,n\} \setminus \{i,j\}$,
 \begin{align*}
-d_P(c_k, c_j)
+d_{P_i}(c_k, c_j)
 & = \Pr_{X \sim P_i}[c_k(X) \neq c_j(X)] \\
 & = \Pr_{X \sim P_i}[X_k \neq X_j] \\
 & = \Pr_{X \sim P_i}[X_k = 1 \wedge X_j = 0] + \Pr_{X \sim P_i}[X_k = 0 \wedge X_j = 1] \\
@@ -136,7 +135,7 @@ For any $\epsilon \in (0,\frac{1}{2})$,
 any two distict probability distributions $P_i,P_j \in P_{n,\epsilon}$
 and any function $h:\{0,1\}^n \to \{0,1\}$,
 $$
-\Pr_{X \sim P_i}[h(X) \neq X_i] + \Pr_{X \sim P_j}[h(X) \neq X_i] \ge \epsilon \; .
+\Pr_{X \sim P_i}[h(X) \neq X_i] + \Pr_{X \sim P_j}[h(X) \neq X_j] \ge \epsilon \; .
 $$
 \end{lemma}
 
@@ -157,7 +156,7 @@ Hence, for any $x \in \{0,1\}^n$ such that $x_i \neq x_j$,
 \end{align*}
 Therefore,
 \begin{align*}
-& \Pr_{X \sim P_i}[h(X) \neq X_i] + \Pr_{X \sim P_j}[h(X) \neq X_i] \\
+& \Pr_{X \sim P_i}[h(X) \neq X_i] + \Pr_{X \sim P_j}[h(X) \neq X_j] \\
 & \qquad = \sum_{x \in \{0,1\}^n} \Pr_{X \sim P_i}[X = x \wedge h(x) \neq x_i] + \Pr_{X \sim P_j}[X = x \wedge h(x) \neq x_j] \\
 & \qquad \ge \sum_{\substack{x \in \{0,1\}^n \\ x_i \neq x_j}} \Pr_{X \sim P_i}[X = x \wedge h(x) \neq x_i] + \Pr_{X \sim P_j}[X = x \wedge h(x) \neq x_j] \\
 & \qquad \ge \sum_{\substack{x \in \{0,1\}^n \\ x_i \neq x_j}} \min \left\{ \Pr_{X \sim P_i}[X = x], \ \Pr_{X \sim P_j}[X = x] \right\} \\
@@ -169,17 +168,35 @@ The first inequality is trivial. The second inequality follows from the fact tha
 if $x_i \neq x_j$ then $h(x)$ must be equal to either $x_i$ or $x_j$.
 \end{proof}
 
+\begin{corollary}
+\label{corollary:projection-distances}
+For any $\epsilon \in (0,\frac{1}{2})$ and any function $h:\{0,1\}^n \to \{0,1\}$,
+for at least $n-1$ out of $n$ possible values of $i \in \{1,2,\dots,n\}$,
+$$
+\Pr_{X \sim P_i}[h(X) \neq X_i] \ge \epsilon/2 \; .
+$$
+\end{corollary}
+
+\begin{proof}
+By contradiction, suppose there exists a pair $i,j \in \{1,2,\dots,n\}$, $i \neq j$, such that
+$$
+\Pr_{X \sim P_i}[h(X) \neq X_i] < \epsilon/2 \qquad \text{and} \qquad \Pr_{X \sim P_j}[h(X) \neq X_j] < \epsilon/2 \; .
+$$
+The existence of such pair violates Lemma~\ref{lemma:projection-distances}.
+\end{proof}
+
+
 \begin{lemma}[Learning without knowledge of the distribution]
 For any algorithm $A$ and any $\epsilon \in (0,\frac{1}{2})$,
 there exists a distribution $P \in \P_{n,\epsilon}$
-and a target concept $c \in C_n$ that requires at least $\Omega(\log(1/\delta) + \log n)$
-examples to $\epsilon$-learn the target $c$ with probability at least $1 - \delta$.
+and a target concept $c \in C_n$ that require at least $\Omega(\log(1/\delta) + \log n)$
+examples to $\frac{\epsilon}{2}$-learn with probability at least $1 - \delta$.
 \end{lemma}
 
 \begin{proof}
 Fix the sample size $m$ to be any integer between $0$ and $\log(1/\delta) + \frac{1}{2} \log n$.
 Let $A$ be any (possibly improper) learning algorithm. We can formalize
-it is a function $A:\bigcup_{k=0}^\infty (\{0,1\}^n \times \{0,1\})^k \to
+it is as a function $A:\bigcup_{k=0}^\infty (\{0,1\}^n \times \{0,1\})^k \to
 \{0,1\}^{\{0,1\}^n}$.
 
 We demostrate the existence of a pair $(P,c) \in \P_{n,\epsilon} \times C_n$ by
@@ -189,16 +206,16 @@ over $\{1,2,\dots,n\}$. We choose the pair $(P,c)$ to be the (random) pair
 $(P_I,c_I)$.
 
 Let $X_1, X_2, \dots, X_m$ be an i.i.d. sample from $P_I$ and
-let $Y_1, Y_2, \dots, Y_m$ be the target labels, $Y_i = c_I(X_i)$.
+let $Y_1 = c_I(X_1), Y_2 = c_I(X_2), \dots, Y_m = c_I(X_m)$ be the target labels.
 We denote by $S = ((X_1, Y_1), (X_2, Y_2), \dots (X_m, Y_m))$ the input examples.
 We will show that,
 \begin{equation}
 \label{equation:expected-failure-probability}
-\Exp \left[ \Pr \left[\err_{P_I,c_I}(A(S)) \ge \epsilon \ \middle| \ I \, \right] \right] > \delta \; .
+\Exp \left[ \Pr \left[\err_{P_I,c_I}(A(S)) \ge \epsilon/2 \ \middle| \ I \, \right] \right] > \delta \; .
 \end{equation}
 The inequality \eqref{equation:expected-failure-probability} will imply that for at least one $i \in \{1,2,\dots,n\}$,
 $$
-\Pr \left[\err_{P_I,c_I}(A(S)) \ge \frac{1}{4} \ \middle| \ I = i \right] > \delta \; .
+\Pr \left[\err_{P_I,c_I}(A(S)) \ge \epsilon/2 \ \middle| \ I = i \right] > \delta \; .
 $$
 In other words, on $(P_i, c_i)$ the algorithm $A$ fails to
 $\epsilon$-learn with probability at least $\delta$.
@@ -217,53 +234,68 @@ Also note that the entries $M_{i,j}$ and $\sigma$ are all mutually independent. 
 \dots, C_n$ be the columns of $M$. Let $J = \{ j ~|~ 1 \le j \le n, \ C_1 = C_j \}$
 be the set of columns matching column $C_1$. Note that $1 \in J$ with probability one.
 
-We define a permutation $\alpha$ as a function of the set $J$. If $|J| = 1$,
-then $\alpha$ is the identity. If $|J| \ge 2$, then with probability $1/2$,
-$\alpha$ is the identity and with probability $1/2$ it is the permutation that
-swaps $1$ with the second smallest element of $J$ and keeps all other elements
-at their place.
+Consider the set of permutations $\{ \pi \in S_n ~|~ \forall i \not \in J, \
+\pi(i) = i\}$. Given $J$, we define $\alpha$ to be a permutation chosen
+uniformly at random from this set. In other words, $\alpha$ randomly permutes
+elements of $J$ and keeps each element of $\{1,2,\dots,n\} \setminus J$ at its
+original position.
 
 Note that $\sigma$ and $\alpha$ are independent; this is due the fact that
-$\alpha$ is a function of $J$ which in turn is a function of $M$. Therefore,
-$\sigma \circ \alpha$ has the same distribution as $\sigma$. Futhermore,
-$X_{i,\sigma(j)} = X_{i,\sigma(\alpha(j)))} = M_{i,j}$ for all $i,j$, since
-$\alpha$ permutes only identical columns of $M$.
+$\alpha$ is a function of $J$ which in turn is a function of $M$. Somewhat less
+obviously, $\sigma \circ \alpha$ and $M$ are independent; this is due to the
+fact that conditioned on $M$, $\sigma \circ \alpha$ is a uniformly random
+permutation. Therefore, trivially, $(M,\sigma)$ and $(M, \sigma \circ \alpha)$
+have the same joint distribution.
+
+Futhermore, $X_{i,\sigma(j)} = X_{i,\sigma(\alpha(j))} = M_{i,j}$ for all
+$i,j$, since $\alpha$ permutes only identical columns of $M$. Hence,
+$(S,\sigma)$ and $(S,\sigma \circ \alpha)$ have the same joint distribution.
+\begin{align*}
+\Exp \left[ \Pr \left[\err_{P_I,c_I}(A(S)) \ge \epsilon/2 \ \middle| \ I \, \right] \right]
+& = \Exp \left[ \Exp \left[ \indicator{ \err_{P_I,c_I}(A(S)) \ge \epsilon/2} \ \middle| \ I \, \right] \right] \\
+& = \Exp \left[ \indicator{ \err_{P_I,c_I}(A(S)) \ge \epsilon/2} \right] \\
+& = \Pr \left[ \err_{P_I,c_I}(A(S)) \ge \epsilon/2 \right] \\
+& = \Pr \left[ \err_{P_{\sigma(1)},c_{\sigma(1)}}(A(S)) \ge \epsilon/2 \right] \\
+& = \Pr \left[ \err_{P_{\sigma(\alpha(1))},c_{\sigma(\alpha(1))}}(A(S)) \ge \epsilon/2 \right] \; .
+\end{align*}
 
 For any subset $K \subseteq \{1,2,3,\dots,n\}$, let $L(K)$ bet set all of all $m
 \times n$ binary matrices such that $K$ is the set of indices of columns equal
-to the first column.
-
-We have
+to the first column. Thus,
 \begin{align*}
-& \Exp \left[ \Pr \left[\err_{P_I,c_I}(A(S)) \ge \epsilon/2 \ \middle| \ I \, \right] \right] \\
-& = \Exp \left[ \Exp \left[ \indicator{ \err_{P_I,c_I}(A(S)) \ge \epsilon/2} \ \middle| \ I \, \right] \right] \\
-& = \Exp \left[ \indicator{ \err_{P_I,c_I}(A(S)) \ge \epsilon/2} \right] \\
-& = \Pr \left[ \err_{P_I,c_I}(A(S)) \ge \epsilon \right] \\
-& \ge \Pr \left[ |J| \ge 2 \wedge \err_{P_I,c_I}(A(S)) \ge \epsilon/2 \right] \\
-& = \sum_{\substack{K \subseteq \{1,2,3,\dots,n\} \\ |K| \ge 2}} \Pr \left[ J = K \wedge \err_{P_I,c_I}(A(S)) \ge \epsilon/2 \right] \\
-& = \sum_{\substack{K \subseteq \{1,2,3,\dots,n\} \\ |K| \ge 2}} \sum_{Q \in L(K)} \Pr \left[ M = Q \wedge \err_{P_I,c_I}(A(S)) \ge \epsilon/2 \right] \\
-& = \sum_{\substack{K \subseteq \{1,2,3,\dots,n\} \\ |K| \ge 2}} \sum_{Q \in L(K)} \sum_{\pi \in S_n} \Pr \left[ M = Q \wedge \sigma = \pi \wedge \err_{P_{\sigma(1)},c_{\sigma(1)}}(A(S)) \ge \epsilon/2 \right] \\
+& \Pr \left[ \err_{P_{\sigma(\alpha(1))},c_{\sigma(\alpha(1))}}(A(S)) \ge \epsilon/2 \right] \\
+& \ge \Pr \left[ |J| \ge 2 \wedge \err_{P_{\sigma(\alpha(1))},c_{\sigma(\alpha(1))}}(A(S)) \ge \epsilon/2 \right] \\
+& = \sum_{\substack{K \subseteq \{1,2,3,\dots,n\} \\ |K| \ge 2}} \Pr \left[ J = K \wedge \err_{P_{\sigma(\alpha(1))},c_{\sigma(\alpha(1))}}(A(S)) \ge \epsilon/2 \right] \\
+& = \sum_{\substack{K \subseteq \{1,2,3,\dots,n\} \\ |K| \ge 2}} \sum_{Q \in L(K)} \Pr \left[ M = Q \wedge \err_{P_{\sigma(\alpha(1))},c_{\sigma(\alpha(1))}}(A(S)) \ge \epsilon/2 \right] \\
 & = \sum_{\substack{K \subseteq \{1,2,3,\dots,n\} \\ |K| \ge 2}} \sum_{Q \in L(K)} \sum_{\pi \in S_n} \Pr \left[ M = Q \wedge \sigma = \pi \wedge \err_{P_{\sigma(\alpha(1))},c_{\sigma(\alpha(1))}}(A(S)) \ge \epsilon/2 \right] \\
-& = \sum_{\substack{K \subseteq \{1,2,3,\dots,n\} \\ |K| \ge 2}} \sum_{Q \in L(K)} \sum_{\pi \in S_n} \Pr \left[ M = Q \wedge \sigma = \pi \right] \Pr \left[ \err_{P_{\sigma(\alpha(1))},c_{\sigma(\alpha(1))}}(A(S)) \ge \epsilon/2 \middle | M = Q \wedge \pi = \sigma \right] \; .
+& = \sum_{\substack{K \subseteq \{1,2,3,\dots,n\} \\ |K| \ge 2}} \sum_{Q \in L(K)} \sum_{\pi \in S_n} \Pr \left[ M = Q \wedge \sigma = \pi \right] \Pr \left[ \err_{P_{\sigma(\alpha(1))},c_{\sigma(\alpha(1))}}(A(S)) \ge \epsilon/2 ~\middle|~ M = Q \wedge \pi = \sigma \right] \; .
 \end{align*}
-Given $M$ and $\sigma$, the values of $S$, $J$ and $A(S)$ are determined. Let $h =
-A(S)$. Assuming that $|J| \ge 2$, let $k$ be the second smallest element of $J$.
-Let $i = \sigma(1)$ and $j = \sigma(k)$. By Lemma~\ref{lemma:projection-distances},
+Given $M$ and $\sigma$, the values of $S$, $J$ and $A(S)$ are determined.
+Let $h = A(S)$. By Corollary~\ref{corollary:projection-distances}, for at least $|J| - 1$
+indices $i \in J$,
 $$
-\err_{P_i,c_i}(h) = \Pr_{X \sim P_i} \left[ h(X) \neq  c_i(X) \right] \ge \epsilon/2 \qquad \text{or} \qquad
-\err_{P_j,c_j}(h) = \Pr_{X \sim P_j} \left[ h(X) \neq  c_j(X) \right] \ge \epsilon/2 \; .
+\err_{P_i,c_i}(h) = \Pr_{X \sim P_i} \left[ h(X) \neq  c_i(X) \right] \ge \epsilon/2 \; .
 $$
-Conditioned on $M$ and $\sigma$, the index $\sigma(\alpha(1))$ is uniformly distributed over the set $\{i,j\}$,
+Conditioned on $M$ and $\sigma$, the index $\sigma(\alpha(1))$ is uniformly distributed over the set $J$. Hence, if $Q \in L(K)$ and $|K| \ge 2$,
 $$
-\Pr \left[ \err_{P_{\sigma(\alpha(1))},c_{\sigma(\alpha(1))}}(A(S)) \ge \epsilon/2 \middle | M = Q \wedge \pi = \sigma \right] \ge 1/2 \; .
+\Pr \left[ \err_{P_{\sigma(\alpha(1))},c_{\sigma(\alpha(1))}}(A(S)) \ge \epsilon/2 ~\middle|~ M = Q \wedge \pi = \sigma \right] \ge \frac{|K|-1}{|K|} \ge \frac{1}{2} \; .
 $$
 We can conclude that
 \begin{align*}
 \Exp \left[ \Pr \left[\err_{P_I,c_I}(A(S)) \ge \epsilon/2 \ \middle| \ I \, \right] \right]
-\ge \frac{1}{2} \sum_{\substack{K \subseteq \{1,2,3,\dots,n\} \\ |K| \ge 2}} \sum_{Q \in L(K)} \sum_{\pi \in S_n} \Pr \left[ M = Q \wedge \sigma = \pi \right]
-= \frac{1}{2} \Pr \left[ |J| \ge 2 \right] \; .
+& \ge \frac{1}{2} \sum_{\substack{K \subseteq \{1,2,3,\dots,n\} \\ |K| \ge 2}} \sum_{Q \in L(K)} \sum_{\pi \in S_n} \Pr \left[ M = Q \wedge \sigma = \pi \right] \\
+& = \frac{1}{2} \Pr \left[ |J| \ge 2 \right] \; .
 \end{align*}
-\textbf{TODO}
+It remains to show that $\Pr \left[ |J| \ge 2 \right] \ge 2 \delta$.
+Recall that $J$ is the subset of columns $C_1, C_2, \dots, C_n$ that are equal to $C_1$.
+Using Bonferroni's inequality, we have
+\begin{align*}
+\Pr\left[ |J| \ge 2 \right]
+& = \Pr\left[ \bigvee_{j=2}^n C_j = C_1 \right] \\
+& \ge \sum_{i=2}^n \Pr\left[ C_j = C_1 \right] - \sum_{2 \le  j < k \le n} \Pr\left[ C_j = C_k = C_1 \right] \\
+& = \sum_{i=2}^n \left( \prod_{j=1}^m \Pr\left[ M_{i,j} = M_{i,1} \right] \right) - \sum_{2 \le j < k \le n} \left( \prod_{j=1}^m \Pr\left[ M_{i,j} = M_{i,k} = M_{i,1} \right] \right) \\
+& = \sum_{i=2}^n \left( \frac{1}{2} \right)^m - \sum_{2 \le j < k \le n} \left( \frac{1}{2} \epsilon^2 + \frac{1}{2} (1-\epsilon)^2 \right)^m \\
+\end{align*}
 \end{proof}
 
 \section{Realizable Case: Monotone Disjuctions}
