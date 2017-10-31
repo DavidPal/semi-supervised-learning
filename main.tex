@@ -18,7 +18,7 @@
 \DeclareMathOperator{\Exp}{\mathbf{E}}
 
 \title{Semi-supervised learning}
-\author{Alexandr Golovenv \and D\'avid P\'al}
+\author{Alexander Golovenv \and D\'avid P\'al}
 
 \begin{document}
 
@@ -57,10 +57,10 @@ c(x_{\lfloor \log_2 n \rfloor}))$. Indeed, given $v$, let $k \in \{0,1,\dots,2^{
 then we can take $c = c_{k+1}$.
 \end{proof}
 
-\cite{Hanneke-2016} showed that for any class of $C$ of Vapnik-Chervonenkis
+\cite{Hanneke-2016} showed that for any class $C$ of Vapnik-Chervonenkis
 dimension $d$ there exists an algorithm that $\epsilon$-learns any target function
 under any domain distribution  from $O\left(\frac{d + \log(1/\delta)}{\epsilon}\right)$
-with probability at least $1-\delta$ examples. Futhermore, for any algorithm
+examples with probability at least $1-\delta$. Futhermore, for any algorithm
 and any class $C$ of Vapnik-Chervonenkis dimension $d \ge 2$ and any $\epsilon
 \in (0,1)$ and $\delta \in (0,1)$ there exists a distribution over the domain
 and a concept which requires at least $\Omega \left(\frac{d +
@@ -83,8 +83,8 @@ the target function with probability at least $1-\delta$.
 \end{itemize}
 
 The family $\P_{n,\epsilon}$ consists of $n$ probability distributions $P_1, P_2, \dots, P_n$.
-If $X = (X_1, X_2, \dots, X_n)$ is a sample drawn $P_i$ then $X_1, X_2, \dots, X_n$
-are independent Bernoulli random variables
+If $X = (X_1, X_2, \dots, X_n)$ is a sample drawn from $P_i$ then $X_1, X_2, \dots, X_n$
+are independent Bernoulli random variables such that
 $$
 \Pr_{X \sim P_i}[X_j = 1] =
 \begin{cases}
@@ -111,7 +111,7 @@ probability at least $1-\delta$. Here, $C_\epsilon$ is any $\epsilon$-cover of
 $C$ with respect to the pseudometric $d_P(c,c') = \Pr_{x \sim P}[c(x) \neq
 c'(x)]$.
 
-We show that any $P \in \P_{n,\epsilon}$ has an $(2\epsilon)$-cover of size $2$.
+We show that any $P \in \P_{n,\epsilon}$ has a $(2\epsilon)$-cover of size $2$.
 If $P = P_i$, choose an arbitrary $j \in \{1,2,\dots,n\} \setminus \{i\}$. We
 claim that $\{c_i, c_j\}$ is an $(2\epsilon)$-cover of $C_n$. That is, we claim
 that for any $k \in \{1,2,\dots,n\}$, either $d_P(c_k,c_i) < 2\epsilon$ or
@@ -123,8 +123,8 @@ Otherwise, if  $k \in \{1,2,\dots,n\} \setminus \{i,j\}$,
 d_P(c_k, c_j)
 & = \Pr_{X \sim P_i}[c_k(X) \neq c_j(X)] \\
 & = \Pr_{X \sim P_i}[X_k \neq X_j] \\
-& = \Pr_{X \sim P}[X_k = 1 \wedge X_j = 0] + \Pr_{X \sim P}[X_k = 0 \wedge X_j = 1] \\
-& = p_k(1 - p_i) + (1 - p_k) p_i \\
+& = \Pr_{X \sim P_i}[X_k = 1 \wedge X_j = 0] + \Pr_{X \sim P_i}[X_k = 0 \wedge X_j = 1] \\
+& = p_k(1 - p_j) + (1 - p_k) p_j \\
 & = 2 \epsilon (1-\epsilon) \\
 & < 2 \epsilon \; .
 \end{align*}
@@ -166,7 +166,7 @@ Therefore,
 & \qquad = \epsilon \left( \frac{1}{2} + \frac{1}{2} \right) \; .
 \end{align*}
 The first inequality is trivial. The second inequality follows from the fact that
-if $x_i \neq x_j$ then $h(x)$ is must be equal to either to $x_i$ or $x_j$.
+if $x_i \neq x_j$ then $h(x)$ must be equal to either $x_i$ or $x_j$.
 \end{proof}
 
 \begin{lemma}[Learning without knowledge of the distribution]
@@ -213,7 +213,7 @@ $$
 \epsilon & \text{if $j \ge 2$.} \\
 \end{cases}
 $$
-Also not that the entries $M_{i,j}$ and $\sigma$ are all mutually independent. Let $C_1, C_2,
+Also note that the entries $M_{i,j}$ and $\sigma$ are all mutually independent. Let $C_1, C_2,
 \dots, C_n$ be the columns of $M$. Let $J = \{ j ~|~ 1 \le j \le n, \ C_1 = C_j \}$
 be the set of columns matching column $C_1$. Note that $1 \in J$ with probability one.
 
@@ -248,13 +248,12 @@ We have
 \end{align*}
 Given $M$ and $\sigma$, the values of $S$, $J$ and $A(S)$ are determined. Let $h =
 A(S)$. Assuming that $|J| \ge 2$, let $k$ be the second smallest element of $J$.
-Let $i = \sigma(1)$ and $j = \sigma(k)$. By
-lemma~\ref{lemma:projection-distances},
+Let $i = \sigma(1)$ and $j = \sigma(k)$. By Lemma~\ref{lemma:projection-distances},
 $$
 \err_{P_i,c_i}(h) = \Pr_{X \sim P_i} \left[ h(X) \neq  c_i(X) \right] \ge \epsilon/2 \qquad \text{or} \qquad
 \err_{P_j,c_j}(h) = \Pr_{X \sim P_j} \left[ h(X) \neq  c_j(X) \right] \ge \epsilon/2 \; .
 $$
-Conditioned on $M$ and $\sigma$, the index $\sigma(\alpha(1)))$ is uniformly distributed over the set $\{i,j\}$,
+Conditioned on $M$ and $\sigma$, the index $\sigma(\alpha(1))$ is uniformly distributed over the set $\{i,j\}$,
 $$
 \Pr \left[ \err_{P_{\sigma(\alpha(1))},c_{\sigma(\alpha(1))}}(A(S)) \ge \epsilon/2 \middle | M = Q \wedge \pi = \sigma \right] \ge 1/2 \; .
 $$
