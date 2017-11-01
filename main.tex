@@ -294,7 +294,10 @@ Using Bonferroni's inequality, we have
 & = \Pr\left[ \bigvee_{j=2}^n C_j = C_1 \right] \\
 & \ge \sum_{i=2}^n \Pr\left[ C_j = C_1 \right] - \sum_{2 \le  j < k \le n} \Pr\left[ C_j = C_k = C_1 \right] \\
 & = \sum_{i=2}^n \left( \prod_{j=1}^m \Pr\left[ M_{i,j} = M_{i,1} \right] \right) - \sum_{2 \le j < k \le n} \left( \prod_{j=1}^m \Pr\left[ M_{i,j} = M_{i,k} = M_{i,1} \right] \right) \\
-& = \sum_{i=2}^n \left( \frac{1}{2} \right)^m - \sum_{2 \le j < k \le n} \left( \frac{1}{2} \epsilon^2 + \frac{1}{2} (1-\epsilon)^2 \right)^m \\
+& = (n-1) \left( \frac{1}{2} \right)^m - \binom{n-1}{2} \left( \frac{1}{2} \epsilon^2 + \frac{1}{2} (1-\epsilon)^2 \right)^m \\
+& = (n-1) \left( \frac{1}{2} \right)^m \left(1 - \frac{n-2}{2}(1 - 2\epsilon + 2\epsilon^2)^m \right) \\
+& \ge (n-1) \left( \frac{1}{2} \right)^m \left(1 - \frac{n-2}{2}(1 - \epsilon)^m \right) \\
+& \ge (n-1) \left( \frac{1}{2} \right)^m \left(1 - \frac{n-2}{2} e^{-m\epsilon} \right) \\
 \end{align*}
 \end{proof}
 
