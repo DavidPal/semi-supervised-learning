@@ -27,11 +27,11 @@
 \section{Realizable Case: Projections}
 
 Let $C_n$ be the class of projections over the domain $\{0,1\}^n$. The concept
-class $C_n$ consists of $n$ functions $c_1, c_2, \dots, c_n$ from $\{0,1\}^n$
-to $\{0,1\}$. For any $i \in \{1,2,\dots,n\}$, the function $c_i$ is defined by $c_i((x_1, x_2,
-\dots, x_n)) = x_i$. The Vapnik-Chervonenkis dimension of $C_n$ is $d = \lfloor
-\log_2 n \rfloor$; see Proposition~\ref{proposition:vc-dimension-projections}
-below.
+class $C_n$ consists of $n$ functions $c_1, c_2, \dots, c_n$ from $\{0,1\}^n$ to
+$\{0,1\}$. For any $i \in \{1,2,\dots,n\}$, the function $c_i$ is defined by
+$c_i((x_1, x_2, \dots, x_n)) = x_i$. The Vapnik-Chervonenkis dimension of $C_n$
+is $d = \lfloor \log_2 n \rfloor$; see
+Proposition~\ref{proposition:vc-dimension-projections} below.
 
 \begin{proposition}
 \label{proposition:vc-dimension-projections}
@@ -46,15 +46,15 @@ least $2^d$ distinct functions in $C_n$. Hence, $d \le \log_2 |C_n| =
 \rfloor$.
 
 On the other hand, we construct a shattered set of size $\lfloor \log_2 n
-\rfloor$. The set will consists of points $x_1, x_2, \dots, x_{\lfloor
-\log_2 n \rfloor} \in \{0,1\}^n$. For any $i \in \{1,2,\dots,\lfloor \log_2 n \rfloor\}$
-and any $j \in \{1,2,\dots,n\}$, we define $x_{i,j}$ to be the $i$-th bit of
-the number $j-1$ in its binary representation. (The bit at position $i=1$ is the least significant bit.)
-It is not hard to see that for any $v \in \{0,1\}^{\lfloor \log_2 n
-\rfloor}$, there exists $c \in C_n$ such that $v = (c(x_1), c(x_2), \dots,
-c(x_{\lfloor \log_2 n \rfloor}))$. Indeed, given $v$, let $k \in \{0,1,\dots,2^{\lfloor \log_2 n
-\rfloor} - 1\}$ be the number with binary representation $v$,
-then we can take $c = c_{k+1}$.
+\rfloor$. The set will consists of points $x_1, x_2, \dots, x_{\lfloor \log_2 n
+\rfloor} \in \{0,1\}^n$. For any $i \in \{1,2,\dots,\lfloor \log_2 n \rfloor\}$
+and any $j \in \{1,2,\dots,n\}$, we define $x_{i,j}$ to be the $i$-th bit of the
+number $j-1$ in its binary representation. (The bit at position $i=1$ is the
+least significant bit.) It is not hard to see that for any $v \in
+\{0,1\}^{\lfloor \log_2 n \rfloor}$, there exists $c \in C_n$ such that $v =
+(c(x_1), c(x_2), \dots, c(x_{\lfloor \log_2 n \rfloor}))$. Indeed, given $v$,
+let $k \in \{0,1,\dots,2^{\lfloor \log_2 n \rfloor} - 1\}$ be the number with
+binary representation $v$, then we can take $c = c_{k+1}$.
 \end{proof}
 
 \cite{Hanneke-2016} showed that for any class $C$ of Vapnik-Chervonenkis
@@ -68,6 +68,100 @@ and a concept which requires at least $\Omega \left(\frac{d +
 at least $1 - \delta$; see~\cite[Theorem 5.3]{Anthony-Bartlett-1999} or
 \cite{Blumer-Ehrenfeucht-Haussler-Warmuth-1989,
 Ehrenfeucht-Haussler-Kearns-Valiant-1989}.
+
+We construct a family of probability distributions $\P_n$ over $\{0,1\}^n$ such that:
+\begin{itemize}
+\item For any $P \in \P_n$, any $\epsilon > 0$ there exists an algorithm such
+that for any $\delta > 0$ the algorithm $\epsilon$-learns any target function $c
+\in C_n$ from $O \left( \frac{\log(1/\delta)}{\epsilon^2} \right)$ examples with
+probability at least $1-\delta$.
+
+\item For any algorithm, there exists
+a probability distribution $P \in \P_n$ and a target function $c \in C_n$
+such that for any $\delta \in (0,\frac{1}{2})$, the algorithm requires
+at least $\Omega(\frac{\log(1/\delta) + \log n}{\log \log n})$ examples to
+$\frac{1}{4}$-learn the target function with probability at least $1-\delta$.
+\end{itemize}
+
+The family $\P_n$ consists of $n! \cdot 2^{n-3}$ probability distributions over
+$\{0,1\}^n$. For any permutation $\sigma \in S_n$ and any bit string $b = (b_4,
+b_5, \dots, b_n) \in \{0,1\}^{n-3}$, we define a probability distribution
+$P_{\sigma,b}$ over $\{0,1\}^n$. To describe the distribution, let $X = (X_1,
+X_2, \dots, X_n)$ be a random vector drawn from it. First, $\Pr_{X \sim P_{\sigma,b}}[X = x] =
+\prod_{i=1}^n \Pr_{X \sim P_{\sigma,b}}[X_i = x_i]$ for any binary vector $(x_1, x_2, \dots, x_n) \in
+\{0,1\}^n$. In other words, $P_{\sigma,b}$ is a product distribution.
+Second, we describe the marginal distributions of each coordinate. Let
+$$
+p_i = \frac{1}{\log_2(1 + i)} \qquad \qquad \text{for $i=1,2,\dots$}
+$$
+The marginal distributions of $X_{\sigma(1)}$, $X_{\sigma(2)}$,
+and $X_{\sigma(3)}$ are
+\begin{align*}
+\Pr[X_{\sigma(1)} = 1] & = 1 \; , \\
+\Pr[X_{\sigma(2)} = 1] & = 0 \; , \\
+\Pr[X_{\sigma(3)} = 1] & = \tfrac{1}{2} \; .
+\end{align*}
+For $i=4,5,\dots,n$, the marginal distributions of $X_{\sigma(i)}$ is
+\begin{align*}
+\Pr[X_{\sigma(i)} = 1] = p_i^{b_i} (1 - p_i)^{b_i} =
+\begin{cases}
+p_i & \text{if $b_i = 1$,} \\
+1 - p_i & \text{if $b_i = 0$.}
+\end{cases}
+\end{align*}
+
+\begin{lemma}[Fixed distribution learning]
+For any $\epsilon > 0$ and any distribution from $P \in \P_n$,
+there exists an algorithm such that for any $\delta > 0$
+the algorithm $\epsilon$-learns any target function
+from $C_n$ from $O \left( \frac{\log(1/\delta)}{\epsilon^2} \right)$
+examples with probability at least $1 - \delta$.
+\end{lemma}
+
+\begin{proof}
+The proof relies on a result of \cite{Benedek-Itai-1991} for learning under
+``fixed'' distributions. If $P$ is any probability distribution on some domain,
+then $d_P(f,g) = \Pr_{X \sim P}[f(X) \neq g(X)]$ is a pseudo-metric on the set of all
+$\{0,1\}$-valued functions on the domain. \cite{Benedek-Itai-1991} proved that
+if a $C$ class of $\{0,1\}$-functions has an $\frac{\epsilon}{2}$-cover of size
+$K$, then any target from $C$ is $\epsilon$-learnable from $O
+\left( \frac{\log K + \log (1/\delta)}{\epsilon}\right)$ examples
+with probability at least $1-\delta$.
+
+We show that for any distribution in $\P_n$ the class $C_n$ has an $\frac{\epsilon}{2}$-cover of size
+$K = \max\{3, \lceil 2^{2/\epsilon}\rceil  - 2 \}$. This will imply the lemma.
+
+Consider distribution $P_{\sigma,b} \in \P_n$ for some $\sigma \in S_n$ and $b
+\in \{0,1\}^{n-1}$. We claim that $C_{\epsilon/2} = \{ c_{\sigma(1)},
+c_{\sigma(2)}, \dots, c_{\sigma(K)}\}$ is an $\frac{\epsilon}{2}$-cover of
+$C_n$. That is, we claim that for any $c \in C_n$, there exists $c' \in
+C_{\epsilon/2}$ such that $d_{P_{\sigma,b}}(c,c') \le \epsilon/2$.
+
+Consider $c_{\sigma(i)}$ for any $i \in \{1,2,\dots,n\}$. If $i \le K$
+then $c_\sigma(i)$ lies in $C_{\epsilon/2}$ and thus, trivially, $d_{P_{\sigma,b}}(c_{\sigma(i)},c_{\sigma(i)}) = 0$.
+Otherwise, if  $i \ge K + 1$, we consider two cases. If $b_i = 1$ then
+\begin{align*}
+d_{P_{\sigma,b}}(c_{\sigma(i)},c_{\sigma(2)})
+= \Pr_{X \sim P_{\sigma,b}}[X_{\sigma(i)} \neq X_{\sigma(2)} ]
+= \Pr_{X \sim P_{\sigma,b}}[X_{\sigma(i)} = 1 ]
+= p_i \le \frac{1}{\log_2(2 + K)}
+\le \epsilon/2 \; .
+\end{align*}
+If $b_i = 0$ then
+\begin{align*}
+d_{P_{\sigma,b}}(c_{\sigma(i)},c_{\sigma(1)})
+= \Pr_{X \sim P_{\sigma,b}}[X_{\sigma(i)} \neq X_{\sigma(1)} ]
+= \Pr_{X \sim P_{\sigma,b}}[X_{\sigma(i)} = 0 ]
+= p_i \le \frac{1}{\log_2(2 + K)}
+\le \epsilon/2 \; .
+\end{align*}
+Here we used that if $X \sim P_{\sigma,b}$
+then $X_{\sigma(1)} = 1$ and $X_{\sigma(2)} = 0$ with probability one.
+\end{proof}
+
+
+
+\section{OLD VERSION: Realizable Case: Projections}
 
 For any $\epsilon \in (0,\frac{1}{2})$,
 we construct a family of probability distributions $\P_{n,\epsilon}$ over $\{0,1\}^n$ such that:
