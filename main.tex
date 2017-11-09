@@ -83,40 +83,39 @@ at least $\Omega(\frac{\log(1/\delta) + \log n}{\log \log n})$ examples to
 $\frac{1}{4}$-learn the target function with probability at least $1-\delta$.
 \end{itemize}
 
-The family $\P_n$ consists of $n! \cdot 2^{n-3}$ probability distributions over
-$\{0,1\}^n$. For any permutation $\sigma \in S_n$ and any bit string $b = (b_4,
-b_5, \dots, b_n) \in \{0,1\}^{n-3}$, we define a probability distribution
+The family $\P_n$ consists of $n! \cdot 2^{n-1}$ probability distributions over
+$\{0,1\}^n$. For any permutation $\sigma \in S_n$ and any bit string $b = (b_1,
+b_2,\dots, b_n) \in \{0,1\}^n$, we define a probability distribution
 $P_{\sigma,b}$ over $\{0,1\}^n$. To describe the distribution, let $X = (X_1,
-X_2, \dots, X_n)$ be a random vector drawn from it. First, $\Pr_{X \sim P_{\sigma,b}}[X = x] =
-\prod_{i=1}^n \Pr_{X \sim P_{\sigma,b}}[X_i = x_i]$ for any binary vector $(x_1, x_2, \dots, x_n) \in
-\{0,1\}^n$. In other words, $P_{\sigma,b}$ is a product distribution.
-Second, we describe the marginal distributions of each coordinate. Let
+X_2, \dots, X_n)$ be a random vector drawn from it. First, $\Pr_{X \sim
+P_{\sigma,b}}[X = x] = \prod_{i=1}^n \Pr_{X \sim P_{\sigma,b}}[X_i = x_i]$ for
+any binary vector $(x_1, x_2, \dots, x_n) \in \{0,1\}^n$. In other words,
+$P_{\sigma,b}$ is a product distribution. Second, we describe the marginal
+distributions of each coordinate. Let
 $$
-p_i = \frac{1}{\log_2(1 + i)} \qquad \qquad \text{for $i=1,2,\dots$}
+p_i = \frac{1}{\log_2(3 + i)} \qquad \qquad \text{for $i=1,2,\dots$}
 $$
-The marginal distributions of $X_{\sigma(1)}$, $X_{\sigma(2)}$,
-and $X_{\sigma(3)}$ are
+For $i=1,2,\dots,n$, the marginal distributions of $X_{\sigma(i)}$ is
 \begin{align*}
-\Pr[X_{\sigma(1)} = 1] & = 1 \; , \\
-\Pr[X_{\sigma(2)} = 1] & = 0 \; , \\
-\Pr[X_{\sigma(3)} = 1] & = \tfrac{1}{2} \; .
-\end{align*}
-For $i=4,5,\dots,n$, the marginal distributions of $X_{\sigma(i)}$ is
-\begin{align*}
-\Pr[X_{\sigma(i)} = 1] = p_i^{b_i} (1 - p_i)^{b_i} =
+\Pr_{X \sim P_{\sigma,b}}[X_{\sigma(i)} = 1] = p_i^{b_i} (1 - p_i)^{b_i} =
 \begin{cases}
 p_i & \text{if $b_i = 1$,} \\
 1 - p_i & \text{if $b_i = 0$.}
 \end{cases}
 \end{align*}
+We note that $\Pr[X_{\sigma(i)} = 1] = \Pr[X_{\sigma(i)} = 0] = p_1 = 1 - p_1 =
+\frac{1}{2}$ regardless of whether $b_1 = 0$ or $b_1 = 1$. Thus, if $b,b' \in \{0,1\}^n$
+differ only in the first coordinate, the corresponding distributions $P_{\sigma,b}$
+and $P_{\sigma,b'}$ are identical. Hence, $\P_n$ has $n! \cdot 2^n / 2 = n! \cdot 2^{n-1}$
+distinct distributions.
 
-\begin{lemma}[Fixed distribution learning]
+\begin{theorem}[Fixed distribution learning]
 For any $\epsilon > 0$ and any distribution from $P \in \P_n$,
 there exists an algorithm such that for any $\delta > 0$
 the algorithm $\epsilon$-learns any target function
 from $C_n$ from $O \left( \frac{\log(1/\delta)}{\epsilon^2} \right)$
 examples with probability at least $1 - \delta$.
-\end{lemma}
+\end{theorem}
 
 \begin{proof}
 The proof relies on a result of \cite{Benedek-Itai-1991} for learning under
@@ -124,39 +123,207 @@ The proof relies on a result of \cite{Benedek-Itai-1991} for learning under
 then $d_P(f,g) = \Pr_{X \sim P}[f(X) \neq g(X)]$ is a pseudo-metric on the set of all
 $\{0,1\}$-valued functions on the domain. \cite{Benedek-Itai-1991} proved that
 if a $C$ class of $\{0,1\}$-functions has an $\frac{\epsilon}{2}$-cover of size
-$K$, then any target from $C$ is $\epsilon$-learnable from $O
-\left( \frac{\log K + \log (1/\delta)}{\epsilon}\right)$ examples
+$N$, then any target from $C$ is $\epsilon$-learnable from $O
+\left( \frac{\log N + \log (1/\delta)}{\epsilon}\right)$ examples
 with probability at least $1-\delta$.
 
 We show that for any distribution in $\P_n$ the class $C_n$ has an $\frac{\epsilon}{2}$-cover of size
-$K = \max\{3, \lceil 2^{2/\epsilon}\rceil  - 2 \}$. This will imply the lemma.
+$N = \max\{3, \lceil 2^{4/\epsilon}\rceil  - 2 \}$. This will imply the lemma.
 
 Consider distribution $P_{\sigma,b} \in \P_n$ for some $\sigma \in S_n$ and $b
-\in \{0,1\}^{n-1}$. We claim that $C_{\epsilon/2} = \{ c_{\sigma(1)},
-c_{\sigma(2)}, \dots, c_{\sigma(K)}\}$ is an $\frac{\epsilon}{2}$-cover of
+\in \{0,1\}^{n-1}$. Let $i$ be the largest index such that $b_i = 1$.
+If not such $i$ exists, we define $i=1$. Likewise, let $j$ be the largest
+index such that $b_j = 0$. If no such index exists, we define $j=1$.
+We claim that $C_{\epsilon/2} = \{ c_{\sigma(i)}, c_{\sigma(j)}, c_{\sigma(1)},
+c_{\sigma(2)}, \dots, c_{\sigma(N-2)}\}$ is an $\frac{\epsilon}{2}$-cover of
 $C_n$. That is, we claim that for any $c \in C_n$, there exists $c' \in
 C_{\epsilon/2}$ such that $d_{P_{\sigma,b}}(c,c') \le \epsilon/2$.
 
-Consider $c_{\sigma(i)}$ for any $i \in \{1,2,\dots,n\}$. If $i \le K$
-then $c_\sigma(i)$ lies in $C_{\epsilon/2}$ and thus, trivially, $d_{P_{\sigma,b}}(c_{\sigma(i)},c_{\sigma(i)}) = 0$.
-Otherwise, if  $i \ge K + 1$, we consider two cases. If $b_i = 1$ then
-\begin{align*}
-d_{P_{\sigma,b}}(c_{\sigma(i)},c_{\sigma(2)})
-= \Pr_{X \sim P_{\sigma,b}}[X_{\sigma(i)} \neq X_{\sigma(2)} ]
-= \Pr_{X \sim P_{\sigma,b}}[X_{\sigma(i)} = 1 ]
-= p_i \le \frac{1}{\log_2(2 + K)}
+Consider $c_{\sigma(k)}$ for any $k \in \{1,2,\dots,n\}$. If $k \le N - 2$
+then $c_\sigma(k)$ lies in $C_{\epsilon/2}$ and thus, trivially, $d_{P_{\sigma,b}}(c_{\sigma(k)},c_{\sigma(k)}) = 0$.
+Otherwise, if  $k \ge N - 1$, we consider two cases. If $b_k = 1$ then $i \ge k$ and $b_i = 1$, and
+\begin{multline*}
+d_{P_{\sigma,b}}(c_{\sigma(i)}, c_{\sigma(k)})
+= \Pr_{X \sim P_{\sigma,b}}[X_{\sigma(i)} \neq X_{\sigma(k)} ] \\
+= p_i (1 - p_k) + p_k (1 - p_i)
+\le p_i + p_k
+\le 2 p_k
+\le \frac{2}{\log_2(3 + k)}
+\le \frac{2}{\log_2(2 + N)}
 \le \epsilon/2 \; .
-\end{align*}
-If $b_i = 0$ then
-\begin{align*}
-d_{P_{\sigma,b}}(c_{\sigma(i)},c_{\sigma(1)})
-= \Pr_{X \sim P_{\sigma,b}}[X_{\sigma(i)} \neq X_{\sigma(1)} ]
-= \Pr_{X \sim P_{\sigma,b}}[X_{\sigma(i)} = 0 ]
-= p_i \le \frac{1}{\log_2(2 + K)}
+\end{multline*}
+If $b_i = 0$ then then $j \ge k$ and $b_j = 0$, and
+\begin{multline*}
+d_{P_{\sigma,b}}(c_{\sigma(j)}, c_{\sigma(k)})
+= \Pr_{X \sim P_{\sigma,b}}[X_{\sigma(j)} \neq X_{\sigma(k)} ] \\
+= p_j (1 - p_k) + p_k (1 - p_j)
+\le p_j + p_k
+\le 2 p_k
+\le \frac{2}{\log_2(3 + k)}
+\le \frac{2}{\log_2(2 + N)}
 \le \epsilon/2 \; .
+\end{multline*}
+\end{proof}
+
+\begin{lemma}
+\label{lemma:projection-distances}
+Let $i \in \{2,3,\dots,n\}$. Let $\alpha \in S_n$ be a permutation
+such that $\alpha(1) = i$ and $\alpha(i)=1$ and $\alpha(j) = j$
+for all $j \neq i$. For any $x \in \{0,1\}$ and any $b \in \{0,1\}^n$,
+let $b(x) \in \{0,1\}^n$ be binary vector such that $b(x)_i = x$
+and $b(x)_j = b_j$ for any $i \neq j$. Let $h:\{0,1\}^n \to \{0,1\}$ be an arbitary function. Then,
+\begin{multline*}
+\Pr_{X \sim P_{id,b(0)}}[h(X) \neq X_1] +
+\Pr_{X \sim P_{id,b(1)}}[h(X) \neq X_1] +
+\Pr_{X \sim P_{\alpha,b(0)}}[h(X) \neq X_1] +
+\Pr_{X \sim P_{\alpha,b(0)}}[h(X) \neq X_1] \ge \epsilon \; .
+\end{multline*}
+\end{lemma}
+
+\begin{proof}
+For any $k \in \{1,2,\dots,n\} \setminus \{i,j\}$, $\Pr_{X \sim P_i}[X_k = 1] = \Pr_{X \sim P_j}[X_k = 1]$.
+Hence, for any $x \in \{0,1\}^n$ such that $x_i \neq x_j$,
+\begin{align*}
+& \frac{\displaystyle \min \left\{ \Pr_{X \sim P_i}[X = x], \ \Pr_{X \sim P_j}[X = x] \right\}}{\displaystyle \Pr_{X \sim P_i}[X = x] + \Pr_{X \sim P_j}[X = x]} \\
+& =  \frac{ \displaystyle
+\left( \prod_{k \in \{1,2,\dots,n\} \setminus \{i,j\}} \Pr_{X \sim P_i}[X_k = x_k] \right) \min \left\{ \Pr_{X \sim P_i}[X_i = x_i] \Pr_{X \sim P_i}[X_j = x_j], \Pr_{X \sim P_j}[X_i = x_i] \Pr_{X \sim P_j}[X_j = x_j]  \right\}
+}{ \displaystyle
+\left( \prod_{k \in \{1,2,\dots,n\} \setminus \{i,j\}} \Pr_{X \sim P_i}[X_k = x_k] \right) \left( \Pr_{X \sim P_i}[X_i = x_i] \Pr_{X \sim P_i}[X_j = x_j] + \Pr_{X \sim P_j}[X_i = x_i] \Pr_{X \sim P_j}[X_j = x_j]  \right)
+} \\
+& = \frac{ \displaystyle \min \left\{ \Pr_{X \sim P_i}[X_i = x_i] \Pr_{X \sim P_i}[X_j = x_j], \Pr_{X \sim P_j}[X_i = x_i] \Pr_{X \sim P_j}[X_j = x_j]  \right\}
+}{ \displaystyle \Pr_{X \sim P_i}[X_i = x_i] \Pr_{X \sim P_i}[X_j = x_j] + \Pr_{X \sim P_j}[X_i = x_i] \Pr_{X \sim P_j}[X_j = x_j] } \\
+& = \frac{ \displaystyle \min \left\{ \frac{1}{2} \epsilon, \ \frac{1}{2} (1-\epsilon) \right\}
+}{ \displaystyle \frac{1}{2} \epsilon + \frac{1}{2} (1-\epsilon) } = \frac{\epsilon/2}{1/2} = \epsilon \; .
 \end{align*}
-Here we used that if $X \sim P_{\sigma,b}$
-then $X_{\sigma(1)} = 1$ and $X_{\sigma(2)} = 0$ with probability one.
+Therefore,
+\begin{align*}
+& \Pr_{X \sim P_i}[h(X) \neq X_i] + \Pr_{X \sim P_j}[h(X) \neq X_j] \\
+& \qquad = \sum_{x \in \{0,1\}^n} \Pr_{X \sim P_i}[X = x \wedge h(x) \neq x_i] + \Pr_{X \sim P_j}[X = x \wedge h(x) \neq x_j] \\
+& \qquad \ge \sum_{\substack{x \in \{0,1\}^n \\ x_i \neq x_j}} \Pr_{X \sim P_i}[X = x \wedge h(x) \neq x_i] + \Pr_{X \sim P_j}[X = x \wedge h(x) \neq x_j] \\
+& \qquad \ge \sum_{\substack{x \in \{0,1\}^n \\ x_i \neq x_j}} \min \left\{ \Pr_{X \sim P_i}[X = x], \ \Pr_{X \sim P_j}[X = x] \right\} \\
+& \qquad = \sum_{\substack{x \in \{0,1\}^n \\ x_i \neq x_j}} \epsilon \left( \Pr_{X \sim P_i}[X = x] + \Pr_{X \sim P_j}[X = x] \right) \\
+& \qquad = \epsilon \left( \Pr_{X \sim P_i}[X_i \neq X_j] + \Pr_{X \sim P_j}[X_i \neq X_j] \right) \\
+& \qquad = \epsilon \left( \frac{1}{2} + \frac{1}{2} \right) \; .
+\end{align*}
+The first inequality is trivial. The second inequality follows from the fact that
+if $x_i \neq x_j$ then $h(x)$ must be equal to either $x_i$ or $x_j$.
+\end{proof}
+
+
+
+\begin{theorem}[Learning without knowledge of the distribution]
+For any algorithm $A$ there exists a distribution $P \in \P_n$
+and a target concept $c \in C_n$ that requires at least $\Omega \left(\frac{\log n + \log(1/\delta)}{\log \log n} \right)$
+examples to $\frac{1}{4}$-learn with probability at least $1 - \delta$.
+\end{theorem}
+
+\begin{proof}
+Fix the number of examples $m$ to be any integer between $0$ and
+$\frac{\log(1/\delta) + \frac{1}{2} \log n}{\log \log n}$. Let $A$ be any
+(possibly improper) learning algorithm. We can formalize it is as a function
+$A:\bigcup_{k=0}^\infty (\{0,1\}^n \times \{0,1\})^k \to \{0,1\}^{\{0,1\}^n}$.
+
+We demostrate the existence of a pair $(P,c) \in \P_n \times C_n$ by
+probabilistic method. Let $\sigma$ be uniformly random permutation over
+$\{1,2,\dots,n\}$ and let $b = (b_1, b_2, \dots, b_n)$ be a vector chosen
+uniformly at random from $\{0,1\}^n$. Let $I = \sigma(1)$; note that $I$ is
+uniformly distributed over $\{1,2,\dots,n\}$. We choose the pair $(P,c)$ to be
+the (random) pair $(P_{\sigma,b},c_I)$.
+
+Let $X_1, X_2, \dots, X_m$ be an i.i.d. sample from $P_{\sigma,b}$ and
+let $Y_1 = c_I(X_1), Y_2 = c_I(X_2), \dots, Y_m = c_I(X_m)$ be the target labels.
+We denote by $S = ((X_1, Y_1), (X_2, Y_2), \dots (X_m, Y_m))$ the input examples.
+We will show that,
+\begin{equation}
+\label{equation:expected-failure-probability}
+\Exp \left[ \Pr \left[\err_{P_{\sigma,b},c_I}(A(S)) \ge \frac{1}{4} \ \middle| \ \sigma, b \, \right] \right] \ge \delta \; .
+\end{equation}
+The inequality \eqref{equation:expected-failure-probability} will imply that
+there exists $\sigma \in S_n$, $b \in \{0,1\}^n$, and $i \in
+\{1,2,\dots,n\}$ such that under the distribution $P_{\sigma,b}$, the
+algorithm $A$ fails to $\frac{1}{4}$-learn the target $c_i$ with probability at least $\delta$.
+
+To prove \eqref{equation:expected-failure-probability}, we first introduce
+necessary notation. Let $Y = (Y_1, Y_2, \dots, Y_m)$ of labels.
+Let $M$ be $m \times n$ binary matrix $M$ with entries
+$M_{i,j} = X_{i,\sigma(j)}$. Note that
+$$
+\Pr[M_{i,j} = 1 ~|~ b_j] =
+p_j^{b_j} (1 - p_j)^{b_j} =
+\begin{cases}
+p_j & \text{if $b_j = 1$,} \\
+1 - p_j & \text{if $b_j = 0$.}
+\end{cases}
+$$
+Also note that the entries $M_{i,j}$ and $\sigma$ are all mutually independent.
+Let $C_1, C_2, \dots, C_n$ be the columns of $M$. Let $J = \{ j ~|~ 1 \le j \le
+n, \ C_j = Y \}$ be the set of columns matching column of labels $Y$. Note that,
+with probability one, $C_1 = Y$ and hence $1 \in J$.
+
+Consider the set of permutations $\{ \pi \in S_n ~|~ \forall i \not \in J, \
+\pi(i) = i\}$. Given $J$, we define $\alpha$ to be a permutation chosen
+uniformly at random from this set. In other words, $\alpha$ randomly permutes
+elements of $J$ and keeps each element of $\{1,2,\dots,n\} \setminus J$ at its
+original position.
+
+Note that $\sigma$ and $\alpha$ are independent; this is due the fact that
+$\alpha$ is a function of $J$ which in turn is a function of $M$. Somewhat less
+obviously, $\sigma \circ \alpha$ and $M$ are independent; this is due to the
+fact that conditioned on $M$, $\sigma \circ \alpha$ is a uniformly random
+permutation. Therefore, trivially, $(M,\sigma)$ and $(M, \sigma \circ \alpha)$
+have the same joint distribution.
+
+Futhermore, $X_{i,\sigma(j)} = X_{i,\sigma(\alpha(j))} = M_{i,j}$ for all
+$i,j$, since $\alpha$ permutes only identical columns of $M$. Hence,
+$(S,\sigma)$ and $(S,\sigma \circ \alpha)$ have the same joint distribution.
+\begin{align*}
+\Exp \left[ \Pr \left[\err_{P_{\sigma, b},c_\sigma(1)}(A(S)) \ge \frac{1}{4} \ \middle| \ I \, \right] \right]
+& = \Exp \left[ \Exp \left[ \indicator{ \err_{P_{\sigma, b},c_\sigma(1)}(A(S)) \ge \frac{1}{4}} \ \middle| \ I \, \right] \right] \\
+& = \Exp \left[ \indicator{ \err_{P_{\sigma,b},c_\sigma(1)}(A(S)) \ge \frac{1}{4}} \right] \\
+& = \Pr \left[ \err_{P_{\sigma, b},c_\sigma(1)}(A(S)) \ge \frac{1}{4} \right] \\
+& = \Pr \left[ \err_{P_{\sigma \circ \alpha, b},c_{\sigma(\alpha(1))}}(A(S)) \ge \frac{1}{4} \right] \; .
+\end{align*}
+
+For any subset $K \subseteq \{1,2,3,\dots,n\}$, let $L(K)$ bet set all of all $m
+\times n$ binary matrices such that $K$ is the set of indices of columns equal
+to the first column. Thus,
+\begin{align*}
+& \Pr \left[ \err_{P_{\sigma \circ \alpha, b},c_{\sigma(\alpha(1))}}(A(S)) \ge \frac{1}{4} \right] \\
+& \ge \Pr \left[ |J| \ge 2 \wedge \err_{P_{\sigma \circ \alpha, b},c_{\sigma(\alpha(1))}}(A(S)) \ge \frac{1}{4} \right] \\
+& = \sum_{\substack{K \subseteq \{1,2,3,\dots,n\} \\ |K| \ge 2}} \Pr \left[ J = K \wedge \err_{P_{\sigma \circ \alpha, b},c_{\sigma(\alpha(1))}}(A(S)) \ge \frac{1}{4} \right] \\
+& = \sum_{\substack{K \subseteq \{1,2,3,\dots,n\} \\ |K| \ge 2}} \sum_{Q \in L(K)} \Pr \left[ M = Q \wedge \err_{P_{\sigma \circ \alpha, b},c_{\sigma(\alpha(1))}}(A(S)) \ge \frac{1}{4} \right] \\
+& = \sum_{\substack{K \subseteq \{1,2,3,\dots,n\} \\ |K| \ge 2}} \sum_{Q \in L(K)} \sum_{\pi \in S_n} \Pr \left[ M = Q \wedge \sigma = \pi \wedge \err_{P_{\sigma \circ \alpha, b},c_{\sigma(\alpha(1))}}(A(S)) \ge \frac{1}{4} \right] \\
+& = \sum_{\substack{K \subseteq \{1,2,3,\dots,n\} \\ |K| \ge 2}} \sum_{Q \in L(K)} \sum_{\pi \in S_n} \Pr \left[ M = Q \wedge \sigma = \pi \right] \Pr \left[ \err_{P_{\sigma \circ \alpha, b},c_{\sigma(\alpha(1))}}(A(S)) \ge \frac{1}{4} ~\middle|~ M = Q \wedge \sigma = \pi \right] \; .
+\end{align*}
+Given $M$ and $\sigma$, the values of $S$, $J$ and $A(S)$ are determined.
+Let $h = A(S)$. By Corollary~\ref{corollary:projection-distances}, for at least $|J| - 1$
+indices $i \in J$,
+$$
+\err_{P_i,c_i}(h) = \Pr_{X \sim P_i} \left[ h(X) \neq  c_i(X) \right] \ge \frac{1}{4} \; .
+$$
+Conditioned on $M$ and $\sigma$, the index $\sigma(\alpha(1))$ is uniformly distributed over the set $J$. Hence, if $Q \in L(K)$ and $|K| \ge 2$,
+$$
+\Pr \left[ \err_{P_{\sigma(\alpha(1))},c_{\sigma(\alpha(1))}}(A(S)) \ge \epsilon/2 ~\middle|~ M = Q \wedge \pi = \sigma \right] \ge \frac{|K|-1}{|K|} \ge \frac{1}{2} \; .
+$$
+We can conclude that
+\begin{align*}
+\Exp \left[ \Pr \left[\err_{P_I,c_I}(A(S)) \ge \epsilon/2 \ \middle| \ I \, \right] \right]
+& \ge \frac{1}{2} \sum_{\substack{K \subseteq \{1,2,3,\dots,n\} \\ |K| \ge 2}} \sum_{Q \in L(K)} \sum_{\pi \in S_n} \Pr \left[ M = Q \wedge \sigma = \pi \right] \\
+& = \frac{1}{2} \Pr \left[ |J| \ge 2 \right] \; .
+\end{align*}
+It remains to show that $\Pr \left[ |J| \ge 2 \right] \ge 2 \delta$.
+Recall that $J$ is the subset of columns $C_1, C_2, \dots, C_n$ that are equal to $C_1$.
+Using Bonferroni's inequality, we have
+\begin{align*}
+\Pr\left[ |J| \ge 2 \right]
+& = \Pr\left[ \bigvee_{j=2}^n C_j = C_1 \right] \\
+& \ge \sum_{i=2}^n \Pr\left[ C_j = C_1 \right] - \sum_{2 \le  j < k \le n} \Pr\left[ C_j = C_k = C_1 \right] \\
+& = \sum_{i=2}^n \left( \prod_{j=1}^m \Pr\left[ M_{i,j} = M_{i,1} \right] \right) - \sum_{2 \le j < k \le n} \left( \prod_{j=1}^m \Pr\left[ M_{i,j} = M_{i,k} = M_{i,1} \right] \right) \\
+& = (n-1) \left( \frac{1}{2} \right)^m - \binom{n-1}{2} \left( \frac{1}{2} \epsilon^2 + \frac{1}{2} (1-\epsilon)^2 \right)^m \\
+& = (n-1) \left( \frac{1}{2} \right)^m \left(1 - \frac{n-2}{2}(1 - 2\epsilon + 2\epsilon^2)^m \right) \\
+& \ge (n-1) \left( \frac{1}{2} \right)^m \left(1 - \frac{n-2}{2}(1 - \epsilon)^m \right) \\
+& \ge (n-1) \left( \frac{1}{2} \right)^m \left(1 - \frac{n-2}{2} e^{-m\epsilon} \right) \\
+\end{align*}
 \end{proof}
 
 
