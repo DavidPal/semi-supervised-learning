@@ -301,30 +301,19 @@ Let $C_1, C_2, \dots, C_n$ be the columns of $M$. Let $J = \{ j ~|~ 1 \le j \le
 n, \ C_j = Y \}$ be the set of columns matching column of labels $Y$. Note that,
 with probability one, $C_1 = Y$ and hence $1 \in J$.
 
-We define a random permutation $\alpha$. Let $r$ be the largest index in
-$J$. With probability $1/2$, $\alpha$ is the identity permutation, and with
-probability $1/2$, $\alpha$ is the swap of $1$ and $r$.
+Let $R$ be the largest index in $J$. Let $\alpha \in S_n$ be the permutation
+that swaps $1$ and $R$ and keeps all the other elements in place. Let $a \in
+\{0,1\}^n$ be the vector obtained from $b$ by flipping $R$-th coordinate.
+That is, $a_R = 1 - b_R$ and for any other coordinate $j$, $a_j = b_j$.
 
-Note that $\sigma$ and $\alpha$ are independent. Somewhat less
-obviously, $\sigma \circ \alpha$ and $M$ are independent; this is due to the
-fact that conditioned on $M$, $\sigma \circ \alpha$ is a uniformly random
-permutation. Therefore, trivially, $(M,\sigma)$ and $(M, \sigma \circ \alpha)$
-have the same joint distribution.
-
-Futhermore, $X_{i,\sigma(j)} = X_{i,\sigma(\alpha(j))} = M_{i,j}$ for all
-$i,j$, since $\alpha$ permutes only identical columns of $M$. Hence,
-$(S,\sigma)$ and $(S,\sigma \circ \alpha)$ have the same joint distribution.
-\begin{align*}
-\Exp \left[ \Pr \left[\err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \ \middle| \ I \, \right] \right]
-& = \Exp \left[ \Exp \left[ \indicator{ \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4}} \ \middle| \ I \, \right] \right] \\
-& = \Exp \left[ \indicator{ \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4}} \right] \\
-& = \Pr \left[ \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] \\
-& = \Pr \left[ \err_{c_{\sigma(\alpha(1))},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right] \; .
-\end{align*}
-
-For any subset $K \subseteq \{1,2,3,\dots,n\}$, let $L(K)$ bet set all of all $m
-\times n$ binary matrices such that $K$ is the set of indices of columns equal
-to the first column. Thus,
+Note that $\sigma$ and $\alpha$ are independent. Somewhat less obviously,
+$\sigma \circ \alpha$ and $M$ are independent and thus $(M,\sigma)$ and $(M,
+\sigma \circ \alpha)$ have the same distribution; this is due to the fact that
+conditioned on $M$, both $\sigma$ and $\sigma \circ \alpha$ have uniform
+distribution over $S_n$. Futhermore, $X_{i,\sigma(j)} = X_{i,\sigma(\alpha(j))} =
+M_{i,j}$ for all $i,j$, since $\alpha$ permutes only identical columns of $M$.
+Hence, $(S,\sigma)$ and $(S,\sigma \circ \alpha)$ have the same joint
+distribution. Therefore,
 \begin{align*}
 & \Pr \left[ \err_{c_{\sigma(1),P_{\sigma, b}}}(A(S)) \ge \frac{1}{4} \right] \\
 & \ge \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] \\
@@ -333,36 +322,35 @@ to the first column. Thus,
 & \qquad + \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right] \\
 & \ge \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} p_n^m  \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, a}}(A(S)) \ge \frac{1}{4} \right] \\
 & \qquad + \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, a}}(A(S)) \ge \frac{1}{4} \right] \\
+& \ge \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} p_n^m  \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, a}}(A(S)) \ge \frac{1}{4} \right] \\
+& \qquad + \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, a}}(A(S)) \ge \frac{1}{4} \right] \\
+& \ge \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \left( \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \vee \err_{c_{\sigma(1)},P_{\sigma, a}}(A(S)) \ge \frac{1}{4} \right. \right. \\
+& \qquad \qquad \qquad \left. \left. \vee \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \vee \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, a}}(A(S)) \ge \frac{1}{4} \right) \right] \\
+& = \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \right] \; .
 \end{align*}
-Given $M$ and $\sigma$, the values of $S$, $J$ and $A(S)$ are determined.
-Let $h = A(S)$. By Corollary~\ref{corollary:projection-distances}, for at least $|J| - 1$
-indices $i \in J$,
+The last equality follows from Lemma~\ref{lemma:projection-distances}.
+
+It remains to show that $\frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \right] \ge \delta$.
+We first show that
 $$
-\err_{P_i,c_i}(h) = \Pr_{X \sim P_i} \left[ h(X) \neq  c_i(X) \right] \ge \frac{1}{4} \; .
+\Pr \left[ |J| \ge 2 \right] \ge \frac{1}{2} \; .
 $$
-Conditioned on $M$ and $\sigma$, the index $\sigma(\alpha(1))$ is uniformly distributed over the set $J$. Hence, if $Q \in L(K)$ and $|K| \ge 2$,
+Recall that $J$ is the subset of columns $C_1, C_2, \dots, C_n$ that are equal
+to $C_1$. Let $x \in \{0,1\}^m$ be any binary vector. Conditioned on the event
+$C_1 = x$, the events $C_2 = x$, $C_3 = x$, \dots, $C_n = x$ are independent.
+Futhermore, $\Pr[C_j = x | C_1 = x] \ge p_n^m$.
 $$
-\Pr \left[ \err_{P_{\sigma(\alpha(1))},c_{\sigma(\alpha(1))}}(A(S)) \ge \epsilon/2 ~\middle|~ M = Q \wedge \pi = \sigma \right] \ge \frac{|K|-1}{|K|} \ge \frac{1}{2} \; .
+\Pr \left[ \bigwedge_{j=2}^n \{C_j \neq x\} ~\middle|~ C_1 = x \right] = \prod_{j=2}^n \Pr[C_j \neq x | C_1 = x] \le (1 - p_n^m)^{n-1} \le (1 - p_n^m)^n \; .
 $$
-We can conclude that
-\begin{align*}
-\Exp \left[ \Pr \left[\err_{P_I,c_I}(A(S)) \ge \epsilon/2 \ \middle| \ I \, \right] \right]
-& \ge \frac{1}{2} \sum_{\substack{K \subseteq \{1,2,3,\dots,n\} \\ |K| \ge 2}} \sum_{Q \in L(K)} \sum_{\pi \in S_n} \Pr \left[ M = Q \wedge \sigma = \pi \right] \\
-& = \frac{1}{2} \Pr \left[ |J| \ge 2 \right] \; .
-\end{align*}
-It remains to show that $\Pr \left[ |J| \ge 2 \right] \ge 2 \delta$.
-Recall that $J$ is the subset of columns $C_1, C_2, \dots, C_n$ that are equal to $C_1$.
-Using Bonferroni's inequality, we have
-\begin{align*}
-\Pr\left[ |J| \ge 2 \right]
-& = \Pr\left[ \bigvee_{j=2}^n C_j = C_1 \right] \\
-& \ge \sum_{i=2}^n \Pr\left[ C_j = C_1 \right] - \sum_{2 \le  j < k \le n} \Pr\left[ C_j = C_k = C_1 \right] \\
-& = \sum_{i=2}^n \left( \prod_{j=1}^m \Pr\left[ M_{i,j} = M_{i,1} \right] \right) - \sum_{2 \le j < k \le n} \left( \prod_{j=1}^m \Pr\left[ M_{i,j} = M_{i,k} = M_{i,1} \right] \right) \\
-& = (n-1) \left( \frac{1}{2} \right)^m - \binom{n-1}{2} \left( \frac{1}{2} \epsilon^2 + \frac{1}{2} (1-\epsilon)^2 \right)^m \\
-& = (n-1) \left( \frac{1}{2} \right)^m \left(1 - \frac{n-2}{2}(1 - 2\epsilon + 2\epsilon^2)^m \right) \\
-& \ge (n-1) \left( \frac{1}{2} \right)^m \left(1 - \frac{n-2}{2}(1 - \epsilon)^m \right) \\
-& \ge (n-1) \left( \frac{1}{2} \right)^m \left(1 - \frac{n-2}{2} e^{-m\epsilon} \right) \\
-\end{align*}
+Summing over all possible choices of $x$, we get
+$$
+\Pr[|J| \le 1] = \Pr \left[ \bigwedge_{j=2}^n \{C_j \neq C_1\} \right] \le (1 - p_n^m)^n \le e^{-n p_n^m} \; .
+$$
+To prove that $e^{-n p_n^m} \le \frac{1}{2}$, we show the equivalent statement $\ln \ln e^{n p_n^m} \ge \ln \ln 2$.
+Indeed,
+$$
+\ln \ln e^{n p_n^m} = \ln n + m \ln p_n = \ln n + m \ln \log_2(3+n)
+$$
 \end{proof}
 
 \section{Realizable Case: Monotone Disjuctions}
