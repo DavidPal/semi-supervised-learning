@@ -1,6 +1,7 @@
 \documentclass[10pt]{article}
 
 \usepackage{fullpage}
+\usepackage{graphics}
 \usepackage{natbib}
 \usepackage{amssymb,amsthm,amsmath}
 
@@ -17,20 +18,95 @@
 \DeclareMathOperator{\err}{err}
 \DeclareMathOperator{\Exp}{\mathbf{E}}
 
-\title{Semi-supervised learning}
-\author{Alexander Golovnev \and D\'avid P\'al}
 
 \begin{document}
 
+\title{Semi-supervised learning: The value of unlabeled data}
+\author{Alexander Golovnev \and D\'avid P\'al \and Bal\'azs Sz\"or\'enyi}
+
 \maketitle
+
+\begin{abstract}
+We show a separation of labeled sample complexity between learning \emph{with}
+and \emph{without} the knowledge of the distribution of the unlabeled data. For
+the class of projections over the boolean hypercube of dimension $n$, we show a
+separation by $\Theta(\log n)$ multiplicative factor.
+
+Learning with the knowledge of the distribution (a.k.a. \emph{fixed-distribution
+learning}) can be viewed as an idealized scenario of semi-supervised learning
+where the number of unlabeled data points is so great that the unlabeled
+distribution is known almost exactly. For this reason, we call the separation
+the \emph{value of unlabeled data}.
+\end{abstract}
+
 
 \section{Realizable Case: Projections}
 
-Let $C_n$ be the class of projections over the domain $\{0,1\}^n$. The concept
+\cite{Hanneke-2016} showed that for any class $C$ of Vapnik-Chervonenkis
+dimension $d$ there exists an algorithm that $\epsilon$-learns any target
+function under any domain distribution  from $O\left(\frac{d +
+\log(1/\delta)}{\epsilon}\right)$ examples with probability at least $1-\delta$.
+On the other hand, for any algorithm and any class $C$ of Vapnik-Chervonenkis dimension
+$d \ge 2$ and any $\epsilon \in (0,1)$ and $\delta \in (0,1)$ there exists a
+distribution over the domain and a concept which requires at least $\Omega
+\left(\frac{d + \log(1/\delta)}{\epsilon}\right)$ examples to $\epsilon$-learn
+with probability at least $1 - \delta$; see~\cite[Theorem
+5.3]{Anthony-Bartlett-1999} or \cite{Blumer-Ehrenfeucht-Haussler-Warmuth-1989,
+Ehrenfeucht-Haussler-Kearns-Valiant-1989}.
+
+The proof of the lower bound constructs a distribution that does \emph{not}
+depend on the algorithm. (The distribution is a fixed distribution over a
+fixed set shattered by $C$.) So even an algorithm that ``knows'' (``is tailored
+to'') the distribution requires $\Omega \left(\frac{d +
+\log(1/\delta)}{\epsilon}\right)$ to learn.
+
+Let $C_n$ be the class of projections over $\{0,1\}^n$. Vapnik-Chervonenkis
+dimension of $C_n$ is $\lfloor \log_2 n \rfloor$. We construct a family of
+probability distributions $\P_n$ over $\{0,1\}^n$ such that:
+
+\begin{itemize}
+\item For any $P \in \P_n$, any $\epsilon > 0$ there exists an algorithm such
+that for any $\delta > 0$ the algorithm $\epsilon$-learns any target function $c
+\in C_n$ from $O \left( \frac{\log(1/\delta)}{\epsilon^2} \right)$ examples with
+probability at least $1-\delta$.
+
+\item For any algorithm, there exists
+a probability distribution $P \in \P_n$ and a target function $c \in C_n$
+such that for any $\delta \in (0,\frac{1}{2})$, the algorithm requires
+at least $\Omega(\frac{\log(1/\delta) + \log n}{\log \log n})$ examples to
+$\frac{1}{4}$-learn the target function with probability at least $1-\delta$.
+\end{itemize}
+%
+The situation for constant $\epsilon$ and $\delta$ is summarized in
+Figure~\ref{figure:sample-complexity}.
+
+\begin{figure}
+\centering
+\includegraphics{figure}
+\caption{The graph shows sample complexity of learning a class of projections
+$C_n$ under various distributions over the domain $\{0,1\}^n$. We assume that
+$\epsilon$ and $\delta$ are constant; e.g. $\epsilon = \delta = 0.1$. The graph
+shows three lines. The red horizontal line is the optimal PAC sample complexity for class of
+projections, which is $\Theta(VC(C_n)) = \Theta(\log_2 n)$. The green line corresponds to
+the optimal sample complexity for fixed-distribution learning, i.e., the learning where algorithm ``knows''
+(``is tailored to'') the specific distribution. The green line touches the red
+line for certain distributions, but is lower for other distributions.
+In particular, for certain distributions the green line is $O(1)$.
+The black line is the sample complexity for an arbitrary fixed algorithm
+that does \emph{not} receive the distribution as input. (For example, the reader can think of the ERM
+algorithm.) Obviously, the black line must lie above the green line. In this paper,
+we prove that there exist a distribution where the black line is $\Omega(\log
+n)$ times higher than green line.}
+\label{figure:sample-complexity}
+\end{figure}
+
+\section{Preliminaries}
+
+We denote by $C_n$ the class of projections over the domain $\{0,1\}^n$. The
 class $C_n$ consists of $n$ functions $c_1, c_2, \dots, c_n$ from $\{0,1\}^n$ to
-$\{0,1\}$. For any $i \in \{1,2,\dots,n\}$, the function $c_i$ is defined by
-$c_i((x_1, x_2, \dots, x_n)) = x_i$. The Vapnik-Chervonenkis dimension of $C_n$
-is $d = \lfloor \log_2 n \rfloor$; see
+$\{0,1\}$. For any $i \in \{1,2,\dots,n\}$, for any $x \in \{0,1\}^n$,
+the function $c_i$ is defined as $c_i((x[1], x[2], \dots, x[n])) = x[i]$.
+The Vapnik-Chervonenkis dimension of $C_n$ is $d = \lfloor \log_2 n \rfloor$; see
 Proposition~\ref{proposition:vc-dimension-projections} below.
 
 \begin{proposition}
@@ -48,8 +124,8 @@ least $2^d$ distinct functions in $C_n$. Hence, $d \le \log_2 |C_n| =
 On the other hand, we construct a shattered set of size $\lfloor \log_2 n
 \rfloor$. The set will consists of points $x_1, x_2, \dots, x_{\lfloor \log_2 n
 \rfloor} \in \{0,1\}^n$. For any $i \in \{1,2,\dots,\lfloor \log_2 n \rfloor\}$
-and any $j \in \{1,2,\dots,n\}$, we define $x_{i,j}$ to be the $i$-th bit of the
-number $j-1$ in its binary representation. (The bit at position $i=1$ is the
+and any $j \in \{0,1,2,\dots,n-1\}$, we define $x_i[j]$ to be the $i$-th bit of the
+in the binary representation of the number $j$. (The bit at position $i=1$ is the
 least significant bit.) It is not hard to see that for any $v \in
 \{0,1\}^{\lfloor \log_2 n \rfloor}$, there exists $c \in C_n$ such that $v =
 (c(x_1), c(x_2), \dots, c(x_{\lfloor \log_2 n \rfloor}))$. Indeed, given $v$,
@@ -57,57 +133,16 @@ let $k \in \{0,1,\dots,2^{\lfloor \log_2 n \rfloor} - 1\}$ be the number with
 binary representation $v$, then we can take $c = c_{k+1}$.
 \end{proof}
 
-\cite{Hanneke-2016} showed that for any class $C$ of Vapnik-Chervonenkis
-dimension $d$ there exists an algorithm that $\epsilon$-learns any target function
-under any domain distribution  from $O\left(\frac{d + \log(1/\delta)}{\epsilon}\right)$
-examples with probability at least $1-\delta$. Futhermore, for any algorithm
-and any class $C$ of Vapnik-Chervonenkis dimension $d \ge 2$ and any $\epsilon
-\in (0,1)$ and $\delta \in (0,1)$ there exists a distribution over the domain
-and a concept which requires at least $\Omega \left(\frac{d +
-\log(1/\delta)}{\epsilon}\right)$ examples to $\epsilon$-learn with probability
-at least $1 - \delta$; see~\cite[Theorem 5.3]{Anthony-Bartlett-1999} or
-\cite{Blumer-Ehrenfeucht-Haussler-Warmuth-1989,
-Ehrenfeucht-Haussler-Kearns-Valiant-1989}.
-
-We construct a family of probability distributions $\P_n$ over $\{0,1\}^n$ such that:
-\begin{itemize}
-\item For any $P \in \P_n$, any $\epsilon > 0$ there exists an algorithm such
-that for any $\delta > 0$ the algorithm $\epsilon$-learns any target function $c
-\in C_n$ from $O \left( \frac{\log(1/\delta)}{\epsilon^2} \right)$ examples with
-probability at least $1-\delta$.
-
-\item For any algorithm, there exists
-a probability distribution $P \in \P_n$ and a target function $c \in C_n$
-such that for any $\delta \in (0,\frac{1}{2})$, the algorithm requires
-at least $\Omega(\frac{\log(1/\delta) + \log n}{\log \log n})$ examples to
-$\frac{1}{4}$-learn the target function with probability at least $1-\delta$.
-\end{itemize}
-
-The family $\P_n$ consists of $n! \cdot 2^{n-1}$ probability distributions over
-$\{0,1\}^n$. For any permutation $\sigma \in S_n$ and any bit string $b = (b_1,
-b_2,\dots, b_n) \in \{0,1\}^n$, we define a probability distribution
-$P_{\sigma,b}$ over $\{0,1\}^n$. To describe the distribution, let $X = (X_1,
-X_2, \dots, X_n)$ be a random vector drawn from it. First, $\Pr_{X \sim
-P_{\sigma,b}}[X = x] = \prod_{i=1}^n \Pr_{X \sim P_{\sigma,b}}[X_i = x_i]$ for
-any binary vector $(x_1, x_2, \dots, x_n) \in \{0,1\}^n$. In other words,
-$P_{\sigma,b}$ is a product distribution. Second, we describe the marginal
-distributions of each coordinate. Let
+The family $\P_n$ consists of $n!$ probability distributions over
+$\{0,1\}^n$. For any permutation $\sigma \in S_n$, we define a probability distribution
+$P_{\sigma}$ over $\{0,1\}^n$. To describe the distribution $P_\sigma$, let $X = (X_1,
+X_2, \dots, X_n)$ be a random vector with this distribution.
+The distribution is a product distribution, i.e., $\Pr[X = x] = \prod_{i=1}^n \Pr_{X}[X_i = x[i]]$
+for any $x \in \{0,1\}^n$. The marginal
+distribution of each coordinate $i$ is
 $$
-p_i = \frac{1}{\log_2(3 + i)} \qquad \qquad \text{for $i=1,2,\dots$}
+\Pr[X_{\sigma(i)} = 1] = p_i = \frac{1}{\log_2(3 + i)} \; .
 $$
-For $i=1,2,\dots,n$, the marginal distributions of $X_{\sigma(i)}$ is
-\begin{align*}
-\Pr_{X \sim P_{\sigma,b}}[X_{\sigma(i)} = 1] = p_i^{b_i} (1 - p_i)^{b_i} =
-\begin{cases}
-p_i & \text{if $b_i = 1$,} \\
-1 - p_i & \text{if $b_i = 0$.}
-\end{cases}
-\end{align*}
-We note that $\Pr[X_{\sigma(1)} = 1] = \Pr[X_{\sigma(1)} = 0] = p_1 = 1 - p_1 =
-\frac{1}{2}$ regardless of whether $b_1 = 0$ or $b_1 = 1$. Thus, if $b,b' \in \{0,1\}^n$
-differ only in the first coordinate, the corresponding distributions $P_{\sigma,b}$
-and $P_{\sigma,b'}$ are identical. Hence, $\P_n$ has $n! \cdot 2^n / 2 = n! \cdot 2^{n-1}$
-distinct distributions.
 
 \begin{theorem}[Fixed distribution learning]
 For any $\epsilon > 0$ and any distribution from $P \in \P_n$,
@@ -130,49 +165,137 @@ with probability at least $1-\delta$.
 We show that for any distribution in $\P_n$ the class $C_n$ has an $\frac{\epsilon}{2}$-cover of size
 $N = \max\{3, \lceil 2^{4/\epsilon}\rceil  - 2 \}$. This will imply the lemma.
 
-Consider distribution $P_{\sigma,b} \in \P_n$ for some $\sigma \in S_n$ and $b
-\in \{0,1\}^{n-1}$. Let $i$ be the largest index such that $b_i = 1$.
-If not such $i$ exists, we define $i=1$. Likewise, let $j$ be the largest
-index such that $b_j = 0$. If no such index exists, we define $j=1$.
-We claim that $C_{\epsilon/2} = \{ c_{\sigma(i)}, c_{\sigma(j)}, c_{\sigma(1)},
-c_{\sigma(2)}, \dots, c_{\sigma(N-2)}\}$ is an $\frac{\epsilon}{2}$-cover of
+Consider distribution $P_{\sigma} \in \P_n$ for some $\sigma \in S_n$.
+We claim that $C_{\epsilon/2} = \{ c_{\sigma(1)},
+c_{\sigma(2)}, \dots, c_{\sigma(N)} \}$ is an $\frac{\epsilon}{2}$-cover of
 $C_n$. That is, we claim that for any $c \in C_n$, there exists $c' \in
-C_{\epsilon/2}$ such that $d_{P_{\sigma,b}}(c,c') \le \epsilon/2$.
+C_{\epsilon/2}$ such that $d_{P_{\sigma}}(c,c') \le \epsilon/2$.
 
-Consider $c_{\sigma(k)}$ for any $k \in \{1,2,\dots,n\}$. If $k \le N - 2$
-then $c_\sigma(k)$ lies in $C_{\epsilon/2}$ and thus, trivially, $d_{P_{\sigma,b}}(c_{\sigma(k)},c_{\sigma(k)}) = 0$.
-Otherwise, if  $k \ge N - 1$, we consider two cases. If $b_k = 1$ then $i \ge k$ and $b_i = 1$, and
-\begin{multline*}
-d_{P_{\sigma,b}}(c_{\sigma(i)}, c_{\sigma(k)})
-= \Pr_{X \sim P_{\sigma,b}}[X_{\sigma(i)} \neq X_{\sigma(k)} ] \\
-= p_i (1 - p_k) + p_k (1 - p_i)
-\le p_i + p_k
-\le 2 p_k
-\le \frac{2}{\log_2(3 + k)}
-\le \frac{2}{\log_2(2 + N)}
-\le \epsilon/2 \; .
-\end{multline*}
-If $b_i = 0$ then then $j \ge k$ and $b_j = 0$, and
-\begin{multline*}
-d_{P_{\sigma,b}}(c_{\sigma(j)}, c_{\sigma(k)})
-= \Pr_{X \sim P_{\sigma,b}}[X_{\sigma(j)} \neq X_{\sigma(k)} ] \\
-= p_j (1 - p_k) + p_k (1 - p_j)
-\le p_j + p_k
-\le 2 p_k
-\le \frac{2}{\log_2(3 + k)}
-\le \frac{2}{\log_2(2 + N)}
-\le \epsilon/2 \; .
-\end{multline*}
+Any $c \in C_n$ is of the form $c = c_{\sigma(k)}$ for some $k \in \{1,2,\dots,n\}$.
+If $k \le N$ then $c_{\sigma(k)}$ lies in $C_{\epsilon/2}$ and thus, trivially, $d_{P_{\sigma}}(c_{\sigma(k)},c_{\sigma(k)}) = 0$.
+Otherwise, if  $k \ge N + 1$,
+\begin{align*}
+d_{P_{\sigma}}(c_{\sigma(N)}, c_{\sigma(k)})
+& = \Pr_{X \sim P_{\sigma}}[X_{\sigma(N)} \neq X_{\sigma(k)} ] \\
+& = p_N (1 - p_k) + p_k (1 - p_N) \\
+& \le p_N + p_k \\
+& \le 2 p_N \\
+& \le \frac{2}{\log_2(2 + N)} \\
+& \le \epsilon/2 \; .
+\end{align*}
 \end{proof}
 
-For any function $h:\{0,1\}^n \to \{0,1\}$, any vector $b \in \{0,1\}^n$,
-any permutation $\sigma \in S_n$, any projection $c_i \in C_n$, define
+For any function $h:\{0,1\}^n \to \{0,1\}$ any permutation $\sigma \in S_n$, any
+projection $i \in \{1,2,\dots,n\}$, define
 $$
-\err_{c_i,P_{\sigma,b}} = \Pr_{X \sim P_{\sigma,b}}[h(X) \neq c_i(X)] \; .
+\err_{\sigma,i}(h) = \Pr_{X \sim P_{\sigma}}[h(X) \neq c_i(X)] \; .
 $$
-In other words, $\err_{P_{\sigma,b},c_i}$ is
-the error of $h$ with respect to the target $c_i$
-under the distribution $P_{\sigma,b}$.
+In other words, $\err_{\sigma,i}$ is the error of $h$ with respect to the target
+$c_i$ under the distribution $P_{\sigma}$.
+
+\begin{theorem}[Learning without knowledge of the distribution]
+For any algorithm $A$ there exists a distribution $P \in \P_n$
+and a target concept $c \in C_n$ that requires at least $\Omega \left(??? \right)$
+labeled examples to $\epsilon$-learn with probability at least $1 - \delta$.
+\end{theorem}
+
+\begin{proof}
+Fix the number of examples $m$ to be any non-negative less than $\log n$. Let $A$
+be any (possibly improper) learning algorithm. We can formalize it is as a
+function $A:\bigcup_{k=0}^\infty (\{0,1\}^n \times \{0,1\})^k \to
+\{0,1\}^{\{0,1\}^n}$.
+
+We demostrate the existence of a pair $(P,c) \in \P_n \times C_n$ by
+probabilistic method. Let $\sigma$ be uniformly random permutation over
+$\{1,2,\dots,n\}$. Let $I = \sigma(1)$; note that $I$ is uniformly distributed
+over $\{1,2,\dots,n\}$. We will show that if we feed $A$ an i.i.d. sample of
+size $m$ from $P_\sigma$ labeled according to $c_I$, with probability at least
+$\delta$ the error of the algorithm is at least $\epsilon$. This will imply
+the existence of the pair $(P,c)$.
+
+Formally, let $X_1, X_2, \dots, X_m$ be an i.i.d. sample from $P_{\sigma}$ and
+let $Y_1 = c_I(X_1), Y_2 = c_I(X_2), \dots, Y_m = c_I(X_m)$ be the target labels.
+Let $S = ((X_1, Y_1), (X_2, Y_2), \dots (X_m, Y_m))$ be the input sample.
+We will show that
+\begin{equation}
+\label{equation:failure-probability}
+\Pr \left[\err_{\sigma,I}(A(S)) \ge \epsilon \right] \ge \delta \; .
+\end{equation}
+Since
+$$
+\Pr \left[\err_{\sigma,I}(A(S)) \ge \epsilon \right] = \Exp\left[ \Pr \left[\err_{\sigma,I}(A(S)) \ge \epsilon \, \middle| \, \sigma, I \right] \right] \; ,
+$$
+the inequality \eqref{equation:failure-probability} implies that there
+exists $\sigma \in S_n$ and $i \in \{1,2,\dots,n\}$ such that under the
+distribution $P_\sigma$, the algorithm $A$ fails to $\epsilon$-learn the target
+$c_i$ with probability at least $\delta$.
+
+To prove \eqref{equation:failure-probability}, we first introduce
+necessary notation. Let $Y = (Y_1, Y_2, \dots, Y_m)$ of labels.
+Let $M$ be $m \times n$ binary matrix $M$ with entries
+$M_{i,j} = X_{i,\sigma(j)}$. Note that
+$$
+\Pr[M_{i,j} = 1] = p_j
+$$
+Note that the entries of $M$ are independent. Also, note that $M$ and $\sigma$
+are independent. Let $C_1, C_2, \dots, C_n$ be the columns of $M$. Let $J = \{ j ~|~
+1 \le j \le n, \ C_j = Y \}$ be the set of columns matching column of labels
+$Y$. Note that, with probability one, $C_1 = Y$ and hence $1 \in J$.
+Let $W(J) = \sum_{i \in J} p_i$ be the probability ``weight'' of columns in $J$.
+
+For any set $S_\pi(J) = \{ \pi \in S_n ~:~ \forall i \in \{1,2,\dots,n\}
+\setminus J, \pi(i) = i \}$ be the set of permutations of $\{1,2,\dots,n\}$ that
+permutes elements of $J$ but keeps the remaining columns in place. Let $\alpha$
+be randomly chosen from $S_n(J)$.
+
+Note that $\sigma$ and $\alpha$ are independent. Somewhat less obviously,
+$\sigma \circ \alpha$ and $M$ are independent and thus $(M,\sigma)$ and $(M,
+\sigma \circ \alpha)$ have the same distribution; this is due to the fact that
+conditioned on $M$ and $\alpha$, both $\sigma$ and $\sigma \circ \alpha$ have uniform
+distribution over $S_n$. Futhermore, $X_{i,\sigma(j)} = X_{i,\sigma(\alpha(j))} =
+M_{i,j}$ for all $i,j$, since $\alpha$ permutes only identical columns of $M$.
+Hence, $(S,\sigma)$ and $(S,\sigma \circ \alpha)$ have the same joint
+distribution. Therefore,
+\begin{align*}
+& \Pr \left[ \err_{\sigma,I}(A(S)) \ge \epsilon \right] \\
+& \ge \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] \\
+& = \frac{1}{2} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{2} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right]  \\
+& = \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] \\
+& \qquad + \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right] \\
+& \ge \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} p_n^m  \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, a}}(A(S)) \ge \frac{1}{4} \right] \\
+& \qquad + \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, a}}(A(S)) \ge \frac{1}{4} \right] \\
+& \ge \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} p_n^m  \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, a}}(A(S)) \ge \frac{1}{4} \right] \\
+& \qquad + \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, a}}(A(S)) \ge \frac{1}{4} \right] \\
+& \ge \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \left( \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \vee \err_{c_{\sigma(1)},P_{\sigma, a}}(A(S)) \ge \frac{1}{4} \right. \right. \\
+& \qquad \qquad \qquad \left. \left. \vee \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \vee \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, a}}(A(S)) \ge \frac{1}{4} \right) \right] \\
+& = \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \right] \; .
+\end{align*}
+The last equality follows from Lemma~\ref{lemma:projection-distances}.
+
+It remains to show that $\frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \right] \ge \delta$.
+We first show that
+$$
+\Pr \left[ |J| \ge 2 \right] \ge \frac{1}{2} \; .
+$$
+Recall that $J$ is the subset of columns $C_1, C_2, \dots, C_n$ that are equal
+to $C_1$. Let $x \in \{0,1\}^m$ be any binary vector. Conditioned on the event
+$C_1 = x$, the events $C_2 = x$, $C_3 = x$, \dots, $C_n = x$ are independent.
+Futhermore, $\Pr[C_j = x | C_1 = x] \ge p_n^m$.
+$$
+\Pr \left[ \bigwedge_{j=2}^n \{C_j \neq x\} ~\middle|~ C_1 = x \right] = \prod_{j=2}^n \Pr[C_j \neq x | C_1 = x] \le (1 - p_n^m)^{n-1} \le (1 - p_n^m)^n \; .
+$$
+Summing over all possible choices of $x$, we get
+$$
+\Pr[|J| \le 1] = \Pr \left[ \bigwedge_{j=2}^n \{C_j \neq C_1\} \right] \le (1 - p_n^m)^n \le e^{-n p_n^m} \; .
+$$
+To prove that $e^{-n p_n^m} \le \frac{1}{2}$, we show the equivalent statement $\ln \ln e^{n p_n^m} \ge \ln \ln 2$.
+Indeed,
+$$
+\ln \ln e^{n p_n^m} = \ln n + m \ln p_n = \ln n + m \ln \log_2(3+n)
+$$
+\end{proof}
+
+\section{Junk}
 
 A permutation $\pi \in S_n$ is said to be a swap of $i,j$
 if $\pi(i) = j$ and $\pi(j) = i$ and for all $k \in \{1,2,\dots,n\} \setminus \{i,j\}$
@@ -251,107 +374,6 @@ if $x_{\sigma(1)} \neq x_{\sigma(i)}$ then $h(x)$ must be equal to either $x_{\s
 \end{proof}
 
 
-
-\begin{theorem}[Learning without knowledge of the distribution]
-For any algorithm $A$ there exists a distribution $P \in \P_n$
-and a target concept $c \in C_n$ that requires at least $\Omega \left(\frac{\log n + \log(1/\delta)}{\log \log n} \right)$
-examples to $\frac{1}{4}$-learn with probability at least $1 - \delta$.
-\end{theorem}
-
-\begin{proof}
-Fix the number of examples $m$ to be any integer between $0$ and
-$\frac{\log(1/\delta) + \frac{1}{2} \log n}{\log \log n}$. Let $A$ be any
-(possibly improper) learning algorithm. We can formalize it is as a function
-$A:\bigcup_{k=0}^\infty (\{0,1\}^n \times \{0,1\})^k \to \{0,1\}^{\{0,1\}^n}$.
-
-We demostrate the existence of a pair $(P,c) \in \P_n \times C_n$ by
-probabilistic method. Let $\sigma$ be uniformly random permutation over
-$\{1,2,\dots,n\}$ and let $b = (b_1, b_2, \dots, b_n)$ be a vector chosen
-uniformly at random from $\{0,1\}^n$. Let $I = \sigma(1)$; note that $I$ is
-uniformly distributed over $\{1,2,\dots,n\}$. We choose the pair $(P,c)$ to be
-the (random) pair $(P_{\sigma,b},c_I)$.
-
-Let $X_1, X_2, \dots, X_m$ be an i.i.d. sample from $P_{\sigma,b}$ and
-let $Y_1 = c_I(X_1), Y_2 = c_I(X_2), \dots, Y_m = c_I(X_m)$ be the target labels.
-We denote by $S = ((X_1, Y_1), (X_2, Y_2), \dots (X_m, Y_m))$ the input examples.
-We will show that,
-\begin{equation}
-\label{equation:expected-failure-probability}
-\Exp \left[ \Pr \left[\err_{P_{\sigma,b},c_I}(A(S)) \ge \frac{1}{4} \ \middle| \ \sigma, b \, \right] \right] \ge \delta \; .
-\end{equation}
-The inequality \eqref{equation:expected-failure-probability} will imply that
-there exists $\sigma \in S_n$, $b \in \{0,1\}^n$, and $i \in
-\{1,2,\dots,n\}$ such that under the distribution $P_{\sigma,b}$, the
-algorithm $A$ fails to $\frac{1}{4}$-learn the target $c_i$ with probability at least $\delta$.
-
-To prove \eqref{equation:expected-failure-probability}, we first introduce
-necessary notation. Let $Y = (Y_1, Y_2, \dots, Y_m)$ of labels.
-Let $M$ be $m \times n$ binary matrix $M$ with entries
-$M_{i,j} = X_{i,\sigma(j)}$. Note that
-$$
-\Pr[M_{i,j} = 1 ~|~ b_j] =
-p_j^{b_j} (1 - p_j)^{b_j} =
-\begin{cases}
-p_j & \text{if $b_j = 1$,} \\
-1 - p_j & \text{if $b_j = 0$.}
-\end{cases}
-$$
-Also note that the entries $M_{i,j}$ and $\sigma$ are all mutually independent.
-Let $C_1, C_2, \dots, C_n$ be the columns of $M$. Let $J = \{ j ~|~ 1 \le j \le
-n, \ C_j = Y \}$ be the set of columns matching column of labels $Y$. Note that,
-with probability one, $C_1 = Y$ and hence $1 \in J$.
-
-Let $R$ be the largest index in $J$. Let $\alpha \in S_n$ be the permutation
-that swaps $1$ and $R$ and keeps all the other elements in place. Let $a \in
-\{0,1\}^n$ be the vector obtained from $b$ by flipping $R$-th coordinate.
-That is, $a_R = 1 - b_R$ and for any other coordinate $j$, $a_j = b_j$.
-
-Note that $\sigma$ and $\alpha$ are independent. Somewhat less obviously,
-$\sigma \circ \alpha$ and $M$ are independent and thus $(M,\sigma)$ and $(M,
-\sigma \circ \alpha)$ have the same distribution; this is due to the fact that
-conditioned on $M$, both $\sigma$ and $\sigma \circ \alpha$ have uniform
-distribution over $S_n$. Futhermore, $X_{i,\sigma(j)} = X_{i,\sigma(\alpha(j))} =
-M_{i,j}$ for all $i,j$, since $\alpha$ permutes only identical columns of $M$.
-Hence, $(S,\sigma)$ and $(S,\sigma \circ \alpha)$ have the same joint
-distribution. Therefore,
-\begin{align*}
-& \Pr \left[ \err_{c_{\sigma(1),P_{\sigma, b}}}(A(S)) \ge \frac{1}{4} \right] \\
-& \ge \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] \\
-& = \frac{1}{2} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{2} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right]  \\
-& = \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] \\
-& \qquad + \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right] \\
-& \ge \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} p_n^m  \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, a}}(A(S)) \ge \frac{1}{4} \right] \\
-& \qquad + \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, a}}(A(S)) \ge \frac{1}{4} \right] \\
-& \ge \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} p_n^m  \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, a}}(A(S)) \ge \frac{1}{4} \right] \\
-& \qquad + \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, a}}(A(S)) \ge \frac{1}{4} \right] \\
-& \ge \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \left( \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \vee \err_{c_{\sigma(1)},P_{\sigma, a}}(A(S)) \ge \frac{1}{4} \right. \right. \\
-& \qquad \qquad \qquad \left. \left. \vee \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \vee \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, a}}(A(S)) \ge \frac{1}{4} \right) \right] \\
-& = \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \right] \; .
-\end{align*}
-The last equality follows from Lemma~\ref{lemma:projection-distances}.
-
-It remains to show that $\frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \right] \ge \delta$.
-We first show that
-$$
-\Pr \left[ |J| \ge 2 \right] \ge \frac{1}{2} \; .
-$$
-Recall that $J$ is the subset of columns $C_1, C_2, \dots, C_n$ that are equal
-to $C_1$. Let $x \in \{0,1\}^m$ be any binary vector. Conditioned on the event
-$C_1 = x$, the events $C_2 = x$, $C_3 = x$, \dots, $C_n = x$ are independent.
-Futhermore, $\Pr[C_j = x | C_1 = x] \ge p_n^m$.
-$$
-\Pr \left[ \bigwedge_{j=2}^n \{C_j \neq x\} ~\middle|~ C_1 = x \right] = \prod_{j=2}^n \Pr[C_j \neq x | C_1 = x] \le (1 - p_n^m)^{n-1} \le (1 - p_n^m)^n \; .
-$$
-Summing over all possible choices of $x$, we get
-$$
-\Pr[|J| \le 1] = \Pr \left[ \bigwedge_{j=2}^n \{C_j \neq C_1\} \right] \le (1 - p_n^m)^n \le e^{-n p_n^m} \; .
-$$
-To prove that $e^{-n p_n^m} \le \frac{1}{2}$, we show the equivalent statement $\ln \ln e^{n p_n^m} \ge \ln \ln 2$.
-Indeed,
-$$
-\ln \ln e^{n p_n^m} = \ln n + m \ln p_n = \ln n + m \ln \log_2(3+n)
-$$
-\end{proof}
 
 \section{Realizable Case: Monotone Disjuctions}
 
