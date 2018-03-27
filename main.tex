@@ -135,13 +135,14 @@ binary representation $v$, then we can take $c = c_{k+1}$.
 
 The family $\P_n$ consists of $n!$ probability distributions over
 $\{0,1\}^n$. For any permutation $\sigma \in S_n$, we define a probability distribution
-$P_{\sigma}$ over $\{0,1\}^n$. To describe the distribution $P_\sigma$, let $X = (X_1,
-X_2, \dots, X_n)$ be a random vector with this distribution.
-The distribution is a product distribution, i.e., $\Pr[X = x] = \prod_{i=1}^n \Pr_{X}[X_i = x[i]]$
-for any $x \in \{0,1\}^n$. The marginal
-distribution of each coordinate $i$ is
+$P_{\sigma}$ over $\{0,1\}^n$. To describe the distribution $P_\sigma$, let $X = (X[1],
+X[2], \dots, X[n])$ be a random vector drawn from $P_\sigma$.
+The distribution $\P_\sigma$ is a product distribution,
+i.e., $\Pr[X = x] = \prod_{i=1}^n \Pr_{X}[X[i] = x[i]]$
+for any $x \in \{0,1\}^n$. The marginal distributions
+of the coordinates are
 $$
-\Pr[X_{\sigma(i)} = 1] = p_i = \frac{1}{\log_2(3 + i)} \; .
+\Pr[X[\sigma(i)] = 1] = p_i = \frac{1}{\log_2(3 + i)} \qquad \qquad \text{for $i=1,2,\dots,n$} \; .
 $$
 
 \begin{theorem}[Fixed distribution learning]
@@ -233,15 +234,16 @@ $c_i$ with probability at least $\delta$.
 To prove \eqref{equation:failure-probability}, we first introduce
 necessary notation. Let $Y = (Y_1, Y_2, \dots, Y_m)$ of labels.
 Let $M$ be $m \times n$ binary matrix $M$ with entries
-$M_{i,j} = X_{i,\sigma(j)}$. Note that
+$M_{i,j} = X_i[\sigma(j)]$. Note that
 $$
 \Pr[M_{i,j} = 1] = p_j
 $$
-Note that the entries of $M$ are independent. Also, note that $M$ and $\sigma$
+and that the entries of $M$ are independent. Also, note that $M$ and $\sigma$
 are independent. Let $C_1, C_2, \dots, C_n$ be the columns of $M$. Let $J = \{ j ~|~
 1 \le j \le n, \ C_j = Y \}$ be the set of columns matching column of labels
 $Y$. Note that, with probability one, $C_1 = Y$ and hence $1 \in J$.
 Let $W(J) = \sum_{i \in J} p_i$ be the probability ``weight'' of columns in $J$.
+Observe that $W(J) \ge 1/2$ since $1 \in J$ and $p_1 = \frac{1}{2}$.
 
 For any set $S_\pi(J) = \{ \pi \in S_n ~:~ \forall i \in \{1,2,\dots,n\}
 \setminus J, \pi(i) = i \}$ be the set of permutations of $\{1,2,\dots,n\}$ that
@@ -252,47 +254,15 @@ Note that $\sigma$ and $\alpha$ are independent. Somewhat less obviously,
 $\sigma \circ \alpha$ and $M$ are independent and thus $(M,\sigma)$ and $(M,
 \sigma \circ \alpha)$ have the same distribution; this is due to the fact that
 conditioned on $M$ and $\alpha$, both $\sigma$ and $\sigma \circ \alpha$ have uniform
-distribution over $S_n$. Futhermore, $X_{i,\sigma(j)} = X_{i,\sigma(\alpha(j))} =
+distribution over $S_n$. Futhermore, $X_i[\sigma(j)] = X_i[\sigma(\alpha(j))] =
 M_{i,j}$ for all $i,j$, since $\alpha$ permutes only identical columns of $M$.
 Hence, $(S,\sigma)$ and $(S,\sigma \circ \alpha)$ have the same joint
 distribution. Therefore,
 \begin{align*}
-& \Pr \left[ \err_{\sigma,I}(A(S)) \ge \epsilon \right] \\
-& \ge \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] \\
-& = \frac{1}{2} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{2} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right]  \\
-& = \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] \\
-& \qquad + \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right] \\
-& \ge \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} p_n^m  \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, a}}(A(S)) \ge \frac{1}{4} \right] \\
-& \qquad + \frac{1}{4} \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, a}}(A(S)) \ge \frac{1}{4} \right] \\
-& \ge \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} p_n^m  \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(1)},P_{\sigma, a}}(A(S)) \ge \frac{1}{4} \right] \\
-& \qquad + \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \right] + \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, a}}(A(S)) \ge \frac{1}{4} \right] \\
-& \ge \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \wedge \left( \err_{c_{\sigma(1)},P_{\sigma, b}}(A(S)) \ge \frac{1}{4} \vee \err_{c_{\sigma(1)},P_{\sigma, a}}(A(S)) \ge \frac{1}{4} \right. \right. \\
-& \qquad \qquad \qquad \left. \left. \vee \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, b}}(A(S)) \ge \frac{1}{4} \vee \err_{c_{\sigma(r)},P_{\sigma \circ \alpha, a}}(A(S)) \ge \frac{1}{4} \right) \right] \\
-& = \frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \right] \; .
+\Pr \left[ \err_{\sigma,I}(A(S)) \ge \epsilon \right]
+& \ge \Pr \left[ W(J) \ge \tfrac{1}{2} + \epsilon \ \wedge \ \err_{\sigma,I}(A(S)) \ge \epsilon \right] \\
 \end{align*}
-The last equality follows from Lemma~\ref{lemma:projection-distances}.
-
-It remains to show that $\frac{1}{4} p_n^m \Pr \left[ |J| \ge 2 \right] \ge \delta$.
-We first show that
-$$
-\Pr \left[ |J| \ge 2 \right] \ge \frac{1}{2} \; .
-$$
-Recall that $J$ is the subset of columns $C_1, C_2, \dots, C_n$ that are equal
-to $C_1$. Let $x \in \{0,1\}^m$ be any binary vector. Conditioned on the event
-$C_1 = x$, the events $C_2 = x$, $C_3 = x$, \dots, $C_n = x$ are independent.
-Futhermore, $\Pr[C_j = x | C_1 = x] \ge p_n^m$.
-$$
-\Pr \left[ \bigwedge_{j=2}^n \{C_j \neq x\} ~\middle|~ C_1 = x \right] = \prod_{j=2}^n \Pr[C_j \neq x | C_1 = x] \le (1 - p_n^m)^{n-1} \le (1 - p_n^m)^n \; .
-$$
-Summing over all possible choices of $x$, we get
-$$
-\Pr[|J| \le 1] = \Pr \left[ \bigwedge_{j=2}^n \{C_j \neq C_1\} \right] \le (1 - p_n^m)^n \le e^{-n p_n^m} \; .
-$$
-To prove that $e^{-n p_n^m} \le \frac{1}{2}$, we show the equivalent statement $\ln \ln e^{n p_n^m} \ge \ln \ln 2$.
-Indeed,
-$$
-\ln \ln e^{n p_n^m} = \ln n + m \ln p_n = \ln n + m \ln \log_2(3+n)
-$$
+TODO
 \end{proof}
 
 \section{Junk}
