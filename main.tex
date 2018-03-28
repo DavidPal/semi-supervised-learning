@@ -256,21 +256,30 @@ and that the entries of $M$ are independent. Also, note that $M$ and $\sigma$
 are independent.
 
 Let $\alpha$ be randomly chosen from $S_n(c(M))$. Note that $\sigma$ and
-$\alpha$ are independent. Somewhat less obviously, $\sigma \circ \alpha$ and $M$
-are independent and thus $(M,\sigma)$ and $(M, \sigma \circ \alpha)$ have the
+$\alpha$ are independent. Somewhat less obviously, $\alpha \circ \sigma$ and $M$
+are independent and thus $(M,\sigma)$ and $(M, \alpha \circ \sigma)$ have the
 same distribution; this is due to the fact that conditioned on $M$ and $\alpha$,
-both $\sigma$ and $\sigma \circ \alpha$ have uniform distribution over $S_n$.
-Futhermore, $X_i[\sigma(j)] = X_i[\sigma(\alpha(j))] = M_{i,j}$ for all $i,j$,
-since $\alpha$ permutes only identical columns of $M$. Therefore,
+both $\sigma$ and $\alpha \circ \sigma$ have uniform distribution over $S_n$.
+
+Since $X = \sigma^{-1}(M)$ and $M = \alpha(M) = \alpha^{-1}(M)$ and $Y = X[J] = X[\sigma(1)] = M[1]$,
 \begin{align*}
 & \Pr \left[ \err_{\sigma,J}(A(X,Y)) \ge \epsilon \right] \\
-& = \Pr \left[ \err_{\sigma,\sigma(1)}(A(\sigma(M), M[\sigma(1)])) \ge \epsilon \right] \\
-& = \Pr \left[ \err_{\sigma \circ \alpha,\sigma(\alpha(1))}(A(\sigma(\alpha(M)), M[\sigma(\alpha(1))])) \ge \epsilon \right] \\
-& \ge \Pr \left[ p(c(M)) \ge \tfrac{1}{2} + \epsilon \ \wedge \ \err_{\sigma \circ \alpha,\sigma(\alpha(1))}(A(\sigma(\alpha(M)), M[\sigma(\alpha(1))])) \ge \epsilon \right] \\
-& = \sum_{\substack{\pi \in S_n \\ B \in \{0,1\}^{n \times m} \\ p(c(B)) \ge \frac{1}{2} + \epsilon}} \Pr \left[ \sigma = \pi \ \wedge \ M = B  \ \wedge \ \err_{\pi \circ \alpha,\pi(\alpha(1))}(A(\pi(\alpha(B)), B[\pi(\alpha(1))])) \ge \epsilon \right] \\
-& = \sum_{\substack{B \in \{0,1\}^{n \times m} \\ p(c(B)) \ge \frac{1}{2} + \epsilon}} \Pr \left[ \err_{\pi \circ \alpha, \pi(\alpha(1))}(A(\pi(\alpha(B)), B[\pi(\alpha(1))])) \ge \epsilon \, \middle| \, M = B \wedge \sigma = \pi \right] \cdot \Pr[M = A] \cdot \Pr[\sigma = \pi] \\
+& = \Pr \left[ \err_{\sigma,\sigma(1)}(A(\sigma^{-1}(M), M[1])) \ge \epsilon \right] \\
+& = \Pr \left[ \err_{\alpha \circ \sigma,\alpha(\sigma(1))}(A(\sigma^{-1} (\alpha^{-1}(M)), M[1])) \ge \epsilon \right] \\
+& = \Pr \left[ \err_{\alpha \circ \sigma,\alpha(\sigma(1))}(A(\sigma^{-1}(M), M[1])) \ge \epsilon \right] \\
+& \ge \Pr \left[ p(c(M)) \ge \tfrac{1}{2} + \epsilon \ \wedge \ \err_{\alpha \circ \sigma,\alpha(\sigma(1))}(A(\sigma^{-1}(M), M[1])) \ge \epsilon \right] \\
+& = \sum_{\substack{\pi \in S_n \\ B \in \{0,1\}^{n \times m} \\ p(c(B)) \ge \frac{1}{2} + \epsilon}} \Pr \left[ \sigma = \pi \ \wedge \ M = B  \ \wedge \ \err_{\alpha \circ \pi,\alpha(\pi(1))}(A(\pi^{-1}(B), B[1])) \ge \epsilon \right] \\
+& = \sum_{\substack{\pi \in S_n \\ B \in \{0,1\}^{n \times m} \\ p(c(B)) \ge \frac{1}{2} + \epsilon}} \Pr \left[ \err_{\alpha \circ \pi,\alpha(\pi(1))}(A(\pi^{-1}(B), B[1])) \ge \epsilon \, \middle| \, M = B \wedge \sigma = \pi \right] \cdot \Pr[M = B] \cdot \Pr[\sigma = \pi]
 \end{align*}
-TODO
+Fix a matrix $B \in \{0,1\}^{n \times m}$ and a permutation $\pi \in S_n$. Conditioned on $M = B$ and $\sigma = \pi$,
+$\alpha$ is uniformly distributed on $S_n(B)$ and $h = A(\pi^{-1}(B), B[1])$ is a fixed non-random classifier.
+We compute
+\begin{align*}
+\Exp \left[ \err_{\alpha \circ \pi,\alpha(\pi(1))}(h) \, \middle| \, M = B \wedge \sigma = \pi \right]
+& = \frac{1}{|c(B)|!} \sum_{\alpha \in S_n(B)} \err_{\alpha \circ \pi,\alpha(\pi(1))}(h) \\
+& = \frac{1}{|c(B)|!} \sum_{\alpha \in S_n(B)} \Pr_{Z \sim P_{\alpha \circ \pi}} \left[ h(Z) \neq c_{\alpha(\pi(1))}(Z) \right] \\
+\end{align*}
+
 \end{proof}
 
 \section{Junk}
