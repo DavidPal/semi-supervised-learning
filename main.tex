@@ -138,11 +138,11 @@ $\{0,1\}^n$. For any permutation $\sigma \in S_n$, we define a probability distr
 $P_{\sigma}$ over $\{0,1\}^n$. To describe the distribution $P_\sigma$, let $X = (X[1],
 X[2], \dots, X[n])$ be a random vector drawn from $P_\sigma$.
 The distribution $\P_\sigma$ is a product distribution,
-i.e., $\Pr[X = x] = \prod_{i=1}^n \Pr_{X}[X[i] = x[i]]$
+i.e., $\Pr[X = x] = \prod_{j=1}^n \Pr_{X}[X[j] = x[j]]$
 for any $x \in \{0,1\}^n$. The marginal distributions
 of the coordinates are
 $$
-\Pr[X[\sigma(i)] = 1] = p_i = \frac{1}{\log_2(3 + i)} \qquad \qquad \text{for $i=1,2,\dots,n$} \; .
+\Pr[X[\sigma(j)] = 1] = p_j = \frac{1}{\log_2(3 + j)} \qquad \qquad \text{for $j=1,2,\dots,n$} \; .
 $$
 
 \begin{theorem}[Fixed distribution learning]
@@ -201,66 +201,74 @@ labeled examples to $\epsilon$-learn with probability at least $1 - \delta$.
 \end{theorem}
 
 \begin{proof}
-Fix the number of examples $m$ to be any non-negative less than $\log n$. Let $A$
-be any (possibly improper) learning algorithm. We can formalize it is as a
-function $A:\bigcup_{k=0}^\infty (\{0,1\}^n \times \{0,1\})^k \to
-\{0,1\}^{\{0,1\}^n}$.
+Let $A$ be any (possibly improper) learning algorithm. We formalize it is as a function
+$$
+A:\bigcup_{m=0}^\infty\{0,1\}^{m \times n} \times \{0,1\})^m \to \{0,1\}^{\{0,1\}^n} \; .
+$$
+The algorithm receives an $m \times n$ matrix and a binary vector of length $m$.
+The rows of the matrix corresponds to unlabeled examples and the vector encodes
+the labels. The output of the $A$ is any function from $\{0,1\}^n \to \{0,1\}$.
 
-We demostrate the existence of a pair $(P,c) \in \P_n \times C_n$ by
-probabilistic method. Let $\sigma$ be uniformly random permutation over
-$\{1,2,\dots,n\}$. Let $I = \sigma(1)$; note that $I$ is uniformly distributed
-over $\{1,2,\dots,n\}$. We will show that if we feed $A$ an i.i.d. sample of
-size $m$ from $P_\sigma$ labeled according to $c_I$, with probability at least
-$\delta$ the error of the algorithm is at least $\epsilon$. This will imply
-the existence of the pair $(P,c)$.
+Fix the number of examples $m$ to be any non-negative less than $\log n$. We
+demostrate the existence of a pair $(P,c) \in \P_n \times C_n$ by probabilistic
+method. Let $\sigma$ be uniformly random permutation over $\{1,2,\dots,n\}$. Let
+$J = \sigma(1)$ and note that $J$ is uniformly distributed over
+$\{1,2,\dots,n\}$. We will show that if we feed $A$ an i.i.d. sample of size $m$
+from $P_\sigma$ labeled according to $c_J$, with probability at least $\delta$
+the error of the algorithm is at least $\epsilon$. This will imply the existence
+of the pair $(P,c)$.
 
 Formally, let $X_1, X_2, \dots, X_m$ be an i.i.d. sample from $P_{\sigma}$ and
-let $Y_1 = c_I(X_1), Y_2 = c_I(X_2), \dots, Y_m = c_I(X_m)$ be the target labels.
-Let $S = ((X_1, Y_1), (X_2, Y_2), \dots (X_m, Y_m))$ be the input sample.
+let $Y_1 = c_J(X_1), Y_2 = c_J(X_2), \dots, Y_m = c_J(X_m)$ be the target
+labels. Let $X$ be $m \times n$ matrix with entries $X_i[j]$ and let $Y = (Y_1,
+Y_2, \dots, Y_m)$ be the vector of labels. The output of the algorithm is $A(X,Y)$.
 We will show that
 \begin{equation}
 \label{equation:failure-probability}
-\Pr \left[\err_{\sigma,I}(A(S)) \ge \epsilon \right] \ge \delta \; .
+\Pr \left[\err_{\sigma,J}(A(X,Y)) \ge \epsilon \right] \ge \delta \; .
 \end{equation}
-Since
-$$
-\Pr \left[\err_{\sigma,I}(A(S)) \ge \epsilon \right] = \Exp\left[ \Pr \left[\err_{\sigma,I}(A(S)) \ge \epsilon \, \middle| \, \sigma, I \right] \right] \; ,
-$$
+Since $\Pr \left[\err_{\sigma,J}(A(X,Y)) \ge \epsilon \right] = \Exp\left[ \Pr \left[\err_{\sigma,J}(A(X,Y)) \ge \epsilon \, \middle| \, \sigma, J \right] \right]$
 the inequality \eqref{equation:failure-probability} implies that there
-exists $\sigma \in S_n$ and $i \in \{1,2,\dots,n\}$ such that under the
+exists $\sigma \in S_n$ and $j \in \{1,2,\dots,n\}$ such that under the
 distribution $P_\sigma$, the algorithm $A$ fails to $\epsilon$-learn the target
-$c_i$ with probability at least $\delta$.
+$c_j$ with probability at least $\delta$.
 
-To prove \eqref{equation:failure-probability}, we first introduce
-necessary notation. Let $Y = (Y_1, Y_2, \dots, Y_m)$ of labels.
-Let $M$ be $m \times n$ binary matrix $M$ with entries
-$M_{i,j} = X_i[\sigma(j)]$. Note that
+To prove \eqref{equation:failure-probability}, we first introduce necessary
+notation. For any $n \times m$ matrix $B$, let $B[1], B[2], \dots, B[n]$ be its
+columns and let $c(B) = \{ j \in \{1,2,\dots, n\} ~|~ \ B[j] = B[1] \}$ be the set
+of indices of columns matching the first column. Note that $1 \in c(B)$. For any
+subset $K \subseteq \{1,2,\dots,n\}$, we define $p(K) = \sum_{j \in K} p_j$
+where $p_j = 1/\log_2(3 + j)$. For any set $K \subseteq \{1,2,\dots,n\}$, let
+$S_n(K) = \{ \pi \in S_n ~:~ \forall j \in \{1,2,\dots,n\} \setminus K, \ \pi(j) =
+j \}$ be the set of permutations of $\{1,2,\dots,n\}$ that keeps the elements in
+$K$ in place. There are $|K|!$ permutations in $S_n(K)$. For any permutation $\pi \in S_n$
+and any $m \times n$ matrix $B$, let $\pi(B)$ an $m \times n$ matrix
 $$
-\Pr[M_{i,j} = 1] = p_j
+\pi(B) = \left[ B[\pi(1)], B[\pi(2)], \dots, B[\pi(n)] \right]
+$$
+with columns permuted according to $\pi$.
+
+Let $M$ be $m \times n$ binary matrix $M = \sigma(X)$. Note that
+$$
+\Pr[M_{i,j} = 1] = \Pr[X_i[\sigma(j)] = 1] = p_j \qquad \qquad \text{for $i=1,2,\dots,m$, \ $j=1,2,\dots,n$}
 $$
 and that the entries of $M$ are independent. Also, note that $M$ and $\sigma$
-are independent. Let $C_1, C_2, \dots, C_n$ be the columns of $M$. Let $J = \{ j ~|~
-1 \le j \le n, \ C_j = Y \}$ be the set of columns matching column of labels
-$Y$. Note that, with probability one, $C_1 = Y$ and hence $1 \in J$.
-Let $W(J) = \sum_{i \in J} p_i$ be the probability ``weight'' of columns in $J$.
-Observe that $W(J) \ge 1/2$ since $1 \in J$ and $p_1 = \frac{1}{2}$.
+are independent.
 
-For any set $S_\pi(J) = \{ \pi \in S_n ~:~ \forall i \in \{1,2,\dots,n\}
-\setminus J, \pi(i) = i \}$ be the set of permutations of $\{1,2,\dots,n\}$ that
-permutes elements of $J$ but keeps the remaining columns in place. Let $\alpha$
-be randomly chosen from $S_n(J)$.
-
-Note that $\sigma$ and $\alpha$ are independent. Somewhat less obviously,
-$\sigma \circ \alpha$ and $M$ are independent and thus $(M,\sigma)$ and $(M,
-\sigma \circ \alpha)$ have the same distribution; this is due to the fact that
-conditioned on $M$ and $\alpha$, both $\sigma$ and $\sigma \circ \alpha$ have uniform
-distribution over $S_n$. Futhermore, $X_i[\sigma(j)] = X_i[\sigma(\alpha(j))] =
-M_{i,j}$ for all $i,j$, since $\alpha$ permutes only identical columns of $M$.
-Hence, $(S,\sigma)$ and $(S,\sigma \circ \alpha)$ have the same joint
-distribution. Therefore,
+Let $\alpha$ be randomly chosen from $S_n(c(M))$. Note that $\sigma$ and
+$\alpha$ are independent. Somewhat less obviously, $\sigma \circ \alpha$ and $M$
+are independent and thus $(M,\sigma)$ and $(M, \sigma \circ \alpha)$ have the
+same distribution; this is due to the fact that conditioned on $M$ and $\alpha$,
+both $\sigma$ and $\sigma \circ \alpha$ have uniform distribution over $S_n$.
+Futhermore, $X_i[\sigma(j)] = X_i[\sigma(\alpha(j))] = M_{i,j}$ for all $i,j$,
+since $\alpha$ permutes only identical columns of $M$. Therefore,
 \begin{align*}
-\Pr \left[ \err_{\sigma,I}(A(S)) \ge \epsilon \right]
-& \ge \Pr \left[ W(J) \ge \tfrac{1}{2} + \epsilon \ \wedge \ \err_{\sigma,I}(A(S)) \ge \epsilon \right] \\
+& \Pr \left[ \err_{\sigma,J}(A(X,Y)) \ge \epsilon \right] \\
+& = \Pr \left[ \err_{\sigma,\sigma(1)}(A(\sigma(M), M[\sigma(1)])) \ge \epsilon \right] \\
+& = \Pr \left[ \err_{\sigma \circ \alpha,\sigma(\alpha(1))}(A(\sigma(\alpha(M)), M[\sigma(\alpha(1))])) \ge \epsilon \right] \\
+& \ge \Pr \left[ p(c(M)) \ge \tfrac{1}{2} + \epsilon \ \wedge \ \err_{\sigma \circ \alpha,\sigma(\alpha(1))}(A(\sigma(\alpha(M)), M[\sigma(\alpha(1))])) \ge \epsilon \right] \\
+& = \sum_{\substack{\pi \in S_n \\ B \in \{0,1\}^{n \times m} \\ p(c(B)) \ge \frac{1}{2} + \epsilon}} \Pr \left[ \sigma = \pi \ \wedge \ M = B  \ \wedge \ \err_{\pi \circ \alpha,\pi(\alpha(1))}(A(\pi(\alpha(B)), B[\pi(\alpha(1))])) \ge \epsilon \right] \\
+& = \sum_{\substack{B \in \{0,1\}^{n \times m} \\ p(c(B)) \ge \frac{1}{2} + \epsilon}} \Pr \left[ \err_{\pi \circ \alpha, \pi(\alpha(1))}(A(\pi(\alpha(B)), B[\pi(\alpha(1))])) \ge \epsilon \, \middle| \, M = B \wedge \sigma = \pi \right] \cdot \Pr[M = A] \cdot \Pr[\sigma = \pi] \\
 \end{align*}
 TODO
 \end{proof}
