@@ -10,6 +10,8 @@
 \newtheorem{corollary}[proposition]{Corollary}
 \newtheorem{theorem}[proposition]{Theorem}
 
+\newcommand{\R}{\mathbb{R}}
+
 \renewcommand{\P}{\mathcal{P}}
 \newcommand{\indicator}[1]{\mathbf{1}\left[{#1}\right]}
 \newcommand{\x}{\mathbf{x}}
@@ -193,6 +195,56 @@ $$
 $$
 In other words, $\err_{\sigma,i}$ is the error of $h$ with respect to the target
 $c_i$ under the distribution $P_{\sigma}$.
+
+\begin{proposition}[Error probability vs. Expected error]
+Let $X$ be a random variable such that $X \le 1$ with probability one.
+Then, for any $\epsilon \in [0, 1)$,
+$$
+\Pr[X > \epsilon] \ge \frac{\Exp[X] - \epsilon}{1 - \epsilon} \; .
+$$
+\end{proposition}
+
+\begin{proof}
+We have
+$$
+\Exp[X]
+\le \epsilon \cdot \Pr[X \le \epsilon] + 1 \cdot \Pr[X > \epsilon]
+= \epsilon \cdot (1 - \Pr[X > \epsilon]) + \Pr[X > \epsilon] \; .  \qquad \qedhere
+$$
+Solving for $\Pr[X > \epsilon]$ finishes the proof.
+\end{proof}
+
+\begin{proposition}[Optimality of Bayes Predictor]
+Let $\mathcal{U}$ be a finite set. Let $U,V$ be a random variables such that $U \in \mathcal{U}$ and $V \in \{0,1\}$ with probability one.
+Let $f:\Omega \to \{0,1\}$ be a predictor. Then,
+$$
+\Pr\left[ f(U) \neq V \right]
+\ge \sum_{u \in \mathcal{U}} \left( \frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[V \, \middle| \, U = u\right] \right| \right) \cdot \Pr[U = u] \; .
+$$
+\end{proposition}
+
+\begin{proof}
+We have
+$$
+\Pr \left[ f(U) \neq V \right] = \sum_{u \in \mathcal{U}} \Pr \left[ f(U) \neq V \, \middle| \, U = u \right] \cdot \Pr[U = u] \; .
+$$
+It remains to show that
+$$
+\Pr\left[ f(U) \neq V \, \middle| \, U = u \right]
+\ge
+\frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[V \, \middle| \, U = u \right] \right| \; .
+$$
+Since if  $U=u$, the value $f(U) = f(u)$ is fixed,
+\begin{align*}
+\Pr\left[ f(U) \neq V \, \middle| \, U = u \right]
+& \ge \min\left\{ \Pr \left[ V = 1 \, \middle| \, U = u \right], \ \Pr \left[ V = 0 \, \middle| \, U = u \right] \right\} \\
+& = \min\left\{ \Exp \left[ V  \, \middle| \, U = u \right], \ 1 - \Exp \left[ V \, \middle| \, U = u \right] \right\} \\
+& = \frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[ V  \, \middle| \, U = u \right] \right|
+\end{align*}
+where we use the fact that $\min\{x, 1 - x\} = \frac{1}{2} - \left| \frac{1}{2} - x \right|$ for all $x \in \R$
+which can be easily verified by considering two cases: $x \ge \frac{1}{2}$ and $x < \frac{1}{2}$.
+\end{proof}
+
 
 \begin{theorem}[Learning without knowledge of the distribution]
 For any algorithm $A$ there exists a distribution $P \in \P_n$
