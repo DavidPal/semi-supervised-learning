@@ -135,24 +135,26 @@ let $k \in \{0,1,\dots,2^{\lfloor \log_2 n \rfloor} - 1\}$ be the number with
 binary representation $v$, then we can take $c = c_{k+1}$.
 \end{proof}
 
-The family $\P_n$ consists of $n!$ probability distributions over
-$\{0,1\}^n$. For any permutation $\sigma \in S_n$, we define a probability distribution
-$P_{\sigma}$ over $\{0,1\}^n$. To describe the distribution $P_\sigma$, let $X = (X[1],
-X[2], \dots, X[n])$ be a random vector drawn from $P_\sigma$.
-The distribution $\P_\sigma$ is a product distribution,
-i.e., $\Pr[X = x] = \prod_{j=1}^n \Pr_{X}[X[j] = x[j]]$
-for any $x \in \{0,1\}^n$. The marginal distributions
-of the coordinates are
+The family $\P_n$ consists of $n$ probability distributions $P_1, P_2, \dots,
+P_n$ over the boolean hypercube $\{0,1\}^n$. In order to describe the
+distribution $P_i$, for some $i$, let $X = (X[1], X[2], \dots, X[n])$ be a
+random vector drawn from $P_i$. The distribution $\P_i$ is a product
+distribution, i.e., $\Pr[X = x] = \prod_{j=1}^n \Pr_{X}[X[j] = x[j]]$ for any $x
+\in \{0,1\}^n$. The marginal distributions of the coordinates are
 $$
-\Pr[X[\sigma(j)] = 1] = p_j = \frac{1}{\log_2(3 + j)} \qquad \qquad \text{for $j=1,2,\dots,n$} \; .
+\Pr[X[j] = 1] =
+\begin{cases}
+\frac{1}{2} & \text{if $j = i$,} \\
+\frac{1}{\ln n} & \text{if $j\neq i$.} \\
+\end{cases}
 $$
 
 \begin{theorem}[Fixed distribution learning]
 For any $\epsilon > 0$ and any distribution from $P \in \P_n$,
 there exists an algorithm such that for any $\delta > 0$
-the algorithm $\epsilon$-learns any target function
-from $C_n$ from $O \left( \frac{\log(1/\delta)}{\epsilon^2} \right)$
-examples with probability at least $1 - \delta$.
+the algorithm $\frac{1}{10}$-learns any target function
+from $C_n$ using $O \left( \log(1/\delta) \right)$
+labeled examples with probability at least $1 - \delta$.
 \end{theorem}
 
 \begin{proof}
@@ -163,12 +165,12 @@ $\{0,1\}$-valued functions on the domain. \cite{Benedek-Itai-1991} proved that
 if a $C$ class of $\{0,1\}$-functions has an $\frac{\epsilon}{2}$-cover of size
 $N$, then any target from $C$ is $\epsilon$-learnable from $O
 \left( \frac{\log N + \log (1/\delta)}{\epsilon}\right)$ examples
-with probability at least $1-\delta$.
+with probability at least $1-\delta$. For our purposes we pick $\epsilon = \frac{1}{10}$.
 
-We show that for any distribution in $\P_n$ the class $C_n$ has an $\frac{\epsilon}{2}$-cover of size
+We show that for any distribution in $\P_n$ the class $C_n$ has an $\frac{1}{20}$-cover of size
 $N = \max\{3, \lceil 2^{4/\epsilon}\rceil  - 2 \}$. This will imply the lemma.
 
-Consider distribution $P_{\sigma} \in \P_n$ for some $\sigma \in S_n$.
+Consider distribution $P_i \in \P_n$ for some $i \in S_n$.
 We claim that $C_{\epsilon/2} = \{ c_{\sigma(1)},
 c_{\sigma(2)}, \dots, c_{\sigma(N)} \}$ is an $\frac{\epsilon}{2}$-cover of
 $C_n$. That is, we claim that for any $c \in C_n$, there exists $c' \in
