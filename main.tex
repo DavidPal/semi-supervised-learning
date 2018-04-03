@@ -23,7 +23,7 @@
 
 \begin{document}
 
-\title{Semi-supervised learning: The value of unlabeled data}
+\title{The information-theoretic value of unlabeled data in semi-supervised learning}
 \author{Alexander Golovnev \and D\'avid P\'al \and Bal\'azs Sz\"or\'enyi}
 
 \maketitle
@@ -32,12 +32,12 @@
 We show a separation of labeled sample complexity between learning \emph{with}
 and \emph{without} the knowledge of the distribution of the unlabeled data. For
 the class of projections over the boolean hypercube of dimension $n$, we show a
-separation by $\Theta(\log n)$ multiplicative factor.
+separation by $\Theta(\frac{\log n}{\log \log n})$ multiplicative factor.
 
 Learning with the knowledge of the distribution (a.k.a. \emph{fixed-distribution
 learning}) can be viewed as an idealized scenario of semi-supervised learning
 where the number of unlabeled data points is so great that the unlabeled
-distribution is known almost exactly. For this reason, we call the separation
+distribution is known exactly. For this reason, we call the separation
 the \emph{value of unlabeled data}.
 \end{abstract}
 
@@ -47,22 +47,29 @@ the \emph{value of unlabeled data}.
 \cite{Hanneke-2016} showed that for any class $C$ of Vapnik-Chervonenkis
 dimension $d$ there exists an algorithm that $\epsilon$-learns any target
 function from $C$ under any domain distribution  from $O\left(\frac{d +
-\log(1/\delta)}{\epsilon}\right)$ labeled examples with probability at least $1-\delta$.
-\cite{Benedek-Itai-1991} showed that for any class $C$ and any distribution
-there exists an algorithm such that the algorithm $\epsilon$-learns any target
-from $C$ from $O \left( \frac{\log N + \log (1/\delta)}{\epsilon}\right)$
-labeled examples with probability at least $1-\delta$ where $N$ is the size of
-an $\epsilon$-covering of $C$ with respect to the disagreement metric.
+\log(1/\delta)}{\epsilon}\right)$ labeled examples with probability at least
+$1-\delta$. \cite{Benedek-Itai-1991} showed that for any class $C$ and any
+distribution there exists an algorithm that $\epsilon$-learns any target from
+$C$ from $O \left( \frac{\log N + \log (1/\delta)}{\epsilon}\right)$ labeled
+examples with probability at least $1-\delta$ where $N$ is the size of an
+$\epsilon$-covering of $C$ with respect to the disagreement metric $d(f,g) =
+\Pr[f(x) \neq g(x)]$.
 
-Benedek-Itai's algorithm requires as input the distribution of unlabeled data.
-Unsurprisingly, there exists distributions for which Benedek-Itai's bound on the
-sample complexity is significantly lower then the Hanneke's bound. However, that
-still leaves the possibility that there exists an algorithm that does \emph{not}
-depend on the distribution and achieves Benedek-Itai bound (or a slightly worse
-bound) for \emph{every} distribution. In fact, one would think that empirical
-risk minimization (ERM) or Hanneke's algorithm is such algorithm. If this was
-true, one could conclude that knowledge of unlabeled data distribution is
-useless.
+Benedek-Itai's algorithm requires as input the distribution of unlabeled data in
+order to construct an $\epsilon$-cover. Unsurprisingly, there exists
+distributions for which Benedek-Itai's bound on the sample complexity is
+significantly lower then the Hanneke's bound. For instance, a distribution with
+support on a single point has cover of size $2$. That leaves the possibility
+that there exists an algorithm that does \emph{not} depend on the distribution
+and achieves Benedek-Itai bound (or a slightly worse bound) for \emph{every}
+distribution. In fact, one would think that empirical risk minimization (ERM) or
+Hanneke's algorithm could be such algorithm. (The reason one might think that is
+that, for example, ERM needs only one labeled example to learn if the unlabeled
+distribution is concentrated on single point.) If ERM, Hanneke's algorithm, or
+some other distribution-independent algorithm had sample complexity that matches
+(or nearly matches) the best known distribution-specific bound for \emph{every}
+distribution, we could conclude that the knowledge of unlabeled data
+distribution is completely useless.
 
 As \cite{Darnstadt-Simon-Szorenyi-2013} showed this not the case. Any algorithm
 that does not depend on the unlabeled data, requires, for some data
@@ -74,6 +81,30 @@ Benedek-Itai bound for some unlabeled distributions.
 
 \section{Related Work}
 
+The question of whether knowledge of unlabeled data distribution helps was
+proposed and initially studied by \cite{Ben-David-Lu-Pal-2008}. However, their
+paper considers only classes with Vapnik-Chervonenkis dimension at most $1$
+or distributions where the size of the covering is
+$\Theta(1/\epsilon)^{\Theta(\VC(C))}$ i.e. as large as it can be.\footnote{For
+any concept class and any distribution, the size of the smallest
+$\epsilon$-cover is at most $O(1/\epsilon)^{O(\VC(C))}$.} In these settings,
+separation does not exist and they (incorrectly) concluded that unlabeled data
+are useless.
+
+The question was studied in earnest by \cite{Darnstadt-Simon-Szorenyi-2013} who
+show two major results. First, they show that for any concept class $C$ and for
+every distribution the ratio of the sample complexities between
+distribution-independent and distribution-dependent algorithms is at most
+$\VC(C)$. Second, they show that for the class of projections over $\{0,1\}^n$,
+there are distributions where the ratio grows to infinity as a function of $n$.
+
+In learning theory, the disagreement metric and $\epsilon$-cover was  introduced
+by \cite{Benedek-Itai-1991} but the ideas are much older; see
+e.g.~\cite{Dudley-1978, Dudley-1984}. The $O(1/\epsilon)^{O(\VC(C))}$ upper
+bound on size of the smallest $\epsilon$-cover is by \citet[Lemma
+7.13]{Dudley-1978}; see also \citet[Chapter 4]{Devroye-Lugosi-2000} and
+\cite{Haussler-1995}.
+
 For any distribution-independent algorithm and any class $C$ of
 Vapnik-Chervonenkis dimension $d \ge 2$ and any $\epsilon \in (0,1)$ and $\delta
 \in (0,1)$ there exists a distribution over the domain and a concept which
@@ -81,51 +112,41 @@ requires at least $\Omega \left(\frac{d + \log(1/\delta)}{\epsilon}\right)$
 examples to $\epsilon$-learn with probability at least $1 - \delta$;
 see~\cite[Theorem 5.3]{Anthony-Bartlett-1999} and
 \cite{Blumer-Ehrenfeucht-Haussler-Warmuth-1989,
-Ehrenfeucht-Haussler-Kearns-Valiant-1989}.
+Ehrenfeucht-Haussler-Kearns-Valiant-1989}. The proof of the lower bound
+constructs a distribution that does \emph{not} depend on the algorithm. The
+distribution is a particular distribution over a fixed set shattered by $C$. So
+even an algorithm that knows the distribution requires $\Omega \left(\frac{d +
+\log(1/\delta)}{\epsilon}\right)$ to learn.
 
-The proof of the lower bound constructs a distribution that does \emph{not}
-depend on the algorithm. (The distribution is a particular distribution over a
-fixed set shattered by $C$.) So even an algorithm that depends on the
-distribution the distribution requires $\Omega \left(\frac{d +
-\log(1/\delta)}{\epsilon}\right)$ to learn. However, there are unlabeled
-distributions for which sample complexity of any consistent algorithm is
-constant, e.g. any distribution with support on a single point. The situation
-for constant $\epsilon$ and $\delta$ is summarized in
-Figure~\ref{figure:sample-complexity}.
+To better understand the relationship of the upper and lower bounds, we
+summarize the situation for the class of projections over $\{0,1\}^n$ in
+Figure~\ref{figure:sample-complexity}. Recall that Vapnik-Chervonenkis dimenion
+of projections over $\{0,1\}^n$ is $\lfloor \log_2 n \rfloor$. This is a
+folklore result, which we re-prove as
+Proposition~\ref{proposition:vc-dimension-projections}.
 
 \begin{figure}
 \centering
 \includegraphics{figure}
-\caption{The graph shows sample complexity of learning a class of projections $C_n$ under
-various distributions over the domain $\{0,1\}^n$. We assume that $\epsilon$ and
-$\delta$ are constant; e.g. $\epsilon = \delta = 0.1$. The graph shows three
-lines. The red horizontal line is the optimal PAC sample complexity for class of
-projections, which is $\Theta(VC(C_n)) = \Theta(\log n)$. The green line
-corresponds to to Benedek-Itai bound. The green line touches the red line for
-certain distributions, but is lower for other distributions. In particular, for
-certain distributions the green line is $O(1)$. The black line is the sample
-complexity for an arbitrary distribution-independent algorithm. (For example,
-the reader can think of the ERM or Hanneke's algorithm.) Obviously, the black
-line must lie above the green line. we prove that there exist a distribution
-where the black line is $\Omega(\frac{\log n}{\log \log n})$ times higher than
-green line.}
-\label{figure:sample-complexity}
+\caption{The graph shows sample complexity bounds of learning a class of
+projections over the domain $\{0,1\}^n$ under various unlabeled distributions.
+We assume that $\epsilon$ and $\delta$ are constant, say, $\epsilon = \delta =
+\frac{1}{10}$. The graph shows three lines. The red horizontal line is the
+optimal Hanneke's bound for the class of projections, which is
+$\Theta(\VC(C_n)) = \Theta(\log n)$. The green line corresponds to to
+Benedek-Itai bound. The green line touches the red line for certain
+distributions, but is lower for other distributions. In particular, for certain
+distributions the green line is $O(1)$. The dashed line corresponds
+to a particular distribution on a shattered set. This is where the green line
+and red line touch. Futhermore, here the the upper bound coincide
+with the lower bound for that particular distribution.
+The black line is the sample complexity
+of an arbitrary \emph{distribution-independent} algorithm. (For example, the
+reader can think of the ERM or Hanneke's algorithm.) Obviously, the black line
+must lie above the green line. We prove that there exist a distribution where
+the black line is $\Omega(\frac{\log n}{\log \log n})$ times higher than the
+green line.} \label{figure:sample-complexity}
 \end{figure}
-
-The problem was proposed and initially studied by \cite{Ben-David-Lu-Pal-2008}.
-However, their paper considers only classes with constant Vapnik-Chervonenkis
-dimension and/or distributions where the size of the covering is roughly
-$\Theta(1/\epsilon)^{\Theta(\VC(C))}$ i.e. as large as it can be.\footnote{For
-any concept class and any distribution, the size of the cover is at most
-$O(1/\epsilon)^{O(\VC(C))}$; see \cite[Chapter 4]{Devroye-Lugosi-2000} and
-\cite{Haussler-1995}. TODO: Vefify that is true.} In these settings, separation
-does not exist and they (incorrectly) concluded that unlabeled data are useless.
-The question was studied in earnest \cite{Darnstadt-Simon-Szorenyi-2013} who
-show two major results. First, they show that for any concept class $C$ and for
-every distribution the ratio of the sample complexities between
-distribution-independent and distribution-dependent algorithms is at most
-$\VC(C)$. Second, they show that for the class of projections over $\{0,1\}^n$,
-there are distributions where the ratio grows to infinity as a function of $n$.
 
 \section{Projections}
 
@@ -133,8 +154,6 @@ We denote by $C_n$ the class of projections over the domain $\{0,1\}^n$. The
 class $C_n$ consists of $n$ functions $c_1, c_2, \dots, c_n$ from $\{0,1\}^n$ to
 $\{0,1\}$. For any $i \in \{1,2,\dots,n\}$, for any $x \in \{0,1\}^n$,
 the function $c_i$ is defined as $c_i((x[1], x[2], \dots, x[n])) = x[i]$.
-The Vapnik-Chervonenkis dimension of $C_n$ is $d = \lfloor \log_2 n \rfloor$; see
-Proposition~\ref{proposition:vc-dimension-projections} below.
 
 \begin{proposition}
 \label{proposition:vc-dimension-projections}
@@ -142,11 +161,11 @@ Vapnik-Chervonenkis dimension of $C_n$ is $\lfloor \log_2 n \rfloor$.
 \end{proposition}
 
 \begin{proof}
-Vapnik-Chervonenkis dimension is the size of the largest shattered set; let us
-denote it by $d$. Let $S$ be a shattered set of size $d$. Then, there must be at
-least $2^d$ distinct functions in $C_n$. Hence, $d \le \log_2 |C_n| =
-\log_2 n$. Since $d$ is an integer, we conclude that $d \le \lfloor \log_2 n
-\rfloor$.
+Let us denote the Vapnik-Chervonenkis dimension by $d$. Recall that $d$ is the
+size of the largest shattered set. Let $S$ be any shattered set of size $d$.
+Then, there must be at least $2^d$ distinct functions in $C_n$. Hence, $d \le
+\log_2 |C_n| = \log_2 n$. Since $d$ is an integer, we conclude that $d \le
+\lfloor \log_2 n \rfloor$.
 
 On the other hand, we construct a shattered set of size $\lfloor \log_2 n
 \rfloor$. The set will consists of points $x_1, x_2, \dots, x_{\lfloor \log_2 n
