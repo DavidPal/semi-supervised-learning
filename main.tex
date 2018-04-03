@@ -242,11 +242,10 @@ which can be easily verified by considering two cases: $x \ge \frac{1}{2}$ and $
 
 \begin{theorem}[Chernoff-Hoeffding bound]
 Let $X_1, X_2, \dots, X_n$ be i.i.d. Bernoulli variables with parameter $p$.
-Let $\KL{q}{p} = q \ln \left( \frac{q}{p} \right) + (1 - q) \ln\left( \frac{1-q}{1-p} \right)$.
 Then, for any $\epsilon \ge 0$,
 $$
-\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \ge p + \epsilon \right] \le e^{ - n \KL{p + \epsilon}{p}}  \qquad \text{and} \qquad
-\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \le p - \epsilon \right] \le e^{ - n \KL{p - \epsilon}{p}}  \; . \\
+\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \ge p + \epsilon \right] \le e^{ - 2n \epsilon^2}  \qquad \text{and} \qquad
+\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \le p - \epsilon \right] \le e^{ - 2n \epsilon^2}  \; . \\
 $$
 \end{theorem}
 
@@ -355,7 +354,7 @@ The rows of the matrix corresponds to unlabeled examples and the vector encodes
 the labels. The output of the $A$ is any function from $\{0,1\}^n \to \{0,1\}$.
 
 Fix the number of examples $m$ to be any non-negative integer less than
-$\frac{\log n}{\log \log n}$. We demostrate the existence of a pair $(P,c) \in
+$\frac{\ln n}{3 \ln \ln n}$. We demostrate the existence of a pair $(P,c) \in
 \P_n \times C_n$ by probabilistic method.
 
 Let $I$ be chosen uniformly at from $\{1,2,\dots,n\}$. We consider distribution $P_I \in \P_n$ and target $c_I \in C_n$.
@@ -383,28 +382,86 @@ Then, by Proposition~\ref{proposition:bayes},
 \begin{align*}
 & \Exp \left[d_{P_I}(c_I, A(X,Y))\right] \\
 & = \Pr\left[ A(X,Y)(X_{m+1}) \neq c_I(X_{m+1}) \right] \\
-& \ge \sum_{\substack{B \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ w \in \{0,1\}^n}} \frac{1}{2} - \left| \frac{1}{2} - \Exp\left[ c_I(X_{m+1}) \, \middle| \, X = B, Y = y, X_{m+1} = w \right] \right| \cdot \Pr \left[X = B, Y = y, X_{m+1} = w \right] \; .
+& \ge \sum_{\substack{B \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ x \in \{0,1\}^n}} \frac{1}{2} - \left| \frac{1}{2} - \Exp\left[ c_I(X_{m+1}) \, \middle| \, X = B, Y = y, X_{m+1} = x \right] \right| \cdot \Pr \left[X = B, Y = y, X_{m+1} = x \right] \; .
 \end{align*}
-It remains to upper bound $\left| \frac{1}{2} - \Exp\left[ c_I(X_{m+1}) \, \middle| \, X = B, Y = y, X_{m+1} = w \right] \right|$.
 
 Let $\norm{Y}_1$ be the number of ones in $Y$. Since the entries of $Y$ are
 i.i.d., by Chernoff-Hoeffding bound, the norm $\norm{Y}_1$ is between
-$\frac{m}{3}$ and $\frac{2m}{3}$ with probability at least $1 - 2e^{-m
-\KL{\frac{1}{3}}{\frac{1}{2}}}$. Notice that for $n \to \infty$ (and hence for
-$m \to \infty$), and this probability approaches $1$.
+$\frac{m}{3}$ and $\frac{2m}{3}$ with probability at least $1 - 2e^{-m/18}$.
+Assuming that $n$ is large enough, we will have $m \ge 54$ and thus the
+probability is at least $1 - 2e^{-3} \ge 5/6$.
 
 Let us denote the columns of $X$ by $X[1], X[2], \dots, X[n]$.
-Let $K = \{ i \in \{1,2,\dots,n\} ~:~ X[i] = Y \}$ be the set of column indices that match the label $Y$.
-Let $p = \frac{1}{\ln n}$. For any $y \in \{0,1\}^m$ such that $\norm{y}_1 \in [\frac{m}{3}, \frac{2m}{3}]$,
+Let
 $$
-\Pr \left[  ~|~ Y = y \right] = 1 + (n-1) p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} \; .
+K = \{ i \in \{1,2,\dots,n\} ~:~ X[i] = Y \}
+$$
+be the set of column indices that match the label $Y$. Note that conditioned on
+$X$ and $Y$, the set $K$ is determined. The set will be crucial for
+understanding the conditional expectation $\Exp\left[ c_I(X_{m+1}) \, \middle| \,
+X = B, Y = y, X_{m+1} = x \right]$.
+
+We lower bound cardinality of $K$. Let $p = \frac{1}{\ln n}$. For any $y \in
+\{0,1\}^m$ and any $i,j \in \{1,2,\dots,n\}$,
+$$
+\Pr \left[ j \in K  \, \middle| \, Y = y, I = i \right]
+=
+\begin{cases}
+1 & \text{if $j = i$,} \\
+p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} & \text{if $j \neq j$.}
+\end{cases}
+$$
+Conditioned on $Y = y, I=i$, $|K|-1$ is sum of $n-1$ Bernoulli variables, one
+for each column other than $i$. Chernoff-Hoeffding bound gives that
+$$
+\Pr \left[ \frac{|K| - 1}{n - 1} > p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} - \epsilon \, \middle| \,  Y = y, I = i  \right] \ge 1 - e^{-2(n-1) \epsilon^2} \; .
+$$
+Hence, substituing $\epsilon = p^m/2$ and using lower bound $p^{\norm{y}_1} (1 -
+p)^{m - \norm{y}_1} \ge p^m$, we get
+\begin{align*}
+\Pr \left[ \frac{|K| - 1}{n - 1} > p^m/2  \, \middle| \,  Y = y, I = i  \right]
+& = \Pr \left[ \frac{|K| - 1}{n - 1} > p^m - \epsilon  \, \middle| \,  Y = y, I = i  \right] \\
+& \ge \Pr \left[ \frac{|K| - 1}{n - 1} > p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} - \epsilon  \, \middle| \,  Y = y, I = i  \right] \\
+& \ge 1 - e^{-2(n-1) \epsilon^2} \; .
+\end{align*}
+We lower bound $\epsilon = p^m/2$ as
+$$
+\epsilon = p^m/2 > \frac{1}{2} p^\frac{\ln n}{3 \ln \ln n} = \frac{1}{2} \left( \frac{1}{\ln n} \right)^\frac{\ln n}{3 \ln \ln n} = \frac{1}{2\sqrt[3]{n}} \; .
+$$
+Since the lower bound is uniform for all choices of $y$ and $i$, we can remove
+the conditionting and conclude that
+$$
+\Pr \left[ |K| > 1 + \frac{(n-1)}{2\sqrt[3]{n}} \right] \ge 1 - \exp \left(- \frac{(n-1)}{2 n^{2/3}} \right) \; .
+$$
+For $n \ge 2$, we can simplify it further to
+$$
+\Pr \left[ |K| > \frac{n^{2/3}}{4} \right] \ge 1 - \exp \left(- \frac{\sqrt[3]{n}}{4} \right) \; .
 $$
 
-
-We first show that with high probability $K$ is $\Omega(\sqrt{n})$. Indeed, $\Exp[K] = 1 + (n-1)p$
-
-Fix $B \in \{0,1\}^{m \times n}$, $y \in \{0,1\}^m$ and $w \in \{0,1\}^m$.
-
+It remains to show that $\Exp\left[ c_I(X_{m+1}) \, \middle| \, X = B, Y = y, X_{m+1} = x \right]$ is close to $1/2$.
+For any $B \in \{0,1\}^{m \times n}$, let $B[1], B[2], \dots, B[n]$ be its columns.
+For any $B \in \{0,1\}^{m \times n}$ and $y \in \{0,1\}^m$ let
+$$
+L(B,y) = \{ i \in \{1,2,\dots,n\} ~:~ B[i] = y \}
+$$
+be the set of matching column indices. We have
+$$
+\Pr \left[ I = i, X_{m+1} = x \, \middle| \, X = B, Y = y \right]
+=
+\begin{cases}
+\frac{1}{|L(B,y)|} \, p^{\norm{x}_1} (1 - p)^{m-\norm{x}_1} & \text{if $i \in L(B,y)$,} \\
+0 & \text{if $i \not \in L(B,y)$.} \\
+\end{cases}
+$$
+Hence,
+\begin{align*}
+\Exp\left[ c_I(X_{m+1}) \, \middle| \, X = B, Y = y, X_{m+1} = x \right]
+& = \Pr \left[ X_{m+1}[I] = 1 \, \middle| \, X = B, Y = y, X_{m+1} = x \right] \\
+& = \frac{\Pr \left[ X_{m+1}[I] = 1, X_{m+1} = x \, \middle| \, X = B, Y = y \right]}{\Pr \left[ X_{m+1} = x \, \middle| \, X = B, Y = y \right]} \\
+& = \frac{\Pr \left[ X_{m+1}[I] = 1, X_{m+1} = x \, \middle| \, X = B, Y = y \right]}{\Pr \left[ X_{m+1} = x \right]} \\
+& = \frac{\sum_{i=1}^n \Pr \left[ I = i, X_{m+1}[i] = 1, X_{m+1} = x \, \middle| \, X = B, Y = y \right]}{\Pr \left[ X_{m+1} = x \right]} \\
+& = TODO
+\end{align*}
 \end{proof}
 
 
