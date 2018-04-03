@@ -13,8 +13,12 @@
 \newcommand{\R}{\mathbb{R}}
 
 \renewcommand{\P}{\mathcal{P}}
+\newcommand{\U}{\mathcal{U}}
+\newcommand{\X}{\mathcal{X}}
 \newcommand{\indicator}[1]{\mathbf{1}\left[{#1}\right]}
 \newcommand{\x}{\mathbf{x}}
+\newcommand{\KL}[2]{D\left(#1 \middle\| #2 \right)}
+\newcommand{\norm}[1]{\left\| #1 \right\|}
 
 \DeclareMathOperator{\argmin}{argmin}
 \DeclareMathOperator{\err}{err}
@@ -55,7 +59,7 @@ examples with probability at least $1-\delta$ where $N$ is the size of an
 $\epsilon$-covering of $C$ with respect to the disagreement metric $d(f,g) =
 \Pr[f(x) \neq g(x)]$.
 
-Benedek-Itai's algorithm requires as input the distribution of unlabeled data in
+Benedek-Itai's algorithm receives as input the distribution of unlabeled data in
 order to construct an $\epsilon$-cover. Unsurprisingly, there exists
 distributions for which Benedek-Itai's bound on the sample complexity is
 significantly lower then the Hanneke's bound. For instance, a distribution with
@@ -63,21 +67,22 @@ support on a single point has cover of size $2$. That leaves the possibility
 that there exists an algorithm that does \emph{not} depend on the distribution
 and achieves Benedek-Itai bound (or a slightly worse bound) for \emph{every}
 distribution. In fact, one would think that empirical risk minimization (ERM) or
-Hanneke's algorithm could be such algorithm. (The reason one might think that is
-that, for example, ERM needs only one labeled example to learn if the unlabeled
-distribution is concentrated on single point.) If ERM, Hanneke's algorithm, or
-some other distribution-independent algorithm had sample complexity that matches
-(or nearly matches) the best known distribution-specific bound for \emph{every}
+Hanneke's algorithm could be such algorithm. The reason one might think that is
+that, for example, ERM needs only singificantly less labeled examples to learn
+for some unlabeled distributions, e.g. unlabeled distribution is concentrated on
+a single point. If ERM, Hanneke's algorithm, or some other
+distribution-independent algorithm had sample complexity that matches (or nearly
+matches) the best known distribution-specific bound for \emph{every}
 distribution, we could conclude that the knowledge of unlabeled data
 distribution is completely useless.
 
 As \cite{Darnstadt-Simon-Szorenyi-2013} showed this not the case. Any algorithm
 that does not depend on the unlabeled data, requires, for some data
-distributions, significantly more labeled examples than the Benedek-Itai bound.
-In this paper, we quantify this gap and we show that any
-distribution-independent algorithm for learning the class of projections over
-$\{0,1\}^n$ requires $\Omega(\frac{\log n}{\log \log n})$ as many samples as
-Benedek-Itai bound for some unlabeled distributions.
+distributions, more labeled examples than the Benedek-Itai bound. However, they
+did not quantify this gap. In this paper, we quantify the gap by showing that
+any distribution-independent algorithm for learning the class of projections
+over $\{0,1\}^n$ requires $\Omega(\frac{\log n}{\log \log n})$ as many samples
+as Benedek-Itai bound for some unlabeled distributions.
 
 \section{Related Work}
 
@@ -148,12 +153,123 @@ the black line is $\Omega(\frac{\log n}{\log \log n})$ times higher than the
 green line.} \label{figure:sample-complexity}
 \end{figure}
 
+\section{Preliminaries}
+
+Let $\X$ be a non-empty set. We denote by $\{0,1\}^\X$ the class of all
+functions from $\X$ to $\{0,1\}$. A \emph{concept class over a domain $\X$} is a
+subset $C \subseteq \{0,1\}^\X$. A \emph{labeled example} is a pair $(x,y) \in
+\X \times \{0,1\}$.
+
+A \emph{distribution-independent learning algorithm} is a function
+$A:\bigcup_{m=0}^\infty \left(\X \times \{0,1\} \right)^m \to \{0,1\}^\X$. In
+other words, the algorithm gets as input a sequence of labeled examples $(x_1,
+y_1), (x_2, y_2), \dots, (x_m, y_m)$ and outputs a function from $\X$ to
+$\{0,1\}$. We allow the algorithm to output function that does not belong to
+$C$, i.e., the algorithm can be improper. A \emph{distribution-dependent algorithm}
+is a function that maps any probability distribution over $\X$ to a
+distribution-independent algorithm.
+
+Let $P$ be a probability distribution over a domain $\X$. For any two functions
+$f:\X \to \{0,1\}$, $g:\X \to \{0,1\}$ we define the disagreement pseudo-metric
+$$
+d_P(f,g) = \Pr_{X \sim P}[f(X) \neq g(X)] \; .
+$$
+Let $C$ be concept class over $\X$, let $c \in C$, let $\epsilon, \delta \in (0,1)$.
+Let  $X_1, X_2, \dots, X_m$ be an i.i.d. sample from $P$. We define the corresponding
+labeled sample $S = ((X_1, c(X_1)), (X_2, c(X_2)), \dots, (X_m, c(X_m)))$.
+We say that an algorithm $A$, \emph{$\epsilon$-learns} target $c$ from $m$ samples
+with probability at least $1 - \delta$ if
+$$
+\Pr \left[d_P(c,A(S)) \le \epsilon \right]  \ge 1 - \delta \; .
+$$
+
+Below we state two simple propositions that are useful for proving lower bounds
+on the number of labeled samples. The first proposition says that if average
+error $d_P(c,A(S))$ is high, the algorithm can't $\epsilon$-learn. The second
+proposition says that the best algorithm for predicting a bit computes
+conditional expectation of the bit and thresholds it at $1/2$.
+
+\begin{proposition}[Error probability vs. Expected error]
+\label{proposition:error-probability-vs-expected-error}
+Let $Z$ be a random variable such that $Z \le 1$ with probability one.
+Then,
+$$
+\Pr[Z > \epsilon] \ge \frac{\Exp[Z] - \epsilon}{1 - \epsilon} \qquad \text{for any $\epsilon \in [0, 1)$.}
+$$
+\end{proposition}
+
+\begin{proof}
+We have
+$$
+\Exp[Z]
+\le \epsilon \cdot \Pr[Z \le \epsilon] + 1 \cdot \Pr[Z > \epsilon]
+= \epsilon \cdot (1 - \Pr[Z > \epsilon]) + \Pr[Z > \epsilon] \; .  \qquad \qedhere
+$$
+Solving for $\Pr[Z > \epsilon]$ finishes the proof.
+\end{proof}
+
+\begin{proposition}[Optimality of Bayes Predictor]
+\label{proposition:bayes}
+Let $\mathcal{U}$ be a finite set. Let $U,V$ be a random variables such that $U \in \U$ and $V \in \{0,1\}$ with probability one.
+Let $f:\mathcal{U} \to \{0,1\}$ be a predictor. Then,
+$$
+\Pr\left[ f(U) \neq V \right]
+\ge \sum_{u \in \U} \left( \frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[V \, \middle| \, U = u\right] \right| \right) \cdot \Pr[U = u] \; .
+$$
+\end{proposition}
+
+\begin{proof}
+We have
+$$
+\Pr \left[ f(U) \neq V \right] = \sum_{u \in \U} \Pr \left[ f(U) \neq V \, \middle| \, U = u \right] \cdot \Pr[U = u] \; .
+$$
+It remains to show that
+$$
+\Pr\left[ f(U) \neq V \, \middle| \, U = u \right]
+\ge
+\frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[V \, \middle| \, U = u \right] \right| \; .
+$$
+Since if  $U=u$, the value $f(U) = f(u)$ is fixed, and hence
+\begin{align*}
+\Pr\left[ f(U) \neq V \, \middle| \, U = u \right]
+& \ge \min\left\{ \Pr \left[ V = 1 \, \middle| \, U = u \right], \ \Pr \left[ V = 0 \, \middle| \, U = u \right] \right\} \\
+& = \min\left\{ \Exp \left[ V  \, \middle| \, U = u \right], \ 1 - \Exp \left[ V \, \middle| \, U = u \right] \right\} \\
+& = \frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[ V  \, \middle| \, U = u \right] \right|
+\end{align*}
+We used the fact that $\min\{x, 1 - x\} = \frac{1}{2} - \left| \frac{1}{2} - x \right|$ for all $x \in \R$
+which can be easily verified by considering two cases: $x \ge \frac{1}{2}$ and $x < \frac{1}{2}$.
+\end{proof}
+
+\begin{theorem}[Chernoff-Hoeffding bound]
+Let $X_1, X_2, \dots, X_n$ be i.i.d. Bernoulli variables with parameter $p$.
+Let $\KL{q}{p} = q \ln \left( \frac{q}{p} \right) + (1 - q) \ln\left( \frac{1-q}{1-p} \right)$.
+Then, for any $\epsilon \ge 0$,
+$$
+\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \ge p + \epsilon \right] \le e^{ - n \KL{p + \epsilon}{p}}  \qquad \text{and} \qquad
+\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \le p - \epsilon \right] \le e^{ - n \KL{p - \epsilon}{p}}  \; . \\
+$$
+\end{theorem}
+
 \section{Projections}
 
-We denote by $C_n$ the class of projections over the domain $\{0,1\}^n$. The
+We denote by $C_n$ the class of \emph{projections} over the domain $\X = \{0,1\}^n$. The
 class $C_n$ consists of $n$ functions $c_1, c_2, \dots, c_n$ from $\{0,1\}^n$ to
 $\{0,1\}$. For any $i \in \{1,2,\dots,n\}$, for any $x \in \{0,1\}^n$,
 the function $c_i$ is defined as $c_i((x[1], x[2], \dots, x[n])) = x[i]$.
+
+We consider a family $\P_n$ consisting of $n$ probability distributions $P_1,
+P_2, \dots, P_n$ over the boolean hypercube $\{0,1\}^n$. In order to describe
+the distribution $P_i$, for some $i$, let $X = (X[1], X[2], \dots, X[n])$ be a
+random vector drawn from $P_i$. The distribution $\P_i$ is a product
+distribution, i.e., $\Pr[X = x] = \prod_{j=1}^n \Pr[X[j] = x[j]]$ for any $x \in
+\{0,1\}^n$. The marginal distributions of the coordinates are
+$$
+\Pr[X[j] = 1] =
+\begin{cases}
+\frac{1}{2} & \text{if $j = i$,} \\
+\frac{1}{\ln n} & \text{if $j\neq i$.} \\
+\end{cases}
+$$
 
 \begin{proposition}
 \label{proposition:vc-dimension-projections}
@@ -179,26 +295,12 @@ let $k \in \{0,1,\dots,2^{\lfloor \log_2 n \rfloor} - 1\}$ be the number with
 binary representation $v$, then we can take $c = c_{k+1}$.
 \end{proof}
 
-The family $\P_n$ consists of $n$ probability distributions $P_1, P_2, \dots,
-P_n$ over the boolean hypercube $\{0,1\}^n$. In order to describe the
-distribution $P_i$, for some $i$, let $X = (X[1], X[2], \dots, X[n])$ be a
-random vector drawn from $P_i$. The distribution $\P_i$ is a product
-distribution, i.e., $\Pr[X = x] = \prod_{j=1}^n \Pr[X[j] = x[j]]$ for any $x
-\in \{0,1\}^n$. The marginal distributions of the coordinates are
-$$
-\Pr[X[j] = 1] =
-\begin{cases}
-\frac{1}{2} & \text{if $j = i$,} \\
-\frac{1}{\ln n} & \text{if $j\neq i$.} \\
-\end{cases}
-$$
 
-\begin{theorem}[Fixed distribution learning]
-For any $\epsilon > 0$ and any distribution from $P \in \P_n$,
-there exists an algorithm such that for any $\delta > 0$
-the algorithm $\frac{1}{10}$-learns any target function
-from $C_n$ using $O \left( \log(1/\delta) \right)$
-labeled examples with probability at least $1 - \delta$.
+\begin{theorem}[Lerning with knowledge of the distribution]
+There exists a distribution-dependent algorithm that for any distribution from
+$\P_n$ and any $\delta \in (0,1)$, $\frac{1}{10}$-learns any target function from $C_n$ using
+$O \left( \log(1/\delta) \right)$ labeled examples with probability at least $1 -
+\delta$.
 \end{theorem}
 
 \begin{proof}
@@ -234,149 +336,74 @@ $$
 The last inequality is true for all $n \ge e^{20}$.
 \end{proof}
 
-\begin{proposition}[Error probability vs. Expected error]
-Let $X$ be a random variable such that $X \le 1$ with probability one.
-Then, for any $\epsilon \in [0, 1)$,
-$$
-\Pr[X > \epsilon] \ge \frac{\Exp[X] - \epsilon}{1 - \epsilon} \; .
-$$
-\end{proposition}
-
-\begin{proof}
-We have
-$$
-\Exp[X]
-\le \epsilon \cdot \Pr[X \le \epsilon] + 1 \cdot \Pr[X > \epsilon]
-= \epsilon \cdot (1 - \Pr[X > \epsilon]) + \Pr[X > \epsilon] \; .  \qquad \qedhere
-$$
-Solving for $\Pr[X > \epsilon]$ finishes the proof.
-\end{proof}
-
-\begin{proposition}[Optimality of Bayes Predictor]
-Let $\mathcal{U}$ be a finite set. Let $U,V$ be a random variables such that $U \in \mathcal{U}$ and $V \in \{0,1\}$ with probability one.
-Let $f:\mathcal{U} \to \{0,1\}$ be a predictor. Then,
-$$
-\Pr\left[ f(U) \neq V \right]
-\ge \sum_{u \in \mathcal{U}} \left( \frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[V \, \middle| \, U = u\right] \right| \right) \cdot \Pr[U = u] \; .
-$$
-\end{proposition}
-
-\begin{proof}
-We have
-$$
-\Pr \left[ f(U) \neq V \right] = \sum_{u \in \mathcal{U}} \Pr \left[ f(U) \neq V \, \middle| \, U = u \right] \cdot \Pr[U = u] \; .
-$$
-It remains to show that
-$$
-\Pr\left[ f(U) \neq V \, \middle| \, U = u \right]
-\ge
-\frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[V \, \middle| \, U = u \right] \right| \; .
-$$
-Since if  $U=u$, the value $f(U) = f(u)$ is fixed, and hence
-\begin{align*}
-\Pr\left[ f(U) \neq V \, \middle| \, U = u \right]
-& \ge \min\left\{ \Pr \left[ V = 1 \, \middle| \, U = u \right], \ \Pr \left[ V = 0 \, \middle| \, U = u \right] \right\} \\
-& = \min\left\{ \Exp \left[ V  \, \middle| \, U = u \right], \ 1 - \Exp \left[ V \, \middle| \, U = u \right] \right\} \\
-& = \frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[ V  \, \middle| \, U = u \right] \right|
-\end{align*}
-We used the fact that $\min\{x, 1 - x\} = \frac{1}{2} - \left| \frac{1}{2} - x \right|$ for all $x \in \R$
-which can be easily verified by considering two cases: $x \ge \frac{1}{2}$ and $x < \frac{1}{2}$.
-\end{proof}
 
 
 \begin{theorem}[Learning without knowledge of the distribution]
 For any algorithm $A$ there exists a distribution $P \in \P_n$ and a target
 concept $c \in C_n$ such that the algorithm requires at least  $\Omega \left(
 \frac{\log n}{\log \log n} \right)$ labeled examples to $\frac{1}{10}$-learn the
-target concept with probability at least $\frac{3}{4}$.
+target concept with probability at least $\frac{5}{6}$.
 \end{theorem}
 
 \begin{proof}
-Let $A$ be any (possibly improper) learning algorithm. We formalize it is as a function
+Let $A$ be any learning algorithm. For ease of notation, we formalize it is as a function
 $$
-A:\bigcup_{m=0}^\infty\{0,1\}^{m \times n} \times \{0,1\})^m \to \{0,1\}^{\{0,1\}^n} \; .
+A:\bigcup_{m=0}^\infty \left(\{0,1\}^{m \times n} \times \{0,1\}^m\right) \to \{0,1\}^{\{0,1\}^n} \; .
 $$
 The algorithm receives an $m \times n$ matrix and a binary vector of length $m$.
 The rows of the matrix corresponds to unlabeled examples and the vector encodes
 the labels. The output of the $A$ is any function from $\{0,1\}^n \to \{0,1\}$.
 
-For any function $h:\{0,1\}^n \to \{0,1\}$ any permutation $\sigma \in S_n$, any
-projection $i \in \{1,2,\dots,n\}$, define
-$$
-\err_i(h) = \Pr_{X \sim P_i}[h(X) \neq c_i(X)] \; .
-$$
-In other words, $\err_i$ is the error of $h$ with respect to the target
-$c_i$ under the distribution $P_i$.
+Fix the number of examples $m$ to be any non-negative integer less than
+$\frac{\log n}{\log \log n}$. We demostrate the existence of a pair $(P,c) \in
+\P_n \times C_n$ by probabilistic method.
 
-Fix the number of examples $m$ to be any non-negative less than $\frac{\log
-n}{\log \log n}$. We demostrate the existence of a pair $(P,c) \in \P_n \times
-C_n$ by probabilistic method. Let $I$ be chosen uniformly at from
-$\{1,2,\dots,n\}$. We will show that if we feed $A$ an i.i.d. sample of size $m$
-from $P_I$ labeled according to $c_I$, with probability at least $\delta$ the
-error of the algorithm is at least $\epsilon$. This will imply the existence of
-the pair $(P,c)$.
-
-Formally, let $X_1, X_2, \dots, X_m$ be an i.i.d. sample from $P_I$ and
+Let $I$ be chosen uniformly at from $\{1,2,\dots,n\}$. We consider distribution $P_I \in \P_n$ and target $c_I \in C_n$.
+Let $X_1, X_2, \dots, X_m$ be an i.i.d. sample from $P_I$ and
 let $Y_1 = c_I(X_1), Y_2 = c_I(X_2), \dots, Y_m = c_I(X_m)$ be the target
 labels. Let $X$ be $m \times n$ matrix with entries $X_i[j]$ and let $Y = (Y_1,
 Y_2, \dots, Y_m)$ be the vector of labels. The output of the algorithm is $A(X,Y)$.
 We will show that
 \begin{equation}
 \label{equation:failure-probability}
-\Pr \left[\err_I(A(X,Y)) > \frac{1}{10} \right] \ge \frac{1}{4} \; .
+\Exp \left[d_{P_I}(c_I, A(X,Y)) \right] \ge \frac{1}{4} \; .
 \end{equation}
-Since $\Pr \left[\err_I(A(X,Y)) \ge \epsilon \right] = \Exp\left[ \Pr \left[\err_I(A(X,Y)) \ge \epsilon \, \middle| \, \sigma, I \right] \right]$
-the inequality \eqref{equation:failure-probability} implies that there
-exists $i \in \{1,2,\dots,n\}$ such that under the
-distribution $P_i$, the algorithm $A$ fails to $\frac{1}{10}$-learn the target
-$c_i$ with probability at least $\frac{1}{4}$.
-
-To prove \eqref{equation:failure-probability}, we first introduce necessary
-notation. For any $n \times m$ matrix $B$, let $B[1], B[2], \dots, B[n]$ be its
-columns and let $c(B) = \{ j \in \{1,2,\dots, n\} ~|~ \ B[j] = B[1] \}$ be the set
-of indices of columns matching the first column. Note that $1 \in c(B)$. For any
-subset $K \subseteq \{1,2,\dots,n\}$, we define $p(K) = \sum_{j \in K} p_j$
-where $p_j = 1/\log_2(3 + j)$. For any set $K \subseteq \{1,2,\dots,n\}$, let
-$S_n(K) = \{ \pi \in S_n ~:~ \forall j \in \{1,2,\dots,n\} \setminus K, \ \pi(j) =
-j \}$ be the set of permutations of $\{1,2,\dots,n\}$ that keeps the elements in
-$K$ in place. There are $|K|!$ permutations in $S_n(K)$. For any permutation $\pi \in S_n$
-and any $m \times n$ matrix $B$, let $\pi(B)$ an $m \times n$ matrix
+This means that there exists $i \in \{1,2,\dots,n\}$ such that
 $$
-\pi(B) = \left[ B[\pi(1)], B[\pi(2)], \dots, B[\pi(n)] \right]
+\Exp \left[d_{P_i}(c_i, A(X,Y)) \right] \ge \frac{1}{4}
 $$
-with columns permuted according to $\pi$.
-
-Let $M$ be $m \times n$ binary matrix $M = \sigma(X)$. Note that
+which, by Proposition~\ref{proposition:error-probability-vs-expected-error} with $\epsilon=1/10$, implies that
 $$
-\Pr[M_{i,j} = 1] = \Pr[X_i[\sigma(j)] = 1] = p_j \qquad \qquad \text{for $i=1,2,\dots,m$, \ $j=1,2,\dots,n$}
+\Pr \left[ d_{P_i}(c_i, A(X,Y)) \ge \frac{1}{10} \right] \ge \frac{\frac{1}{4} - \frac{1}{10}}{1 - \frac{1}{10}} = \frac{1}{6} \; .
 $$
-and that the entries of $M$ are independent. Also, note that $M$ and $\sigma$
-are independent.
 
-Let $\alpha$ be randomly chosen from $S_n(c(M))$. Note that $\sigma$ and
-$\alpha$ are independent. Somewhat less obviously, $\alpha \circ \sigma$ and $M$
-are independent and thus $(M,\sigma)$ and $(M, \alpha \circ \sigma)$ have the
-same distribution; this is due to the fact that conditioned on $M$ and $\alpha$,
-both $\sigma$ and $\alpha \circ \sigma$ have uniform distribution over $S_n$.
-
-Since $X = \sigma^{-1}(M)$ and $M = \alpha(M) = \alpha^{-1}(M)$ and $Y = X[J] = X[\sigma(1)] = M[1]$,
+It remains to prove \eqref{equation:failure-probability}.
+Let $X_{m+1}$ be a test sample drawn from $P_I$. That is, conditioned on $I$, the sequence $X_1, X_2, \dots, X_m, X_{m+1}$ is i.i.d. drawn from $P_I$.
+Then, by Proposition~\ref{proposition:bayes},
 \begin{align*}
-& \Pr \left[ \err_{\sigma,J}(A(X,Y)) \ge \epsilon \right] \\
-& = \Pr \left[ \err_{\sigma,\sigma(1)}(A(\sigma^{-1}(M), M[1])) \ge \epsilon \right] \\
-& = \Pr \left[ \err_{\alpha \circ \sigma,\alpha(\sigma(1))}(A(\sigma^{-1} (\alpha^{-1}(M)), M[1])) \ge \epsilon \right] \\
-& = \Pr \left[ \err_{\alpha \circ \sigma,\alpha(\sigma(1))}(A(\sigma^{-1}(M), M[1])) \ge \epsilon \right] \\
-& \ge \Pr \left[ p(c(M)) \ge \tfrac{1}{2} + \epsilon \ \wedge \ \err_{\alpha \circ \sigma,\alpha(\sigma(1))}(A(\sigma^{-1}(M), M[1])) \ge \epsilon \right] \\
-& = \sum_{\substack{\pi \in S_n \\ B \in \{0,1\}^{n \times m} \\ p(c(B)) \ge \frac{1}{2} + \epsilon}} \Pr \left[ \sigma = \pi \ \wedge \ M = B  \ \wedge \ \err_{\alpha \circ \pi,\alpha(\pi(1))}(A(\pi^{-1}(B), B[1])) \ge \epsilon \right] \\
-& = \sum_{\substack{\pi \in S_n \\ B \in \{0,1\}^{n \times m} \\ p(c(B)) \ge \frac{1}{2} + \epsilon}} \Pr \left[ \err_{\alpha \circ \pi,\alpha(\pi(1))}(A(\pi^{-1}(B), B[1])) \ge \epsilon \, \middle| \, M = B \wedge \sigma = \pi \right] \cdot \Pr[M = B] \cdot \Pr[\sigma = \pi]
+& \Exp \left[d_{P_I}(c_I, A(X,Y))\right] \\
+& = \Pr\left[ A(X,Y)(X_{m+1}) \neq c_I(X_{m+1}) \right] \\
+& \ge \sum_{\substack{B \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ w \in \{0,1\}^n}} \frac{1}{2} - \left| \frac{1}{2} - \Exp\left[ c_I(X_{m+1}) \, \middle| \, X = B, Y = y, X_{m+1} = w \right] \right| \cdot \Pr \left[X = B, Y = y, X_{m+1} = w \right] \; .
 \end{align*}
-Fix a matrix $B \in \{0,1\}^{n \times m}$ and a permutation $\pi \in S_n$. Conditioned on $M = B$ and $\sigma = \pi$,
-$\alpha$ is uniformly distributed on $S_n(B)$ and $h = A(\pi^{-1}(B), B[1])$ is a fixed non-random classifier.
-We compute
-\begin{align*}
-\Exp \left[ \err_{\alpha \circ \pi,\alpha(\pi(1))}(h) \, \middle| \, M = B \wedge \sigma = \pi \right]
-& = \frac{1}{|c(B)|!} \sum_{\alpha \in S_n(B)} \err_{\alpha \circ \pi,\alpha(\pi(1))}(h) \\
-& = \frac{1}{|c(B)|!} \sum_{\alpha \in S_n(B)} \Pr_{Z \sim P_{\alpha \circ \pi}} \left[ h(Z) \neq c_{\alpha(\pi(1))}(Z) \right] \\
-\end{align*}
+It remains to upper bound $\left| \frac{1}{2} - \Exp\left[ c_I(X_{m+1}) \, \middle| \, X = B, Y = y, X_{m+1} = w \right] \right|$.
+
+Let $\norm{Y}_1$ be the number of ones in $Y$. Since the entries of $Y$ are
+i.i.d., by Chernoff-Hoeffding bound, the norm $\norm{Y}_1$ is between
+$\frac{m}{3}$ and $\frac{2m}{3}$ with probability at least $1 - 2e^{-m
+\KL{\frac{1}{3}}{\frac{1}{2}}}$. Notice that for $n \to \infty$ (and hence for
+$m \to \infty$), and this probability approaches $1$.
+
+Let us denote the columns of $X$ by $X[1], X[2], \dots, X[n]$.
+Let $K = \{ i \in \{1,2,\dots,n\} ~:~ X[i] = Y \}$ be the set of column indices that match the label $Y$.
+Let $p = \frac{1}{\ln n}$. For any $y \in \{0,1\}^m$ such that $\norm{y}_1 \in [\frac{m}{3}, \frac{2m}{3}]$,
+$$
+\Pr \left[  ~|~ Y = y \right] = 1 + (n-1) p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} \; .
+$$
+
+
+We first show that with high probability $K$ is $\Omega(\sqrt{n})$. Indeed, $\Exp[K] = 1 + (n-1)p$
+
+Fix $B \in \{0,1\}^{m \times n}$, $y \in \{0,1\}^m$ and $w \in \{0,1\}^m$.
 
 \end{proof}
 
