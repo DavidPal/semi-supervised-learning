@@ -19,7 +19,7 @@
 \DeclareMathOperator{\argmin}{argmin}
 \DeclareMathOperator{\err}{err}
 \DeclareMathOperator{\Exp}{\mathbf{E}}
-
+\DeclareMathOperator{\VC}{VC}
 
 \begin{document}
 
@@ -42,67 +42,92 @@ the \emph{value of unlabeled data}.
 \end{abstract}
 
 
-\section{Realizable Case: Projections}
+\section{Introduction}
 
 \cite{Hanneke-2016} showed that for any class $C$ of Vapnik-Chervonenkis
 dimension $d$ there exists an algorithm that $\epsilon$-learns any target
-function under any domain distribution  from $O\left(\frac{d +
-\log(1/\delta)}{\epsilon}\right)$ examples with probability at least $1-\delta$.
-On the other hand, for any algorithm and any class $C$ of Vapnik-Chervonenkis dimension
-$d \ge 2$ and any $\epsilon \in (0,1)$ and $\delta \in (0,1)$ there exists a
-distribution over the domain and a concept which requires at least $\Omega
-\left(\frac{d + \log(1/\delta)}{\epsilon}\right)$ examples to $\epsilon$-learn
-with probability at least $1 - \delta$; see~\cite[Theorem
-5.3]{Anthony-Bartlett-1999} or \cite{Blumer-Ehrenfeucht-Haussler-Warmuth-1989,
+function from $C$ under any domain distribution  from $O\left(\frac{d +
+\log(1/\delta)}{\epsilon}\right)$ labeled examples with probability at least $1-\delta$.
+\cite{Benedek-Itai-1991} showed that for any class $C$ and any distribution
+there exists an algorithm such that the algorithm $\epsilon$-learns any target
+from $C$ from $O \left( \frac{\log N + \log (1/\delta)}{\epsilon}\right)$
+labeled examples with probability at least $1-\delta$ where $N$ is the size of
+an $\epsilon$-covering of $C$ with respect to the disagreement metric.
+
+Benedek-Itai's algorithm requires as input the distribution of unlabeled data.
+Unsurprisingly, there exists distributions for which Benedek-Itai's bound on the
+sample complexity is significantly lower then the Hanneke's bound. However, that
+still leaves the possibility that there exists an algorithm that does \emph{not}
+depend on the distribution and achieves Benedek-Itai bound (or a slightly worse
+bound) for \emph{every} distribution. In fact, one would think that empirical
+risk minimization (ERM) or Hanneke's algorithm is such algorithm. If this was
+true, one could conclude that knowledge of unlabeled data distribution is
+useless.
+
+As \cite{Darnstadt-Simon-Szorenyi-2013} showed this not the case. Any algorithm
+that does not depend on the unlabeled data, requires, for some data
+distributions, significantly more labeled examples than the Benedek-Itai bound.
+In this paper, we quantify this gap and we show that any
+distribution-independent algorithm for learning the class of projections over
+$\{0,1\}^n$ requires $\Omega(\frac{\log n}{\log \log n})$ as many samples as
+Benedek-Itai bound for some unlabeled distributions.
+
+\section{Related Work}
+
+For any distribution-independent algorithm and any class $C$ of
+Vapnik-Chervonenkis dimension $d \ge 2$ and any $\epsilon \in (0,1)$ and $\delta
+\in (0,1)$ there exists a distribution over the domain and a concept which
+requires at least $\Omega \left(\frac{d + \log(1/\delta)}{\epsilon}\right)$
+examples to $\epsilon$-learn with probability at least $1 - \delta$;
+see~\cite[Theorem 5.3]{Anthony-Bartlett-1999} and
+\cite{Blumer-Ehrenfeucht-Haussler-Warmuth-1989,
 Ehrenfeucht-Haussler-Kearns-Valiant-1989}.
 
 The proof of the lower bound constructs a distribution that does \emph{not}
-depend on the algorithm. (The distribution is a fixed distribution over a
-fixed set shattered by $C$.) So even an algorithm that ``knows'' (``is tailored
-to'') the distribution requires $\Omega \left(\frac{d +
-\log(1/\delta)}{\epsilon}\right)$ to learn.
-
-Let $C_n$ be the class of projections over $\{0,1\}^n$. Vapnik-Chervonenkis
-dimension of $C_n$ is $\lfloor \log_2 n \rfloor$. We construct a family of
-probability distributions $\P_n$ over $\{0,1\}^n$ such that:
-
-\begin{itemize}
-\item For any $P \in \P_n$, any $\epsilon > 0$ there exists an algorithm such
-that for any $\delta > 0$ the algorithm $\epsilon$-learns any target function $c
-\in C_n$ from $O \left( \frac{\log(1/\delta)}{\epsilon^2} \right)$ examples with
-probability at least $1-\delta$.
-
-\item For any algorithm, there exists
-a probability distribution $P \in \P_n$ and a target function $c \in C_n$
-such that for any $\delta \in (0,\frac{1}{2})$, the algorithm requires
-at least $\Omega(\frac{\log(1/\delta) + \log n}{\log \log n})$ examples to
-$\frac{1}{4}$-learn the target function with probability at least $1-\delta$.
-\end{itemize}
-%
-The situation for constant $\epsilon$ and $\delta$ is summarized in
+depend on the algorithm. (The distribution is a particular distribution over a
+fixed set shattered by $C$.) So even an algorithm that depends on the
+distribution the distribution requires $\Omega \left(\frac{d +
+\log(1/\delta)}{\epsilon}\right)$ to learn. However, there are unlabeled
+distributions for which sample complexity of any consistent algorithm is
+constant, e.g. any distribution with support on a single point. The situation
+for constant $\epsilon$ and $\delta$ is summarized in
 Figure~\ref{figure:sample-complexity}.
 
 \begin{figure}
 \centering
 \includegraphics{figure}
-\caption{The graph shows sample complexity of learning a class of projections
-$C_n$ under various distributions over the domain $\{0,1\}^n$. We assume that
-$\epsilon$ and $\delta$ are constant; e.g. $\epsilon = \delta = 0.1$. The graph
-shows three lines. The red horizontal line is the optimal PAC sample complexity for class of
-projections, which is $\Theta(VC(C_n)) = \Theta(\log_2 n)$. The green line corresponds to
-the optimal sample complexity for fixed-distribution learning, i.e., the learning where algorithm ``knows''
-(``is tailored to'') the specific distribution. The green line touches the red
-line for certain distributions, but is lower for other distributions.
-In particular, for certain distributions the green line is $O(1)$.
-The black line is the sample complexity for an arbitrary fixed algorithm
-that does \emph{not} receive the distribution as input. (For example, the reader can think of the ERM
-algorithm.) Obviously, the black line must lie above the green line. In this paper,
-we prove that there exist a distribution where the black line is $\Omega(\log
-n)$ times higher than green line.}
+\caption{The graph shows sample complexity of learning a class of projections $C_n$ under
+various distributions over the domain $\{0,1\}^n$. We assume that $\epsilon$ and
+$\delta$ are constant; e.g. $\epsilon = \delta = 0.1$. The graph shows three
+lines. The red horizontal line is the optimal PAC sample complexity for class of
+projections, which is $\Theta(VC(C_n)) = \Theta(\log n)$. The green line
+corresponds to to Benedek-Itai bound. The green line touches the red line for
+certain distributions, but is lower for other distributions. In particular, for
+certain distributions the green line is $O(1)$. The black line is the sample
+complexity for an arbitrary distribution-independent algorithm. (For example,
+the reader can think of the ERM or Hanneke's algorithm.) Obviously, the black
+line must lie above the green line. we prove that there exist a distribution
+where the black line is $\Omega(\frac{\log n}{\log \log n})$ times higher than
+green line.}
 \label{figure:sample-complexity}
 \end{figure}
 
-\section{Preliminaries}
+The problem was proposed and initially studied by \cite{Ben-David-Lu-Pal-2008}.
+However, their paper considers only classes with constant Vapnik-Chervonenkis
+dimension and/or distributions where the size of the covering is roughly
+$\Theta(1/\epsilon)^{\Theta(\VC(C))}$ i.e. as large as it can be.\footnote{For
+any concept class and any distribution, the size of the cover is at most
+$O(1/\epsilon)^{O(\VC(C))}$; see \cite[Chapter 4]{Devroye-Lugosi-2000} and
+\cite{Haussler-1995}. TODO: Vefify that is true.} In these settings, separation
+does not exist and they (incorrectly) concluded that unlabeled data are useless.
+The question was studied in earnest \cite{Darnstadt-Simon-Szorenyi-2013} who
+show two major results. First, they show that for any concept class $C$ and for
+every distribution the ratio of the sample complexities between
+distribution-independent and distribution-dependent algorithms is at most
+$\VC(C)$. Second, they show that for the class of projections over $\{0,1\}^n$,
+there are distributions where the ratio grows to infinity as a function of $n$.
+
+\section{Projections}
 
 We denote by $C_n$ the class of projections over the domain $\{0,1\}^n$. The
 class $C_n$ consists of $n$ functions $c_1, c_2, \dots, c_n$ from $\{0,1\}^n$ to
@@ -139,7 +164,7 @@ The family $\P_n$ consists of $n$ probability distributions $P_1, P_2, \dots,
 P_n$ over the boolean hypercube $\{0,1\}^n$. In order to describe the
 distribution $P_i$, for some $i$, let $X = (X[1], X[2], \dots, X[n])$ be a
 random vector drawn from $P_i$. The distribution $\P_i$ is a product
-distribution, i.e., $\Pr[X = x] = \prod_{j=1}^n \Pr_{X}[X[j] = x[j]]$ for any $x
+distribution, i.e., $\Pr[X = x] = \prod_{j=1}^n \Pr[X[j] = x[j]]$ for any $x
 \in \{0,1\}^n$. The marginal distributions of the coordinates are
 $$
 \Pr[X[j] = 1] =
@@ -165,38 +190,30 @@ $\{0,1\}$-valued functions on the domain. \cite{Benedek-Itai-1991} proved that
 if a $C$ class of $\{0,1\}$-functions has an $\frac{\epsilon}{2}$-cover of size
 $N$, then any target from $C$ is $\epsilon$-learnable from $O
 \left( \frac{\log N + \log (1/\delta)}{\epsilon}\right)$ examples
-with probability at least $1-\delta$. For our purposes we pick $\epsilon = \frac{1}{10}$.
+with probability at least $1-\delta$.
 
-We show that for any distribution in $\P_n$ the class $C_n$ has an $\frac{1}{20}$-cover of size
-$N = \max\{3, \lceil 2^{4/\epsilon}\rceil  - 2 \}$. This will imply the lemma.
+For our purposes we pick $\epsilon = \frac{1}{5}$. We show that for any
+distribution in $\P_n$ the class $C_n$ has an $\frac{1}{10}$-cover of size $N =
+2$. This will imply the lemma.
 
-Consider distribution $P_i \in \P_n$ for some $i \in S_n$.
-We claim that $C_{\epsilon/2} = \{ c_{\sigma(1)},
-c_{\sigma(2)}, \dots, c_{\sigma(N)} \}$ is an $\frac{\epsilon}{2}$-cover of
+Consider distribution $P_i \in \P_n$ for some $i \in \{1,2,\dots,n\}$.
+Pick any $j \in \{1,2,\dots,n\}$ such that $j \neq i$.
+We claim that $C' = \{ c_i, c_j \}$ is an $\frac{1}{10}$-cover of
 $C_n$. That is, we claim that for any $c \in C_n$, there exists $c' \in
-C_{\epsilon/2}$ such that $d_{P_{\sigma}}(c,c') \le \epsilon/2$.
+C'$ such that $d_{P_{\sigma}}(c,c') \le \frac{1}{10}$.
 
-Any $c \in C_n$ is of the form $c = c_{\sigma(k)}$ for some $k \in \{1,2,\dots,n\}$.
-If $k \le N$ then $c_{\sigma(k)}$ lies in $C_{\epsilon/2}$ and thus, trivially, $d_{P_{\sigma}}(c_{\sigma(k)},c_{\sigma(k)}) = 0$.
-Otherwise, if  $k \ge N + 1$,
-\begin{align*}
-d_{P_{\sigma}}(c_{\sigma(N)}, c_{\sigma(k)})
-& = \Pr_{X \sim P_{\sigma}}[X_{\sigma(N)} \neq X_{\sigma(k)} ] \\
-& = p_N (1 - p_k) + p_k (1 - p_N) \\
-& \le p_N + p_k \\
-& \le 2 p_N \\
-& \le \frac{2}{\log_2(2 + N)} \\
-& \le \epsilon/2 \; .
-\end{align*}
+Any $c \in C_n$ is of the form $c = c_k$. If $k \in \{i,j\}$ then, trivially, $c \in C'$ and $d_{P_i}(c,c) = 0$.
+Otherwise, if  $k \not \in \{i,j\}$, let $p = \frac{1}{\ln n}$,
+$$
+d_{P_i}(c_j, c_k)
+= \Pr_{X \sim P_i}[X_j \neq X_k] \\
+= 2 p (1 - p) \\
+\le 2p \\
+= \frac{2}{\ln n} \\
+\le \frac{1}{10} \; .
+$$
+The last inequality is true for all $n \ge e^{20}$.
 \end{proof}
-
-For any function $h:\{0,1\}^n \to \{0,1\}$ any permutation $\sigma \in S_n$, any
-projection $i \in \{1,2,\dots,n\}$, define
-$$
-\err_{\sigma,i}(h) = \Pr_{X \sim P_{\sigma}}[h(X) \neq c_i(X)] \; .
-$$
-In other words, $\err_{\sigma,i}$ is the error of $h$ with respect to the target
-$c_i$ under the distribution $P_{\sigma}$.
 
 \begin{proposition}[Error probability vs. Expected error]
 Let $X$ be a random variable such that $X \le 1$ with probability one.
@@ -218,7 +235,7 @@ Solving for $\Pr[X > \epsilon]$ finishes the proof.
 
 \begin{proposition}[Optimality of Bayes Predictor]
 Let $\mathcal{U}$ be a finite set. Let $U,V$ be a random variables such that $U \in \mathcal{U}$ and $V \in \{0,1\}$ with probability one.
-Let $f:\Omega \to \{0,1\}$ be a predictor. Then,
+Let $f:\mathcal{U} \to \{0,1\}$ be a predictor. Then,
 $$
 \Pr\left[ f(U) \neq V \right]
 \ge \sum_{u \in \mathcal{U}} \left( \frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[V \, \middle| \, U = u\right] \right| \right) \cdot \Pr[U = u] \; .
@@ -236,22 +253,23 @@ $$
 \ge
 \frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[V \, \middle| \, U = u \right] \right| \; .
 $$
-Since if  $U=u$, the value $f(U) = f(u)$ is fixed,
+Since if  $U=u$, the value $f(U) = f(u)$ is fixed, and hence
 \begin{align*}
 \Pr\left[ f(U) \neq V \, \middle| \, U = u \right]
 & \ge \min\left\{ \Pr \left[ V = 1 \, \middle| \, U = u \right], \ \Pr \left[ V = 0 \, \middle| \, U = u \right] \right\} \\
 & = \min\left\{ \Exp \left[ V  \, \middle| \, U = u \right], \ 1 - \Exp \left[ V \, \middle| \, U = u \right] \right\} \\
 & = \frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[ V  \, \middle| \, U = u \right] \right|
 \end{align*}
-where we use the fact that $\min\{x, 1 - x\} = \frac{1}{2} - \left| \frac{1}{2} - x \right|$ for all $x \in \R$
+We used the fact that $\min\{x, 1 - x\} = \frac{1}{2} - \left| \frac{1}{2} - x \right|$ for all $x \in \R$
 which can be easily verified by considering two cases: $x \ge \frac{1}{2}$ and $x < \frac{1}{2}$.
 \end{proof}
 
 
 \begin{theorem}[Learning without knowledge of the distribution]
-For any algorithm $A$ there exists a distribution $P \in \P_n$
-and a target concept $c \in C_n$ that requires at least $\Omega \left(??? \right)$
-labeled examples to $\epsilon$-learn with probability at least $1 - \delta$.
+For any algorithm $A$ there exists a distribution $P \in \P_n$ and a target
+concept $c \in C_n$ such that the algorithm requires at least  $\Omega \left(
+\frac{\log n}{\log \log n} \right)$ labeled examples to $\frac{1}{10}$-learn the
+target concept with probability at least $\frac{3}{4}$.
 \end{theorem}
 
 \begin{proof}
@@ -263,29 +281,36 @@ The algorithm receives an $m \times n$ matrix and a binary vector of length $m$.
 The rows of the matrix corresponds to unlabeled examples and the vector encodes
 the labels. The output of the $A$ is any function from $\{0,1\}^n \to \{0,1\}$.
 
-Fix the number of examples $m$ to be any non-negative less than $\log n$. We
-demostrate the existence of a pair $(P,c) \in \P_n \times C_n$ by probabilistic
-method. Let $\sigma$ be uniformly random permutation over $\{1,2,\dots,n\}$. Let
-$J = \sigma(1)$ and note that $J$ is uniformly distributed over
-$\{1,2,\dots,n\}$. We will show that if we feed $A$ an i.i.d. sample of size $m$
-from $P_\sigma$ labeled according to $c_J$, with probability at least $\delta$
-the error of the algorithm is at least $\epsilon$. This will imply the existence
-of the pair $(P,c)$.
+For any function $h:\{0,1\}^n \to \{0,1\}$ any permutation $\sigma \in S_n$, any
+projection $i \in \{1,2,\dots,n\}$, define
+$$
+\err_i(h) = \Pr_{X \sim P_i}[h(X) \neq c_i(X)] \; .
+$$
+In other words, $\err_i$ is the error of $h$ with respect to the target
+$c_i$ under the distribution $P_i$.
 
-Formally, let $X_1, X_2, \dots, X_m$ be an i.i.d. sample from $P_{\sigma}$ and
-let $Y_1 = c_J(X_1), Y_2 = c_J(X_2), \dots, Y_m = c_J(X_m)$ be the target
+Fix the number of examples $m$ to be any non-negative less than $\frac{\log
+n}{\log \log n}$. We demostrate the existence of a pair $(P,c) \in \P_n \times
+C_n$ by probabilistic method. Let $I$ be chosen uniformly at from
+$\{1,2,\dots,n\}$. We will show that if we feed $A$ an i.i.d. sample of size $m$
+from $P_I$ labeled according to $c_I$, with probability at least $\delta$ the
+error of the algorithm is at least $\epsilon$. This will imply the existence of
+the pair $(P,c)$.
+
+Formally, let $X_1, X_2, \dots, X_m$ be an i.i.d. sample from $P_I$ and
+let $Y_1 = c_I(X_1), Y_2 = c_I(X_2), \dots, Y_m = c_I(X_m)$ be the target
 labels. Let $X$ be $m \times n$ matrix with entries $X_i[j]$ and let $Y = (Y_1,
 Y_2, \dots, Y_m)$ be the vector of labels. The output of the algorithm is $A(X,Y)$.
 We will show that
 \begin{equation}
 \label{equation:failure-probability}
-\Pr \left[\err_{\sigma,J}(A(X,Y)) \ge \epsilon \right] \ge \delta \; .
+\Pr \left[\err_I(A(X,Y)) > \frac{1}{10} \right] \ge \frac{1}{4} \; .
 \end{equation}
-Since $\Pr \left[\err_{\sigma,J}(A(X,Y)) \ge \epsilon \right] = \Exp\left[ \Pr \left[\err_{\sigma,J}(A(X,Y)) \ge \epsilon \, \middle| \, \sigma, J \right] \right]$
+Since $\Pr \left[\err_I(A(X,Y)) \ge \epsilon \right] = \Exp\left[ \Pr \left[\err_I(A(X,Y)) \ge \epsilon \, \middle| \, \sigma, I \right] \right]$
 the inequality \eqref{equation:failure-probability} implies that there
-exists $\sigma \in S_n$ and $j \in \{1,2,\dots,n\}$ such that under the
-distribution $P_\sigma$, the algorithm $A$ fails to $\epsilon$-learn the target
-$c_j$ with probability at least $\delta$.
+exists $i \in \{1,2,\dots,n\}$ such that under the
+distribution $P_i$, the algorithm $A$ fails to $\frac{1}{10}$-learn the target
+$c_i$ with probability at least $\frac{1}{4}$.
 
 To prove \eqref{equation:failure-probability}, we first introduce necessary
 notation. For any $n \times m$ matrix $B$, let $B[1], B[2], \dots, B[n]$ be its
@@ -336,87 +361,8 @@ We compute
 
 \end{proof}
 
-\section{Junk}
 
-A permutation $\pi \in S_n$ is said to be a swap of $i,j$
-if $\pi(i) = j$ and $\pi(j) = i$ and for all $k \in \{1,2,\dots,n\} \setminus \{i,j\}$
-$\pi(k) = k$.
-
-\begin{lemma}
-\label{lemma:projection-distances}
-Let $i \in \{2,3,\dots,n\}$. Let $\alpha \in S_n$ be a swap of $1$ and $i$.
-Let $a,b \in \{0,1\}^n$ be binary vectors such that $a_i \neq b_i$
-and $a_j = b_j$ for all $j \in \{1,2,\dots,n\} \setminus \{i\}$.
-Let $h:\{0,1\}^n \to \{0,1\}$ be an arbitary function. Then, for any permutation $\sigma \in S_n$,
-$$
-\err_{c_{\sigma(1)},P_{\sigma,a}}(h) + \err_{c_{\sigma(1)},P_{\sigma,b}}(h) +
-\err_{c_{\sigma(\alpha(1))},P_{\sigma \circ \alpha,b}}(h) + \err_{c_{\sigma(\alpha(1))},P_{\sigma \circ \alpha,b}}(h) \ge 1 \; .
-$$
-\end{lemma}
-
-\begin{proof}
-We claim that for any $x \in \{0,1\}^n$,
-\begin{equation}
-\label{equation:probability-ratio}
-\frac{\displaystyle
-\min \left\{ \Pr_{X \sim P_{\sigma,a}}[X = x] + \Pr_{X \sim P_{\sigma,b}}[X = x], \ \Pr_{X \sim P_{\sigma \circ \alpha,a}}[X = x] + \Pr_{X \sim P_{\sigma \circ \alpha,b}}[X = x] \right\}}{
-\displaystyle \Pr_{X \sim P_{\sigma,a}}[X = x] + \Pr_{X \sim P_{\sigma,b}}[X = x] + \Pr_{X \sim P_{\sigma \circ \alpha,b}}[X = x] + \Pr_{X \sim P_{\sigma \circ \alpha,b}}[X = x]}
-= \frac{1}{2} \; .
-\end{equation}
-Since $P_{\sigma,a}$,
-$P_{\sigma,b}$, $P_{\sigma \circ \alpha,a}$, $P_{\sigma \circ \alpha,b}$
-are product distributions and the marginal distributions of $X_{\sigma(k)}$
-for any $k \not \in \{1,i\}$ under these four distributions are the same,
-after cancelling common terms, we can write the fraction on the left side as $A/B$ where
-\begin{multline*}
-A =
-\min \left\{ \Pr_{X \sim P_{\sigma,a}}[X_{\sigma(1)} = x_{\sigma(1)} \wedge X_{\sigma(i)} = x_{\sigma(i)}]
-+ \Pr_{X \sim P_{\sigma,b}}[X_{\sigma(1)} = x_{\sigma(1)} \wedge X_{\sigma(i)} = x_{\sigma(i)}],  \right. \\
-\left. \Pr_{X \sim P_{\sigma \circ \alpha,a}}[X_{\sigma(1)} = x_{\sigma(1)} \wedge X_{\sigma(i)} = x_{\sigma(i)}]
-+ \Pr_{X \sim P_{\sigma \circ \alpha,b}}[X_{\sigma(1)} = x_{\sigma(1)} \wedge X_{\sigma(i)} = x_{\sigma(i)}]  \right\}
-\end{multline*}
-and
-\begin{multline*}
-B =
-\Pr_{X \sim P_{\sigma,a}}[X_{\sigma(1)} = x_{\sigma(1)} \wedge X_{\sigma(i)} = x_{\sigma(i)}] + \Pr_{X \sim P_{\sigma,b}}[X_{\sigma(1)} = x_{\sigma(1)} \wedge X_{\sigma(i)} = x_{\sigma(i)}] \\
-+ \Pr_{X \sim P_{\sigma \circ \alpha,a}}[X_{\sigma(1)} = x_{\sigma(1)} \wedge X_{\sigma(i)} = x_{\sigma(i)}] + \Pr_{X \sim P_{\sigma \circ \alpha,b}}[X_{\sigma(1)} = x_{\sigma(1)} \wedge X_{\sigma(i)} = x_{\sigma(i)}] \; .
-\end{multline*}
-Since $a_i \neq b_i$,
-$$
-\Pr_{X \sim P_{\sigma,a}}[X_{\sigma(1)} = x_{\sigma(1)} \wedge X_{\sigma(i)} = x_{\sigma(i)}] + \Pr_{X \sim P_{\sigma,b}}[X_{\sigma(1)} = x_{\sigma(1)} \wedge X_{\sigma(i)} = x_{\sigma(i)}] =
-\Pr_{X \sim P_{\sigma,a}}[X_{\sigma(1)} = x_{\sigma(1)}] = \frac{1}{2}
-$$
-and
-$$
-\Pr_{X \sim P_{\sigma \circ \alpha,a}}[X_{\sigma(1)} = x_{\sigma(1)} \wedge X_{\sigma(i)} = x_{\sigma(i)}] + \Pr_{X \sim P_{\sigma \circ \alpha,b}}[X_{\sigma(1)} = x_{\sigma(1)} \wedge X_{\sigma(i)} = x_{\sigma(i)}] =
-\Pr_{X \sim P_{\sigma \circ \alpha,a}}[X_{\sigma(i)} = x_{\sigma(i)}] = \frac{1}{2} \; .
-$$
-
-\allowdisplaybreaks
-Equipped with \eqref{equation:probability-ratio} we finish the proof of the lemma:
-\begin{align*}
-& \err_{c_{\sigma(1)},P_{\sigma,a}}(h) + \err_{c_{\sigma(1)},P_{\sigma,b}}(h) + \err_{c_{\sigma(\alpha(1))},P_{\sigma \circ \alpha,b}}(h) + \err_{c_{\sigma(\alpha(1))},P_{\sigma \circ \alpha,b}}(h) \\
-& = \err_{c_{\sigma(1)},P_{\sigma,a}}(h) + \err_{c_{\sigma(1)},P_{\sigma,b}}(h) + \err_{c_{\sigma(i)},P_{\sigma \circ \alpha,a}}(h) + \err_{c_{\sigma(i)},P_{\sigma \circ \alpha,b}}(h) \\
-& = \Pr_{X \sim P_{\sigma,a}}[h(X) \neq X_{\sigma(1)}] + \Pr_{X \sim P_{\sigma,b}}[h(X) \neq X_{\sigma(1)}] + \Pr_{X \sim P_{\sigma \circ \alpha,b}}[h(X) \neq X_{\sigma(i)}] + \Pr_{X \sim P_{\sigma \circ \alpha,b}}[h(X) \neq X_{\sigma(i)}] \\
-& = \sum_{x \in \{0,1\}^n} \Pr_{X \sim P_{\sigma,a}}[X = x \wedge h(x) \neq x_{\sigma(1)}] + \Pr_{X \sim P_{\sigma,b}}[X = x \wedge h(x) \neq x_{\sigma(1)}] \\
-  & \qquad \qquad + \Pr_{X \sim P_{\sigma \circ \alpha,a}}[X = x \wedge h(x) \neq x_{\sigma(i)}] + \Pr_{X \sim P_{\sigma \circ \alpha,b}}[X = x \wedge h(x) \neq x_{\sigma(i)}] \\
-& \ge \sum_{\substack{x \in \{0,1\}^n \\ x_{\sigma(1)} \neq x_{\sigma(i)}}} \Pr_{X \sim P_{\sigma,a}}[X = x \wedge h(x) \neq x_{\sigma(1)}] + \Pr_{X \sim P_{\sigma,b}}[X = x \wedge h(x) \neq x_{\sigma(1)}] \\
-& \qquad \qquad + \Pr_{X \sim P_{\sigma \circ \alpha,a}}[X = x \wedge h(x) \neq x_{\sigma(i)}] + \Pr_{X \sim P_{\sigma \circ \alpha,b}}[X = x \wedge h(x) \neq x_{\sigma(i)}]  \\
-& \ge \sum_{\substack{x \in \{0,1\}^n \\ x_{\sigma(1)} \neq x_{\sigma(i)}}} \min \left\{ \Pr_{X \sim P_{\sigma,a}}[X = x] + \Pr_{X \sim P_{\sigma,b}}[X = x], \ \Pr_{X \sim P_{\sigma \circ \alpha,a}}[X = x] + \Pr_{X \sim P_{\sigma \circ \alpha,b}}[X = x] \right\}
-  \displaybreak[4] \\
-& = \sum_{\substack{x \in \{0,1\}^n \\ x_{\sigma(1)} \neq x_{\sigma(i)}}} \frac{1}{2} \left(
-\Pr_{X \sim P_{\sigma,a}}[X = x] + \Pr_{X \sim P_{\sigma,b}}[X = x] + \Pr_{X \sim P_{\sigma \circ \alpha,a}}[X = x] + \Pr_{X \sim P_{\sigma \circ \alpha,b}}[X = x] \right) \\
-& = \frac{1}{2} \left( \Pr_{X \sim P_{\sigma,a}}[X_{\sigma(1)} \neq X_{\sigma(i)}] + \Pr_{X \sim P_{\sigma,b}}[X_{\sigma(1)} \neq X_{\sigma(i)}]
-+ \Pr_{X \sim P_{\sigma \circ \alpha,a}}[X_{\sigma(1)} \neq X_{\sigma(i)}] + \Pr_{X \sim P_{\sigma \circ \alpha,b}}[X_{\sigma(1)} \neq X_{\sigma(i)}] \right) \\
-& = \frac{1}{2} \left( \frac{1}{2} + \frac{1}{2} + \frac{1}{2} + \frac{1}{2} \right) = 1 \; .
-\end{align*}
-The first inequality is trivial. The second inequality follows from the fact that
-if $x_{\sigma(1)} \neq x_{\sigma(i)}$ then $h(x)$ must be equal to either $x_{\sigma(1)}$ or $x_{\sigma(i)}$.
-\end{proof}
-
-
-
-\section{Realizable Case: Monotone Disjuctions}
+\section{Monotone Disjuctions}
 
 Consider the class $C_n$ of monotone disjuctions over $D_n = \{0,1\}^n$.
 There are $2^n$ functions in $C_n$. For each subset $I \subseteq \{1,2,\dots,n\}$
@@ -439,21 +385,6 @@ d_P(c_I, c_J)
 & = \Pr[A_I] + \Pr[A_J] - 2 \Pr[A_{I \cup J}] \\
 & = \prod_{i \in I} (1 - p_i) + \prod_{j \in J} (1 - p_j) - 2 \prod_{k \in I \cup J} (1 - p_k) \; . \\
 \end{align*}
-
-\section{Agnostic Model}
-
-Let $C$ be a concept class over a domain $X$. Let $P$ be any distribution over
-$X$. We define the ``disagreement'' pseudometric $d_P(c,c') = \Pr_{(x,y) \sim
-P}[c(x) = c'(x)]$ on $C$. We denote by $N(C,P,\epsilon,)$ be the size of the
-smallest $\epsilon$-cover of $C$ with respect to $d_P$.
-
-Let $R(c) = \Pr_{(x,y) \sim P}[c(x) \neq y]$ be the risk.
-For an i.i.d. sample $(X_1, Y_1), \dots, (X_n, Y_n)$ be an i.i.d. sample
-from $P$, we define the empirical risk
-$$
-R_n(c) = \sum_{i=1}^n \indicator{c(X_i) \neq Y_i} \; .
-$$
-Finally, let $c_n = \argmin_{c \in C} R_n(c)$.
 
 \bibliography{biblio}
 \bibliographystyle{plainnat}
