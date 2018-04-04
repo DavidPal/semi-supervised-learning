@@ -35,7 +35,7 @@
 \begin{abstract}
 We show a separation of labeled sample complexity between learning \emph{with}
 and \emph{without} the knowledge of the distribution of the unlabeled data. For
-the class of projections over the boolean hypercube of dimension $n$, we show a
+the class of projections over the Boolean hypercube of dimension $n$, we show a
 separation by $\Theta(\frac{\log n}{\log \log n})$ multiplicative factor.
 
 Learning with the knowledge of the distribution (a.k.a. \emph{fixed-distribution
@@ -67,22 +67,21 @@ support on a single point has cover of size $2$. That leaves the possibility
 that there exists an algorithm that does \emph{not} depend on the distribution
 and achieves Benedek-Itai bound (or a slightly worse bound) for \emph{every}
 distribution. In fact, one would think that empirical risk minimization (ERM) or
-Hanneke's algorithm could be such algorithm. The reason one might think that is
-that, for example, ERM needs only singificantly less labeled examples to learn
-for some unlabeled distributions, e.g. unlabeled distribution is concentrated on
-a single point. If ERM, Hanneke's algorithm, or some other
-distribution-independent algorithm had sample complexity that matches (or nearly
-matches) the best known distribution-specific bound for \emph{every}
-distribution, we could conclude that the knowledge of unlabeled data
-distribution is completely useless.
+Hanneke's algorithm could be such algorithm. There is reason good to think that:
+ERM needs significantly less labeled examples to learn for some unlabeled
+distributions, e.g. unlabeled distribution is concentrated on a single point. If
+ERM, Hanneke's algorithm, or some other distribution-independent algorithm had
+sample complexity that matches (or nearly matches) the best known
+distribution-specific bound for \emph{every} distribution, we could conclude
+that the knowledge of unlabeled data distribution is completely useless.
 
 As \cite{Darnstadt-Simon-Szorenyi-2013} showed this not the case. Any algorithm
 that does not depend on the unlabeled data, requires, for some data
 distributions, more labeled examples than the Benedek-Itai bound. However, they
 did not quantify this gap. In this paper, we quantify the gap by showing that
-any distribution-independent algorithm for learning the class of projections
-over $\{0,1\}^n$ requires $\Omega(\frac{\log n}{\log \log n})$ as many samples
-as Benedek-Itai bound for some unlabeled distributions.
+\emph{any} distribution-independent algorithm for learning the class of projections
+over $\{0,1\}^n$ requires, for some unlabeled distributions, $\Omega(\frac{\log
+n}{\log \log n})$ times many labeled examples as Benedek-Itai bound.
 
 \section{Related Work}
 
@@ -125,7 +124,7 @@ even an algorithm that knows the distribution requires $\Omega \left(\frac{d +
 
 To better understand the relationship of the upper and lower bounds, we
 summarize the situation for the class of projections over $\{0,1\}^n$ in
-Figure~\ref{figure:sample-complexity}. Recall that Vapnik-Chervonenkis dimenion
+Figure~\ref{figure:sample-complexity}. Recall that Vapnik-Chervonenkis dimension
 of projections over $\{0,1\}^n$ is $\lfloor \log_2 n \rfloor$. This is a
 folklore result, which we re-prove as
 Proposition~\ref{proposition:vc-dimension-projections}.
@@ -143,7 +142,7 @@ Benedek-Itai bound. The green line touches the red line for certain
 distributions, but is lower for other distributions. In particular, for certain
 distributions the green line is $O(1)$. The dashed line corresponds
 to a particular distribution on a shattered set. This is where the green line
-and red line touch. Futhermore, here the the upper bound coincide
+and red line touch. Furthermore, here the the upper bound coincide
 with the lower bound for that particular distribution.
 The black line is the sample complexity
 of an arbitrary \emph{distribution-independent} algorithm. (For example, the
@@ -176,16 +175,16 @@ d_P(f,g) = \Pr_{X \sim P}[f(X) \neq g(X)] \; .
 $$
 Let $C$ be concept class over $\X$, let $c \in C$, let $\epsilon, \delta \in (0,1)$.
 Let  $X_1, X_2, \dots, X_m$ be an i.i.d. sample from $P$. We define the corresponding
-labeled sample $S = ((X_1, c(X_1)), (X_2, c(X_2)), \dots, (X_m, c(X_m)))$.
+labeled sample $T = ((X_1, c(X_1)), (X_2, c(X_2)), \dots, (X_m, c(X_m)))$.
 We say that an algorithm $A$, \emph{$\epsilon$-learns} target $c$ from $m$ samples
 with probability at least $1 - \delta$ if
 $$
-\Pr \left[d_P(c,A(S)) \le \epsilon \right]  \ge 1 - \delta \; .
+\Pr \left[d_P(c,A(T)) \le \epsilon \right]  \ge 1 - \delta \; .
 $$
 
 Below we state two simple propositions that are useful for proving lower bounds
 on the number of labeled samples. The first proposition says that if average
-error $d_P(c,A(S))$ is high, the algorithm can't $\epsilon$-learn. The second
+error $d_P(c,A(T))$ is high, the algorithm can't $\epsilon$-learn. The second
 proposition says that the best algorithm for predicting a bit computes
 conditional expectation of the bit and thresholds it at $1/2$.
 
@@ -257,7 +256,7 @@ $\{0,1\}$. For any $i \in \{1,2,\dots,n\}$, for any $x \in \{0,1\}^n$,
 the function $c_i$ is defined as $c_i((x[1], x[2], \dots, x[n])) = x[i]$.
 
 We consider a family $\P_n$ consisting of $n$ probability distributions $P_1,
-P_2, \dots, P_n$ over the boolean hypercube $\{0,1\}^n$. In order to describe
+P_2, \dots, P_n$ over the Boolean hypercube $\{0,1\}^n$. In order to describe
 the distribution $P_i$, for some $i$, let $X = (X[1], X[2], \dots, X[n])$ be a
 random vector drawn from $P_i$. The distribution $\P_i$ is a product
 distribution, i.e., $\Pr[X = x] = \prod_{j=1}^n \Pr[X[j] = x[j]]$ for any $x \in
@@ -353,8 +352,8 @@ The algorithm receives an $m \times n$ matrix and a binary vector of length $m$.
 The rows of the matrix corresponds to unlabeled examples and the vector encodes
 the labels. The output of the $A$ is any function from $\{0,1\}^n \to \{0,1\}$.
 
-Fix the number of examples $m$ to be any non-negative integer less than
-$\frac{\ln n}{3 \ln \ln n}$. We demostrate the existence of a pair $(P,c) \in
+Let $n \ge 8$. Fix the number of examples $m$ to be any non-negative integer less than
+$\frac{\ln n}{3 \ln \ln n}$. We demonstrate the existence of a pair $(P,c) \in
 \P_n \times C_n$ by probabilistic method.
 
 Let $I$ be chosen uniformly at from $\{1,2,\dots,n\}$. We consider distribution $P_I \in \P_n$ and target $c_I \in C_n$.
@@ -377,108 +376,145 @@ $$
 $$
 
 It remains to prove \eqref{equation:failure-probability}.
-Let $X_{m+1}$ be a test sample drawn from $P_I$. That is, conditioned on $I$, the sequence $X_1, X_2, \dots, X_m, X_{m+1}$ is i.i.d. drawn from $P_I$.
+Let $Z$ be a test sample drawn from $P_I$. That is, conditioned on $I$, the sequence $X_1, X_2, \dots, X_m, Z$ is i.i.d. drawn from $P_I$.
 Then, by Proposition~\ref{proposition:bayes},
 \begin{align*}
 & \Exp \left[d_{P_I}(c_I, A(X,Y))\right] \\
-& = \Pr\left[ A(X,Y)(X_{m+1}) \neq c_I(X_{m+1}) \right] \\
-& \ge \sum_{\substack{B \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ x \in \{0,1\}^n}} \frac{1}{2} - \left| \frac{1}{2} - \Exp\left[ c_I(X_{m+1}) \, \middle| \, X = B, Y = y, X_{m+1} = x \right] \right| \cdot \Pr \left[X = B, Y = y, X_{m+1} = x \right] \; .
+& = \Pr\left[ A(X,Y)(Z) \neq c_I(Z) \right] \\
+& \ge \sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n}} \frac{1}{2} - \left| \frac{1}{2} - \Exp\left[ c_I(Z) \, \middle| \, X = x, Y = y, Z = z \right] \right| \cdot \Pr \left[X = x, Y = y, Z = z \right] \; .
 \end{align*}
-
-Let $\norm{Y}_1$ be the number of ones in $Y$. Since the entries of $Y$ are
-i.i.d., by Chernoff-Hoeffding bound, the norm $\norm{Y}_1$ is between
-$\frac{m}{3}$ and $\frac{2m}{3}$ with probability at least $1 - 2e^{-m/18}$.
-Assuming that $n$ is large enough, we will have $m \ge 54$ and thus the
-probability is at least $1 - 2e^{-3} \ge 5/6$.
-
-Let us denote the columns of $X$ by $X[1], X[2], \dots, X[n]$.
+We need to compute $\Exp\left[ c_I(X_{m+1}) \, \middle| \, X = x, Y = y, Z = z \right]$.
+For that we need some additional notation.
+For any $x \in \{0,1\}^{m \times n}$, let $x[1], x[2], \dots, x[n]$ be its columns.
+For any $x \in \{0,1\}^{m \times n}$ and $y \in \{0,1\}^m$ let
+$$
+k(x,y) = \{ i \in \{1,2,\dots,n\} ~:~ B[i] = y \}
+$$
+be the set of indices of columns matching the column of labels $y$. The key observation is due to symmetry, for $i = 1,2,\dots,n$,
+\begin{align*}
+\Pr \left[I = i \, \middle| \, X = x, Y = y \right]
+=
+\begin{cases}
+\frac{1}{|k(x,y)|} & \text{if $i \in k(x,y)$,} \\
+0 & \text{if $i \not \in k(x,y)$,} \\
+\end{cases}
+\end{align*}
+Next, let
+$$
+p = \frac{1}{\ln n} \; .
+$$
+By definition of the distribution $P_I$ and that conditioned on $I$, the variables $X,Y,Z$ are independent,
+we have for any $x \in \{0,1\}^n$, and $i = 1,2,\dots,n$,
+\begin{align*}
+\Pr \left[Z = z \, \middle| \, I = i, X = x, Y = y \right]
+& = \Pr \left[Z = z \, \middle| \, I = i \right] \\
+& =
+\begin{cases}
+\frac{1}{2} p^{\norm{z}_1 - 1} (1 - p)^{n - \norm{z}_1} & \text{if $z[i] = 1$,} \\
+\frac{1}{2} p^{\norm{z}_1} (1-p)^{n-1 - \norm{z}_1}& \text{if $z[i] = 0$.} \\
+\end{cases}
+\end{align*}
+This allows us to compute the conditional probability
+\begin{align*}
+& \Pr \left[I = i, Z = z \, \middle| \, X = x, Y = y \right] \\
+& \quad = \Pr \left[Z = z \, \middle| \, I = i, X = x, Y = y \right] \cdot \Pr \left[I = i \, \middle| \, X = x, Y = y \right] \\
+& \quad =
+\begin{cases}
+\frac{1}{2|k(x,y)|} p^{\norm{z}_1 - 1} (1 - p)^{n - \norm{z}_1} & \text{if $i \in k(x,y)$ and $z[i] = 1$,} \\
+\frac{1}{2|k(x,y)|} p^{\norm{z}_1} (1 - p)^{n - 1 - \norm{z}_1} & \text{if $i \in k(x,y)$ and $z[i] = 0$,} \\
+0 & \text{if $i \not \in k(B,y)$.} \\
+\end{cases}
+\end{align*}
 Let
 $$
-K = \{ i \in \{1,2,\dots,n\} ~:~ X[i] = Y \}
+s(x,y,z) = \{ i \in k(x,y) ~:~ z[i] = 1 \} \; .
 $$
-be the set of column indices that match the label $Y$. Note that conditioned on
-$X$ and $Y$, the set $K$ is determined. The set will be crucial for
-understanding the conditional expectation $\Exp\left[ c_I(X_{m+1}) \, \middle| \,
-X = B, Y = y, X_{m+1} = x \right]$.
+and note that $s(x,y,z) \subseteq k(x,y)$.
+Then,
+\begin{align*}
+& \Pr \left[Z = z \, \middle| \, X = x, Y = y \right] \\
+& \quad = \sum_{i=1}^n \Pr \left[Z = z, I = i \, \middle| \, X = x, Y = y \right] \\
+& \quad = \sum_{i \in k(x,y)} \Pr \left[Z = z, I = i \, \middle| \, X = x, Y = y \right] \\
+& \quad = \sum_{i \in s(x,y,x)} \Pr \left[Z = z, I = i \, \middle| \, X = x, Y = y \right] + \sum_{i \in k(x,y) \setminus s(x,y,z)} \Pr \left[Z = z, I = i \, \middle| \, X = x, Y = y \right] \\
+& \quad = \frac{1}{2|k(x,y)|} \cdot |s(x,y,z)| \cdot p^{\norm{z}_1 - 1} (1 - p)^{n - \norm{z}_1} + \frac{1}{2|k(x,y)|} \cdot (|k(x,y)| - |s(x,y,z)|) \cdot p^{\norm{z}_1} (1 - p)^{n - 1 - \norm{z}_1} \\
+& \quad = \frac{p^{\norm{z}_1 - 1} (1 - p)^{n - 1 - \norm{z}_1}}{2|k(x,y)|} \cdot \left( |s(x,y,z)| \cdot (1 - 2p) + |k(x,y)| \cdot p \right) \; .
+\end{align*}
+Hence,
+\begin{align*}
+& \Exp\left[ c_I(Z) \, \middle| \, X = x, Y = y, Z = z \right] \\
+& \quad = \Pr \left[ Z[I] = 1 \, \middle| \, X = x, Y = y, Z = z \right] \\
+& \quad = \frac{\displaystyle \Pr \left[ Z[I] = 1, Z = z \, \middle| \, X = x, Y = y \right]}{\displaystyle \Pr \left[ Z = z \, \middle| \, X = x, Y = y \right]} \\
+& \quad = \frac{\displaystyle \Pr \left[ Z[I] = 1, Z = z \, \middle| \, X = x, Y = y \right]}{\displaystyle \Pr \left[ Z = z \right]} \\
+& \quad = \frac{\displaystyle \sum_{i=1}^n \Pr \left[ I = i, Z[i] = 1, Z = z \, \middle| \, X = x, Y = y \right]}{\displaystyle \Pr \left[ Z = z \right]} \\
+& \quad = \frac{\displaystyle \frac{|s(x,y,z)|}{2|k(x,y)|} \cdot p^{\norm{z}_1 - 1} (1 - p)^{n - \norm{z}_1}}{\displaystyle \frac{p^{\norm{z}_1 - 1} (1 - p)^{n - 1 - \norm{z}_1}}{2|k(x,y)|} \cdot \left( |s(x,y,z)| \cdot (1 - 2p) + |k(x,y,z)| \cdot p \right) } \\
+& \quad = \frac{\displaystyle |s(x,y,z)| \cdot (1 - p)}{\displaystyle |s(x,y,z)| \cdot (1 - 2p) + |k(x,y)| \cdot p } \\
+& \quad = \frac{\displaystyle 1 - p}{\displaystyle 1 - 2p + \frac{|k(x,y)| \cdot p}{|s(x,y,z)|}} \\
+\end{align*}
 
-We lower bound cardinality of $K$. Let $p = \frac{1}{\ln n}$. For any $y \in
-\{0,1\}^m$ and any $i,j \in \{1,2,\dots,n\}$,
+Making the approximations $\frac{|k(x,y)| \cdot p}{|s(x,y,z)|} \approx 1$ and $p
+\approx 0$, we see that the conditional expectation is close to $1/2$. The rest
+of proof formalizes this intuition. To that end, we define
+two additional random variables
 $$
-\Pr \left[ j \in K  \, \middle| \, Y = y, I = i \right]
+K = |k(X,Y)| \qquad \text{and} \qquad S = |s(X,Y,Z)| \; .
+$$
+
+We lower bound $K$. For any $y \in \{0,1\}^m$ and any $i,j \in \{1,2,\dots,n\}$,
+$$
+\Pr \left[ j \in k(X,Y)  \, \middle| \, Y = y, I = i \right]
 =
 \begin{cases}
 1 & \text{if $j = i$,} \\
 p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} & \text{if $j \neq j$.}
 \end{cases}
 $$
-Conditioned on $Y = y, I=i$, $|K|-1$ is sum of $n-1$ Bernoulli variables, one
-for each column other than $i$. Chernoff-Hoeffding bound gives that
+Conditioned on $Y = y$ and $I=i$, the random variable $K - 1 = |k(X,Y)| - 1$ is
+a sum of $n-1$ Bernoulli variables, one for each column except $i$.
+Chernoff-Hoeffding bound gives that
 $$
-\Pr \left[ \frac{|K| - 1}{n - 1} > p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} - \epsilon \, \middle| \,  Y = y, I = i  \right] \ge 1 - e^{-2(n-1) \epsilon^2} \; .
+\Pr \left[ \frac{K - 1}{n - 1} > p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} - \epsilon \, \middle| \,  Y = y, I = i  \right] \ge 1 - e^{-2(n-1) \epsilon^2} \; .
 $$
-Hence, substituing $\epsilon = p^m/2$ and using lower bound $p^{\norm{y}_1} (1 -
-p)^{m - \norm{y}_1} \ge p^m$, we get
+We substitute $\epsilon = p^m/2$. Since $n \ge 8$, $p = \frac{1}{\ln n} \le 1/2$ and thus $p^{\norm{y}_1} (1 -
+p)^{m - \norm{y}_1} \ge p^m$ and we get
 \begin{align*}
-\Pr \left[ \frac{|K| - 1}{n - 1} > p^m/2  \, \middle| \,  Y = y, I = i  \right]
-& = \Pr \left[ \frac{|K| - 1}{n - 1} > p^m - \epsilon  \, \middle| \,  Y = y, I = i  \right] \\
-& \ge \Pr \left[ \frac{|K| - 1}{n - 1} > p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} - \epsilon  \, \middle| \,  Y = y, I = i  \right] \\
+\Pr \left[ \frac{K - 1}{n - 1} > \frac{p^m}{2}  \, \middle| \,  Y = y, I = i  \right]
+& = \Pr \left[ \frac{K - 1}{n - 1} > p^m - \epsilon  \, \middle| \,  Y = y, I = i  \right] \\
+& \ge \Pr \left[ \frac{K - 1}{n - 1} > p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} - \epsilon  \, \middle| \,  Y = y, I = i  \right] \\
 & \ge 1 - e^{-2(n-1) \epsilon^2} \; .
 \end{align*}
-We lower bound $\epsilon = p^m/2$ as
+We lower bound $\epsilon = \frac{p^m}{2}$ as
 $$
-\epsilon = p^m/2 > \frac{1}{2} p^\frac{\ln n}{3 \ln \ln n} = \frac{1}{2} \left( \frac{1}{\ln n} \right)^\frac{\ln n}{3 \ln \ln n} = \frac{1}{2\sqrt[3]{n}} \; .
+\epsilon = p^m/2 > \frac{p^\frac{\ln n}{3 \ln \ln n}}{2} = \frac{1}{2} \left( \frac{1}{\ln n} \right)^\frac{\ln n}{3 \ln \ln n} = \frac{1}{2\sqrt[3]{n}} \; .
 $$
 Since the lower bound is uniform for all choices of $y$ and $i$, we can remove
-the conditionting and conclude that
+the conditioning and conclude that
 $$
 \Pr \left[ |K| > 1 + \frac{(n-1)}{2\sqrt[3]{n}} \right] \ge 1 - \exp \left(- \frac{(n-1)}{2 n^{2/3}} \right) \; .
 $$
 For $n \ge 2$, we can simplify it further to
 $$
-\Pr \left[ |K| > \frac{n^{2/3}}{4} \right] \ge 1 - \exp \left(- \frac{\sqrt[3]{n}}{4} \right) \; .
+\Pr \left[ |K| > 1 + \frac{n^{2/3}}{4} \right] \ge 1 - \exp \left(- \frac{\sqrt[3]{n}}{4} \right) \; .
 $$
 
-It remains to show that $\Exp\left[ c_I(X_{m+1}) \, \middle| \, X = B, Y = y, X_{m+1} = x \right]$ is close to $1/2$.
-For any $B \in \{0,1\}^{m \times n}$, let $B[1], B[2], \dots, B[n]$ be its columns.
-For any $B \in \{0,1\}^{m \times n}$ and $y \in \{0,1\}^m$ let
-$$
-L(B,y) = \{ i \in \{1,2,\dots,n\} ~:~ B[i] = y \}
-$$
-be the set of matching column indices. We have
-$$
-\Pr \left[ I = i, X_{m+1} = x \, \middle| \, X = B, Y = y \right]
-=
-\begin{cases}
-\frac{1}{|L(B,y)|} \, p^{\norm{x}_1} (1 - p)^{m-\norm{x}_1} & \text{if $i \in L(B,y)$,} \\
-0 & \text{if $i \not \in L(B,y)$.} \\
-\end{cases}
-$$
-Hence,
-\begin{align*}
-\Exp\left[ c_I(X_{m+1}) \, \middle| \, X = B, Y = y, X_{m+1} = x \right]
-& = \Pr \left[ X_{m+1}[I] = 1 \, \middle| \, X = B, Y = y, X_{m+1} = x \right] \\
-& = \frac{\Pr \left[ X_{m+1}[I] = 1, X_{m+1} = x \, \middle| \, X = B, Y = y \right]}{\Pr \left[ X_{m+1} = x \, \middle| \, X = B, Y = y \right]} \\
-& = \frac{\Pr \left[ X_{m+1}[I] = 1, X_{m+1} = x \, \middle| \, X = B, Y = y \right]}{\Pr \left[ X_{m+1} = x \right]} \\
-& = \frac{\sum_{i=1}^n \Pr \left[ I = i, X_{m+1}[i] = 1, X_{m+1} = x \, \middle| \, X = B, Y = y \right]}{\Pr \left[ X_{m+1} = x \right]} \\
-& = TODO
-\end{align*}
+TODO
+
 \end{proof}
 
 
-\section{Monotone Disjuctions}
+\section{Monotone Disjunctions}
 
-Consider the class $C_n$ of monotone disjuctions over $D_n = \{0,1\}^n$.
-There are $2^n$ functions in $C_n$. For each subset $I \subseteq \{1,2,\dots,n\}$
-there is monotone disjuction $c_I:D_n \to \{0,1\}$ defined by
+Consider the class $C_n$ of monotone disjunctions over $D_n = \{0,1\}^n$. There
+are $2^n$ functions in $C_n$. For each subset $I \subseteq \{1,2,\dots,n\}$
+there is monotone disjunction $c_I:D_n \to \{0,1\}$ defined by
 $$
 c_I(x) = \bigvee_{i \in I} x_i \; .
 $$
 We define $c_\emptyset$ to be constant zero function.
 
 We consider the same family of distributions $\P_n$ as in the previous section.
-Let $P = P_{Identity} \in \P_n$. We compute the distance $d_P(c_I, c_J)$
-between any two monotone disjuctions. For any subset
-$K \subseteq \{1,2,\dots,n\}$, let $A_K$ be the event that all for all $i \in K$, $x_i = 0$.
+Let $P = P_{Identity} \in \P_n$. We compute the distance $d_P(c_I, c_J)$ between
+any two monotone disjunctions. For any subset $K \subseteq \{1,2,\dots,n\}$, let
+$A_K$ be the event that all for all $i \in K$, $x_i = 0$.
 \begin{align*}
 d_P(c_I, c_J)
 & = \Pr_{x \sim P}[c_I(x) \neq c_J(x)] \\
