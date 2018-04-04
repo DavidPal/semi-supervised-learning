@@ -33,7 +33,7 @@
 \maketitle
 
 \begin{abstract}
-We show a separation of labeled sample complexity between learning \emph{with}
+We show a separation of the number of labeled examples required between learning \emph{with}
 and \emph{without} the knowledge of the distribution of the unlabeled data. For
 the class of projections over the Boolean hypercube of dimension $n$, we show a
 separation by $\Theta(\frac{\log n}{\log \log n})$ multiplicative factor.
@@ -50,38 +50,43 @@ the \emph{value of unlabeled data}.
 
 \cite{Hanneke-2016} showed that for any class $C$ of Vapnik-Chervonenkis
 dimension $d$ there exists an algorithm that $\epsilon$-learns any target
-function from $C$ under any domain distribution  from $O\left(\frac{d +
+function from $C$ under any distribution from $O\left(\frac{d +
 \log(1/\delta)}{\epsilon}\right)$ labeled examples with probability at least
 $1-\delta$. \cite{Benedek-Itai-1991} showed that for any class $C$ and any
 distribution there exists an algorithm that $\epsilon$-learns any target from
-$C$ from $O \left( \frac{\log N + \log (1/\delta)}{\epsilon}\right)$ labeled
-examples with probability at least $1-\delta$ where $N$ is the size of an
+$C$ from $O \left( \frac{\log N_\epsilon + \log (1/\delta)}{\epsilon}\right)$ labeled
+examples with probability at least $1-\delta$ where $N_\epsilon$ is the size of an
 $\epsilon$-covering of $C$ with respect to the disagreement metric $d(f,g) =
-\Pr[f(x) \neq g(x)]$.
+\Pr[f(x) \neq g(x)]$. Ignoring $\log(1/\epsilon)$ factor, Benedek-Itai bound
+is never worse than Hanneke's bound, since $N_\epsilon = O(1/\epsilon)^{O(d)}$; see
+\cite{Dudley-1978}.
 
-Benedek-Itai's algorithm receives as input the distribution of unlabeled data in
-order to construct an $\epsilon$-cover. Unsurprisingly, there exists
-distributions for which Benedek-Itai's bound on the sample complexity is
+Benedek-Itai's algorithm receives as input the distribution of unlabeled data.
+(The algorithm uses it to construct the $\epsilon$-cover.) Unsurprisingly, there
+exist distributions for which Benedek-Itai's bound on the sample complexity is
 significantly lower then the Hanneke's bound. For instance, a distribution with
 support on a single point has cover of size $2$. That leaves the possibility
 that there exists an algorithm that does \emph{not} depend on the distribution
 and achieves Benedek-Itai bound (or a slightly worse bound) for \emph{every}
 distribution. In fact, one would think that empirical risk minimization (ERM) or
 Hanneke's algorithm could be such algorithm. There is reason good to think that:
-ERM needs significantly less labeled examples to learn for some unlabeled
-distributions, e.g. unlabeled distribution is concentrated on a single point. If
-ERM, Hanneke's algorithm, or some other distribution-independent algorithm had
-sample complexity that matches (or nearly matches) the best known
-distribution-specific bound for \emph{every} distribution, we could conclude
-that the knowledge of unlabeled data distribution is completely useless.
+ERM needs significantly less labeled examples to learn any target under some
+unlabeled distributions, e.g. for distributions concentrated on a single point
+ERM needs only one labeled example. If ERM, Hanneke's algorithm, or some other
+distribution-independent algorithm had sample complexity that matches (or nearly
+matches) the optimal distribution-specific sample complexity for \emph{every}
+distribution, we could conclude that the knowledge of unlabeled data
+distribution is completely useless.
 
-As \cite{Darnstadt-Simon-Szorenyi-2013} showed this not the case. Any algorithm
-that does not depend on the unlabeled data, requires, for some data
-distributions, more labeled examples than the Benedek-Itai bound. However, they
-did not quantify this gap. In this paper, we quantify the gap by showing that
-\emph{any} distribution-independent algorithm for learning the class of projections
-over $\{0,1\}^n$ requires, for some unlabeled distributions, $\Omega(\frac{\log
-n}{\log \log n})$ times many labeled examples as Benedek-Itai bound.
+As \cite{Darnstadt-Simon-Szorenyi-2013} showed this not the case. They showed
+that any algorithm for learning projections over $\{0,1\}^n$ that does not
+depend on the unlabeled data, requires, for some data distributions, more
+labeled examples than the Benedek-Itai bound. However, they did not quantify
+this gap, beside stating that it grows without bound as $n$ goes to infinity.
+In this paper, we quantify the gap by showing that \emph{any}
+distribution-independent algorithm for learning the class of projections over
+$\{0,1\}^n$ requires, for some unlabeled distributions, $\Omega(\frac{\log
+n}{\log \log n})$ times as many labeled examples as Benedek-Itai bound.
 
 \section{Related Work}
 
@@ -209,8 +214,8 @@ Solving for $\Pr[Z > \epsilon]$ finishes the proof.
 
 \begin{proposition}[Optimality of Bayes Predictor]
 \label{proposition:bayes}
-Let $\mathcal{U}$ be a finite set. Let $U,V$ be a random variables such that $U \in \U$ and $V \in \{0,1\}$ with probability one.
-Let $f:\mathcal{U} \to \{0,1\}$ be a predictor. Then,
+Let $\U$ be a finite set. Let $U,V$ be a random variables such that $U \in \U$ and $V \in \{0,1\}$ with probability one.
+Let $f:\U \to \{0,1\}$ be a predictor. Then,
 $$
 \Pr\left[ f(U) \neq V \right]
 \ge \sum_{u \in \U} \left( \frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[V \, \middle| \, U = u\right] \right| \right) \cdot \Pr[U = u] \; .
@@ -458,8 +463,9 @@ two additional random variables
 $$
 K = |k(X,Y)| \qquad \text{and} \qquad S = |s(X,Y,Z)| \; .
 $$
+We will show that with probability $1 - o(1)$, $K = \Omega(n^{2/3})$ and $S$ is within a constant factor of $Kp$.
 
-We lower bound $K$. For any $y \in \{0,1\}^m$ and any $i,j \in \{1,2,\dots,n\}$,
+First, we lower bound $K$. For any $y \in \{0,1\}^m$ and any $i,j \in \{1,2,\dots,n\}$,
 $$
 \Pr \left[ j \in k(X,Y)  \, \middle| \, Y = y, I = i \right]
 =
@@ -469,7 +475,7 @@ p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} & \text{if $j \neq j$.}
 \end{cases}
 $$
 Conditioned on $Y = y$ and $I=i$, the random variable $K - 1 = |k(X,Y)| - 1$ is
-a sum of $n-1$ Bernoulli variables, one for each column except $i$.
+a sum of $n-1$ Bernoulli variables with parameter $p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1}$, one for each column except for column $i$.
 Chernoff-Hoeffding bound gives that
 $$
 \Pr \left[ \frac{K - 1}{n - 1} > p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} - \epsilon \, \middle| \,  Y = y, I = i  \right] \ge 1 - e^{-2(n-1) \epsilon^2} \; .
@@ -496,6 +502,14 @@ $$
 \Pr \left[ |K| > 1 + \frac{n^{2/3}}{4} \right] \ge 1 - \exp \left(- \frac{\sqrt[3]{n}}{4} \right) \; .
 $$
 
+Second, condioned on the set $X=x$, $Y=y$ and $I=i$, the random variable $S - 1$
+is a sum of $|k(x,y)|-1 = K - 1$ Bernoulli random variables with parameter $p$,
+one for each column in $k(x,y)$ except for column $i$. Chernoff-Hoeffding bound with $\epsilon = p/2$
+gives that
+\begin{align*}
+\Pr \left[ \left| \frac{S - 1}{|k(x,y)| - 1} - p \right| < p/2  \, \middle| \, X = x, Y = y, I = i  \right] \ge 1 - e^{-2 (|k(x,y)| - 1) p^2} \; .
+\end{align*}
+
 TODO
 
 \end{proof}
@@ -503,9 +517,9 @@ TODO
 
 \section{Monotone Disjunctions}
 
-Consider the class $C_n$ of monotone disjunctions over $D_n = \{0,1\}^n$. There
+Consider the class $C_n$ of monotone disjunctions over $\X = \{0,1\}^n$. There
 are $2^n$ functions in $C_n$. For each subset $I \subseteq \{1,2,\dots,n\}$
-there is monotone disjunction $c_I:D_n \to \{0,1\}$ defined by
+there is monotone disjunction $c_I:\X \to \{0,1\}$ defined by
 $$
 c_I(x) = \bigvee_{i \in I} x_i \; .
 $$
