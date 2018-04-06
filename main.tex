@@ -260,19 +260,23 @@ class $C_n$ consists of $n$ functions $c_1, c_2, \dots, c_n$ from $\{0,1\}^n$ to
 $\{0,1\}$. For any $i \in \{1,2,\dots,n\}$, for any $x \in \{0,1\}^n$,
 the function $c_i$ is defined as $c_i((x[1], x[2], \dots, x[n])) = x[i]$.
 
-We consider a family $\P_n$ consisting of $n$ probability distributions $P_1,
-P_2, \dots, P_n$ over the Boolean hypercube $\{0,1\}^n$. In order to describe
-the distribution $P_i$, for some $i$, let $X = (X[1], X[2], \dots, X[n])$ be a
-random vector drawn from $P_i$. The distribution $\P_i$ is a product
-distribution, i.e., $\Pr[X = x] = \prod_{j=1}^n \Pr[X[j] = x[j]]$ for any $x \in
-\{0,1\}^n$. The marginal distributions of the coordinates are
+For any $p \in (0,\frac{1}{4})$ and $n \ge 2$,
+we consider a family $\P_{n,p}$ consisting of
+$n$ probability distributions $P_1, P_2, \dots, P_n$ over the Boolean hypercube
+$\{0,1\}^n$. In order to describe the distribution $P_i$, for some $i$, let $X =
+(X[1], X[2], \dots, X[n])$ be a random vector drawn from $P_i$. The distribution
+$\P_i$ is a product distribution, i.e., $\Pr[X = x] = \prod_{j=1}^n \Pr[X[j] =
+x[j]]$ for any $x \in \{0,1\}^n$. The marginal distributions of the coordinates
+are
 $$
 \Pr[X[j] = 1] =
 \begin{cases}
 \frac{1}{2} & \text{if $j = i$,} \\
-\frac{1}{\ln n} & \text{if $j\neq i$.} \\
+p & \text{if $j\neq i$.} \\
 \end{cases}
 $$
+Throughtout the paper we treat $p$ as a constant that does not depend
+on $n$. The reader can think of $p=1/100$.
 
 \begin{proposition}
 \label{proposition:vc-dimension-projections}
@@ -300,13 +304,48 @@ binary representation $v$, then we can take $c = c_{k+1}$.
 
 
 \begin{theorem}[Lerning with knowledge of the distribution]
-There exists a distribution-dependent algorithm that for any distribution from
-$\P_n$ and any $\delta \in (0,1)$, $\frac{1}{10}$-learns any target function from $C_n$ using
-$O \left( \log(1/\delta) \right)$ labeled examples with probability at least $1 -
-\delta$.
+For any $n \ge 2$, there exists a distribution-dependent algorithm such that
+for any $p \in (0,\frac{1}{4})$, any distribution from $\P_{n,p}$, any $\delta
+\in (0,1)$, any target function $c \in C_n$, such that the algorithm
+$2p$-learns the target using $O \left( \log(1/\delta) \right)$
+labeled examples with probability at least $1 - \delta$.
 \end{theorem}
 
 \begin{proof}
+Given a distribution $P_i \in \P_{n,p}$ for some $i \in \{1,2,\dots,n\}$, the
+algorithm chooses two candidate functions $c_i, c_j \in C_n$ where $j$ is
+arbitary index in $\{1,2,\dots,n\} \setminus \{j\}$. Given a sample $T =
+((x_1, y_1), (x_2, y_2), \dots, (x_m,y_m))$ it outputs either $c_i$ or $c_j$
+depending on which one has smaller empirical error. Recall that
+empirical error of a classifier $h:\X \to \{0,1\}$ is
+$$
+\widehat \err(h) = \frac{1}{m} \sum_{t=1}^m \indicator{y_t \neq h(x_t)} \; .
+$$
+If $x_1, x_2, \dots, x_m$ are drawn i.i.d. from $P_i$
+and the target function is $c_k \in C_n$ then
+$\Exp[\widehat \err(h)] = d_{P_i}(c_k, h)$.
+
+There are three cases. Either $k = i$, $k = j$ or $k \not \in {i,k}$.
+
+\emph{Case $k=i$} In this case $\widehat \err(c_i) = 0$ with probability one.
+Since $\indicator{y_t \neq c_j(x_t)}$ is a Bernoulli variable with parameter
+$d_{P_i}(c_k, c_j) = d_{P_i}(c_i, c_j) = \frac{1}{2}$. Thus,
+using Chernoff-Heoffding bound with $\epsilon = \frac{1}{2}$,
+$$
+\Pr[\widehat \err(c_j) > \widehat \err(c_i)] = \Pr[\widehat \err(c_j) > 0] \ge 1 - e^{m/2} \ge 1 - \delta \; .
+$$
+Therefore, with probability $1 - \delta$, the algorithm outputs the correct target $c_i$.
+
+\emph{Case $k=j$} In this case $\widehat \err(c_j) = 0$ with probability one.
+Since $\indicator{y_t \neq c_i(x_t)}$ is a Bernoulli variable with parameter
+$d_{P_i}(c_k, c_i) = d_{P_i}(c_i, c_j) = \frac{1}{2}$. Thus,
+using Chernoff-Heoffding bound with $\epsilon = \frac{1}{2}$,
+$$
+\Pr[\widehat \err(c_i) > \widehat \err(c_j)] = \Pr[\widehat \err(c_i) > 0] \ge 1 - e^{m/2} \ge 1 - \delta \; .
+$$
+Therefore, with probability $1 - \delta$, the algorithm the correct target $c_i$.
+
+
 The proof relies on a result of \cite{Benedek-Itai-1991} for learning under
 ``fixed'' distributions. If $P$ is any probability distribution on some domain,
 then $d_P(f,g) = \Pr_{X \sim P}[f(X) \neq g(X)]$ is a pseudo-metric on the set of all
@@ -320,7 +359,7 @@ For our purposes we pick $\epsilon = \frac{1}{5}$. We show that for any
 distribution in $\P_n$ the class $C_n$ has an $\frac{1}{10}$-cover of size $N =
 2$. This will imply the lemma.
 
-Consider distribution $P_i \in \P_n$ for some $i \in \{1,2,\dots,n\}$.
+Consider a distribution $P_i \in \P_{n,p}$ for some $i \in \{1,2,\dots,n\}$.
 Pick any $j \in \{1,2,\dots,n\}$ such that $j \neq i$.
 We claim that $C' = \{ c_i, c_j \}$ is an $\frac{1}{10}$-cover of
 $C_n$. That is, we claim that for any $c \in C_n$, there exists $c' \in
@@ -332,11 +371,8 @@ $$
 d_{P_i}(c_j, c_k)
 = \Pr_{X \sim P_i}[X_j \neq X_k] \\
 = 2 p (1 - p) \\
-\le 2p \\
-= \frac{2}{\ln n} \\
-\le \frac{1}{10} \; .
+\le 2p \; .
 $$
-The last inequality is true for all $n \ge e^{20}$.
 \end{proof}
 
 
