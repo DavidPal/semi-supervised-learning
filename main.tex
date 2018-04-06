@@ -36,7 +36,7 @@
 We show a separation of the number of labeled examples required between learning \emph{with}
 and \emph{without} the knowledge of the distribution of the unlabeled data. For
 the class of projections over the Boolean hypercube of dimension $n$, we show a
-separation by $\Theta(\frac{\log n}{\log \log n})$ multiplicative factor.
+separation by $\Theta(\log n)$ multiplicative factor.
 
 Learning with the knowledge of the distribution (a.k.a. \emph{fixed-distribution
 learning}) can be viewed as an idealized scenario of semi-supervised learning
@@ -85,8 +85,8 @@ labeled examples than the Benedek-Itai bound. However, they did not quantify
 this gap, beside stating that it grows without bound as $n$ goes to infinity.
 In this paper, we quantify the gap by showing that \emph{any}
 distribution-independent algorithm for learning the class of projections over
-$\{0,1\}^n$ requires, for some unlabeled distributions, $\Omega(\frac{\log
-n}{\log \log n})$ times as many labeled examples as Benedek-Itai bound.
+$\{0,1\}^n$ requires, for some unlabeled distributions, $\Omega(\log
+n)$ times as many labeled examples as Benedek-Itai bound.
 
 \section{Related Work}
 
@@ -101,8 +101,8 @@ separation does not exist and they (incorrectly) concluded that unlabeled data
 are useless.
 
 The question was studied in earnest by \cite{Darnstadt-Simon-Szorenyi-2013} who
-show two major results. First, they show that for any concept class $C$ and for
-every distribution the ratio of the sample complexities between
+show two major results. First, they show that for any non-trivial concept class
+$C$ and for every distribution the ratio of the sample complexities between
 distribution-independent and distribution-dependent algorithms is at most
 $\VC(C)$. Second, they show that for the class of projections over $\{0,1\}^n$,
 there are distributions where the ratio grows to infinity as a function of $n$.
@@ -244,12 +244,12 @@ We used the fact that $\min\{x, 1 - x\} = \frac{1}{2} - \left| \frac{1}{2} - x \
 which can be easily verified by considering two cases: $x \ge \frac{1}{2}$ and $x < \frac{1}{2}$.
 \end{proof}
 
-\begin{theorem}[Chernoff-Hoeffding bound]
-Let $X_1, X_2, \dots, X_n$ be i.i.d. Bernoulli variables with parameter $p$.
+\begin{theorem}[Hoeffding bound]
+Let $X_1, X_2, \dots, X_n$ be i.i.d. that lie in interval $[a,b]$ with probability one.
 Then, for any $\epsilon \ge 0$,
 $$
-\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \ge p + \epsilon \right] \le e^{ - 2n \epsilon^2}  \qquad \text{and} \qquad
-\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \le p - \epsilon \right] \le e^{ - 2n \epsilon^2}  \; . \\
+\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \ge p + \epsilon \right] \le e^{ - 2n \epsilon^2/(a-b)^2}  \qquad \text{and} \qquad
+\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \le p - \epsilon \right] \le e^{ - 2n \epsilon^2/(a-b)^2}  \; . \\
 $$
 \end{theorem}
 
@@ -260,22 +260,22 @@ class $C_n$ consists of $n$ functions $c_1, c_2, \dots, c_n$ from $\{0,1\}^n$ to
 $\{0,1\}$. For any $i \in \{1,2,\dots,n\}$, for any $x \in \{0,1\}^n$,
 the function $c_i$ is defined as $c_i((x[1], x[2], \dots, x[n])) = x[i]$.
 
-For any $p \in (0,\frac{1}{4})$ and $n \ge 2$,
-we consider a family $\P_{n,p}$ consisting of
-$n$ probability distributions $P_1, P_2, \dots, P_n$ over the Boolean hypercube
-$\{0,1\}^n$. In order to describe the distribution $P_i$, for some $i$, let $X =
-(X[1], X[2], \dots, X[n])$ be a random vector drawn from $P_i$. The distribution
-$\P_i$ is a product distribution, i.e., $\Pr[X = x] = \prod_{j=1}^n \Pr[X[j] =
-x[j]]$ for any $x \in \{0,1\}^n$. The marginal distributions of the coordinates
-are
+For any $p \in (0,\frac{1}{4})$ and $n \ge 2$, we consider a family $\P_{n,p}$
+consisting of $n$ probability distributions $P_1, P_2, \dots, P_n$ over the
+Boolean hypercube $\{0,1\}^n$. In order to describe the distribution $P_i$, for
+some $i$, considers a random vector $X = (X[1], X[2], \dots, X[n])$ drawn from
+$P_i$. The distribution $P_i$ is a product distribution, i.e., $\Pr[X = x] =
+\prod_{j=1}^n \Pr[X[j] = x[j]]$ for any $x \in \{0,1\}^n$. The marginal
+distributions of the coordinates are
 $$
 \Pr[X[j] = 1] =
 \begin{cases}
 \frac{1}{2} & \text{if $j = i$,} \\
 p & \text{if $j\neq i$.} \\
 \end{cases}
+\qquad \qquad \text{for $j=1,2,\dots,n$.}
 $$
-Throughtout the paper we treat $p$ as a constant that does not depend
+Throughout the paper, we treat $p$ as a constant that does not depend
 on $n$. The reader can think of $p=1/100$.
 
 \begin{proposition}
@@ -302,13 +302,20 @@ let $k \in \{0,1,\dots,2^{\lfloor \log_2 n \rfloor} - 1\}$ be the number with
 binary representation $v$, then we can take $c = c_{k+1}$.
 \end{proof}
 
+The following theorem states that under any distribution from $\P_{n,p}$, if the
+distribution is known, for learning any target from $C_n$, the number of
+labeled examples that are required does not depend on $n$. In other
+words, the distribution-dependent complexity is $O(1)$.
 
-\begin{theorem}[Lerning with knowledge of the distribution]
+\begin{theorem}[Learning with knowledge of the distribution]
 For any $n \ge 2$, there exists a distribution-dependent algorithm such that
 for any $p \in (0,\frac{1}{4})$, any distribution from $\P_{n,p}$, any $\delta
-\in (0,1)$, any target function $c \in C_n$, such that the algorithm
-$2p$-learns the target using $O \left( \log(1/\delta) \right)$
-labeled examples with probability at least $1 - \delta$.
+\in (0,1)$, any target function $c \in C_n$,
+if the algorithm gets at least
+$$
+\frac{2\ln(1/\delta)}{(1 - 4p(1-p))^2}
+$$
+labeled examples, with probability at least $1 - \delta$, it $2p$-learns the target.
 \end{theorem}
 
 \begin{proof}
@@ -323,65 +330,56 @@ $$
 $$
 If $x_1, x_2, \dots, x_m$ are drawn i.i.d. from $P_i$
 and the target function is $c_k \in C_n$ then
-$\Exp[\widehat \err(h)] = d_{P_i}(c_k, h)$.
+$\Exp[\indicator{y_t \neq h(x_t)}] = \Exp[\widehat \err(h)] = d_{P_i}(c_k, h)$.
+There are three cases. Either $k = i$, $k = j$, or $k \not \in \{i,j\}$.
 
-There are three cases. Either $k = i$, $k = j$ or $k \not \in {i,k}$.
-
-\emph{Case $k=i$} In this case $\widehat \err(c_i) = 0$ with probability one.
+\emph{Case $k=i$.} With probability one, $\widehat \err(c_i) = 0$.
 Since $\indicator{y_t \neq c_j(x_t)}$ is a Bernoulli variable with parameter
-$d_{P_i}(c_k, c_j) = d_{P_i}(c_i, c_j) = \frac{1}{2}$. Thus,
+$d_{P_i}(c_k, c_j) = d_{P_i}(c_i, c_j) = \frac{1}{2}$,
 using Chernoff-Heoffding bound with $\epsilon = \frac{1}{2}$,
 $$
-\Pr[\widehat \err(c_j) > \widehat \err(c_i)] = \Pr[\widehat \err(c_j) > 0] \ge 1 - e^{m/2} \ge 1 - \delta \; .
+\Pr[\widehat \err(c_j) > \widehat \err(c_i)] = \Pr[\widehat \err(c_j) > 0] = \Pr[\widehat \err(c_j) > 1/2 - \epsilon] \ge 1 - e^{-m/2} \ge 1 - \delta \; .
 $$
 Therefore, with probability $1 - \delta$, the algorithm outputs the correct target $c_i$.
 
-\emph{Case $k=j$} In this case $\widehat \err(c_j) = 0$ with probability one.
+\emph{Case $k=j$.} With probability one, $\widehat \err(c_j) = 0$.
 Since $\indicator{y_t \neq c_i(x_t)}$ is a Bernoulli variable with parameter
-$d_{P_i}(c_k, c_i) = d_{P_i}(c_i, c_j) = \frac{1}{2}$. Thus,
+$d_{P_i}(c_k, c_i) = d_{P_i}(c_j, c_i) = \frac{1}{2}$,
 using Chernoff-Heoffding bound with $\epsilon = \frac{1}{2}$,
 $$
-\Pr[\widehat \err(c_i) > \widehat \err(c_j)] = \Pr[\widehat \err(c_i) > 0] \ge 1 - e^{m/2} \ge 1 - \delta \; .
+\Pr[\widehat \err(c_i) > \widehat \err(c_j)] = \Pr[\widehat \err(c_i) > 0] = \Pr[\widehat \err(c_i) > 1/2 - \epsilon] \ge 1 - e^{-m/2} \ge 1 - \delta \; .
 $$
-Therefore, with probability $1 - \delta$, the algorithm the correct target $c_i$.
+Therefore, with probability $1 - \delta$, the algorithm outputs the correct target $c_j$.
 
-
-The proof relies on a result of \cite{Benedek-Itai-1991} for learning under
-``fixed'' distributions. If $P$ is any probability distribution on some domain,
-then $d_P(f,g) = \Pr_{X \sim P}[f(X) \neq g(X)]$ is a pseudo-metric on the set of all
-$\{0,1\}$-valued functions on the domain. \cite{Benedek-Itai-1991} proved that
-if a $C$ class of $\{0,1\}$-functions has an $\frac{\epsilon}{2}$-cover of size
-$N$, then any target from $C$ is $\epsilon$-learnable from $O
-\left( \frac{\log N + \log (1/\delta)}{\epsilon}\right)$ examples
-with probability at least $1-\delta$.
-
-For our purposes we pick $\epsilon = \frac{1}{5}$. We show that for any
-distribution in $\P_n$ the class $C_n$ has an $\frac{1}{10}$-cover of size $N =
-2$. This will imply the lemma.
-
-Consider a distribution $P_i \in \P_{n,p}$ for some $i \in \{1,2,\dots,n\}$.
-Pick any $j \in \{1,2,\dots,n\}$ such that $j \neq i$.
-We claim that $C' = \{ c_i, c_j \}$ is an $\frac{1}{10}$-cover of
-$C_n$. That is, we claim that for any $c \in C_n$, there exists $c' \in
-C'$ such that $d_{P_{\sigma}}(c,c') \le \frac{1}{10}$.
-
-Any $c \in C_n$ is of the form $c = c_k$. If $k \in \{i,j\}$ then, trivially, $c \in C'$ and $d_{P_i}(c,c) = 0$.
-Otherwise, if  $k \not \in \{i,j\}$, let $p = \frac{1}{\ln n}$,
+\emph{Case $k \not \in \{i,j\}$.}
+Since $\indicator{y_t \neq c_i(x_t)}$ is a Bernoulli variable with parameter
+$d_{P_i}(c_k, c_i) = \frac{1}{2}$ and $\indicator{y_t \neq c_j(x_t)}$ is a Bernoulli variable with parameter
+$d_{P_i}(c_k, c_j) = 2p(1-p)$, and hence $\indicator{y_t \neq c_i(x_t)} - \indicator{y_t \neq c_j(x_t)}$
+is a random variable that lies in $[-1,1]$ and has mean $\frac{1}{2} - 2p(1-p)$.
+Using Chernoff-Heoffding bound with $\epsilon = \frac{1}{2} - 2p(1-p)$,
 $$
-d_{P_i}(c_j, c_k)
-= \Pr_{X \sim P_i}[X_j \neq X_k] \\
-= 2 p (1 - p) \\
-\le 2p \; .
+\Pr[\widehat \err(c_i) > \widehat \err(c_j)] = \Pr[\widehat \err(c_i) - \widehat \err(c_j) > 0] \ge 1 - e^{-m(1 - 4p(1-p))^2/2} \ge 1 - \delta \; .
+$$
+Therefore, with probability $1 - \delta$, the algorithm outputs $c_j$ which satisfies
+$$
+d_{P_i}(c_j, c_k) = 2p(1-p) < 2p \; .
 $$
 \end{proof}
 
-
+The next theorem states that without knowing the distribution
+learning a target under a distribution from $\P_{n,p}$ the number
+of labeled examples required is at least $\Omega(\log n)$.
 
 \begin{theorem}[Learning without knowledge of the distribution]
-For any algorithm $A$ there exists a distribution $P \in \P_n$ and a target
-concept $c \in C_n$ such that the algorithm requires at least  $\Omega \left(
-\frac{\log n}{\log \log n} \right)$ labeled examples to $\frac{1}{10}$-learn the
-target concept with probability at least $\frac{5}{6}$.
+For any distribution-independent algorithm and any $p \in (0,\frac{1}{2})$,
+any any $n \ge 1/p^{12}$
+there exists a distribution $P \in \P_{n,p}$ and a target
+concept $c \in C_n$ such that if the sample size is less than
+$$
+\frac{\ln n}{3 \ln (1/p)}
+$$
+the algorithm fails to $2p$-learn the
+target concept with probability at least $\frac{1}{2}$.
 \end{theorem}
 
 \begin{proof}
@@ -395,14 +393,14 @@ the labels. The output of the $A$ is any function from $\{0,1\}^n \to \{0,1\}$.
 
 Let $n \ge 8$. Fix the number of examples $m$ to be any non-negative integer less than
 $\frac{\ln n}{3 \ln \ln n}$. We demonstrate the existence of a pair $(P,c) \in
-\P_n \times C_n$ by probabilistic method.
+\P_{n,p} \times C_n$ by probabilistic method.
 
-Let $I$ be chosen uniformly at from $\{1,2,\dots,n\}$. We consider distribution $P_I \in \P_n$ and target $c_I \in C_n$.
-Let $X_1, X_2, \dots, X_m$ be an i.i.d. sample from $P_I$ and
-let $Y_1 = c_I(X_1), Y_2 = c_I(X_2), \dots, Y_m = c_I(X_m)$ be the target
-labels. Let $X$ be $m \times n$ matrix with entries $X_i[j]$ and let $Y = (Y_1,
-Y_2, \dots, Y_m)$ be the vector of labels. The output of the algorithm is $A(X,Y)$.
-We will show that
+Let $I$ be chosen uniformly at from $\{1,2,\dots,n\}$. We consider distribution
+$P_I \in \P_{n,p}$ and target $c_I \in C_n$. Let $X_1, X_2, \dots, X_m$ be an
+i.i.d. sample from $P_I$ and let $Y_1 = c_I(X_1), Y_2 = c_I(X_2), \dots, Y_m =
+c_I(X_m)$ be the target labels. Let $X$ be $m \times n$ matrix with entries
+$X_i[j]$ and let $Y = (Y_1, Y_2, \dots, Y_m)$ be the vector of labels. The
+output of the algorithm is $A(X,Y)$. We will show that
 \begin{equation}
 \label{equation:failure-probability}
 \Exp \left[d_{P_I}(c_I, A(X,Y)) \right] \ge \frac{1}{4} \; .
@@ -419,17 +417,17 @@ $$
 It remains to prove \eqref{equation:failure-probability}.
 Let $Z$ be a test sample drawn from $P_I$. That is, conditioned on $I$, the sequence $X_1, X_2, \dots, X_m, Z$ is i.i.d. drawn from $P_I$.
 Then, by Proposition~\ref{proposition:bayes},
-\begin{align*}
-& \Exp \left[d_{P_I}(c_I, A(X,Y))\right] \\
-& = \Pr\left[ A(X,Y)(Z) \neq c_I(Z) \right] \\
-& \ge \sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n}} \frac{1}{2} - \left| \frac{1}{2} - \Exp\left[ c_I(Z) \, \middle| \, X = x, Y = y, Z = z \right] \right| \cdot \Pr \left[X = x, Y = y, Z = z \right] \; .
-\end{align*}
+\begin{align}
+& \Exp \left[d_{P_I}(c_I, A(X,Y))\right] \notag \\
+& = \Pr\left[ A(X,Y)(Z) \neq c_I(Z) \right] \notag \\
+& \ge \sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n}} \left( \frac{1}{2} - \left| \frac{1}{2} - \Exp\left[ c_I(Z) \, \middle| \, X = x, Y = y, Z = z \right] \right| \right) \cdot \Pr \left[X = x, Y = y, Z = z \right] \label{equation:expected-error-lower-bound} \; .
+\end{align}
 We need to compute $\Exp\left[ c_I(X_{m+1}) \, \middle| \, X = x, Y = y, Z = z \right]$.
 For that we need some additional notation.
 For any $x \in \{0,1\}^{m \times n}$, let $x[1], x[2], \dots, x[n]$ be its columns.
 For any $x \in \{0,1\}^{m \times n}$ and $y \in \{0,1\}^m$ let
 $$
-k(x,y) = \{ i \in \{1,2,\dots,n\} ~:~ B[i] = y \}
+k(x,y) = \{ i \in \{1,2,\dots,n\} ~:~ x[i] = y \}
 $$
 be the set of indices of columns matching the column of labels $y$. The key observation is due to symmetry, for $i = 1,2,\dots,n$,
 \begin{align*}
@@ -440,10 +438,6 @@ be the set of indices of columns matching the column of labels $y$. The key obse
 0 & \text{if $i \not \in k(x,y)$,} \\
 \end{cases}
 \end{align*}
-Next, let
-$$
-p = \frac{1}{\ln n} \; .
-$$
 By definition of the distribution $P_I$ and that conditioned on $I$, the variables $X,Y,Z$ are independent,
 we have for any $x \in \{0,1\}^n$, and $i = 1,2,\dots,n$,
 \begin{align*}
@@ -492,14 +486,36 @@ Hence,
 & \quad = \frac{\displaystyle 1 - p}{\displaystyle 1 - 2p + \frac{|k(x,y)| \cdot p}{|s(x,y,z)|}} \\
 \end{align*}
 
-Making the approximations $\frac{|k(x,y)| \cdot p}{|s(x,y,z)|} \approx 1$ and $p
-\approx 0$, we see that the conditional expectation is close to $1/2$. The rest
-of proof formalizes this intuition. To that end, we define
-two additional random variables
+We now the now show that the last expression is close to $1/2$. More precisely, if
+\begin{equation}
+\frac{|k(x,y)| \cdot p}{|s(x,y,z)|} \in \left[\frac{5}{6}, 2 \right]
+\end{equation}
+then since $p \in (0,\frac{1}{4})$,
+$$
+\frac{\displaystyle 1 - p}{\displaystyle 1 - 2p + \frac{|k(x,y)| \cdot p}{|s(x,y,z)|}} \ge
+\frac{\displaystyle 1 - p}{\displaystyle 1 - 2p + 2} \ge \frac{\displaystyle 1 - 1/4}{\displaystyle 1 + 2} = \frac{1}{4}
+$$
+and
+$$
+\frac{\displaystyle 1 - p}{\displaystyle 1 - 2p + \frac{|k(x,y)| \cdot p}{|s(x,y,z)|}} \le
+\frac{\displaystyle 1 - p}{\displaystyle 1 - 2p + 5/6} \le \frac{\displaystyle 1}{\displaystyle 1 - 1/2 + 5/6} = \frac{3}{4} \; .
+$$
+We now substitute this into the \eqref{equation:expected-error-lower-bound}. We have
+\begin{align*}
+& \sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n}} \frac{1}{2} - \left| \frac{1}{2} - \Exp\left[ c_I(Z) \, \middle| \, X = x, Y = y, Z = z \right] \right| \cdot \Pr \left[X = x, Y = y, Z = z \right] \\
+& = \sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n}} \frac{1}{2} - \left| \frac{1}{2} - \frac{\displaystyle 1 - p}{\displaystyle 1 - 2p + \frac{|k(x,y)| \cdot p}{|s(x,y,z)|}} \right| \cdot \Pr \left[X = x, Y = y, Z = z \right] \\
+& \ge
+\sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n \\ \frac{|k(x,y,z)| p}{|s(x,y,z)|} \in [\frac{5}{6},2]}} \left( \frac{1}{2} - \left| \frac{1}{2} - \frac{\displaystyle 1 - p}{\displaystyle 1 - 2p + \frac{|k(x,y)| \cdot p}{|s(x,y,z)|}} \right|  \right) \cdot \Pr \left[X = x, Y = y, Z = z \right] \\
+& \ge
+\sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n \\ \frac{|k(x,y,z)| p}{|s(x,y,z)|} \in [\frac{5}{6},2]}} \left( \frac{1}{2} - \frac{1}{4} \right) \cdot \Pr \left[X = x, Y = y, Z = z \right] \\
+& =
+\frac{1}{4} \Pr \left[ \frac{|k(X,Y)| \cdot p}{|s(X,Y,Z)|} \in \left[\frac{5}{6}, 2 \right]  \right] \\
+\end{align*}
+It remains to show that the with high probability $\frac{|k(X,Y)| \cdot p}{|s(X,Y,Z)|} \in \left[\frac{5}{6}, 2 \right]$.
+To that end, we define two additional random variables
 $$
 K = |k(X,Y)| \qquad \text{and} \qquad S = |s(X,Y,Z)| \; .
 $$
-We will show that with probability $1 - o(1)$, $K = \Omega(n^{2/3})$ and $S$ is within a constant factor of $Kp$.
 
 First, we lower bound $K$. For any $y \in \{0,1\}^m$ and any $i,j \in \{1,2,\dots,n\}$,
 $$
@@ -512,12 +528,7 @@ p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} & \text{if $j \neq j$.}
 $$
 Conditioned on $Y = y$ and $I=i$, the random variable $K - 1 = |k(X,Y)| - 1$ is
 a sum of $n-1$ Bernoulli variables with parameter $p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1}$, one for each column except for column $i$.
-Chernoff-Hoeffding bound gives that
-$$
-\Pr \left[ \frac{K - 1}{n - 1} > p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} - \epsilon \, \middle| \,  Y = y, I = i  \right] \ge 1 - e^{-2(n-1) \epsilon^2} \; .
-$$
-We substitute $\epsilon = p^m/2$. Since $n \ge 8$, $p = \frac{1}{\ln n} \le 1/2$ and thus $p^{\norm{y}_1} (1 -
-p)^{m - \norm{y}_1} \ge p^m$ and we get
+Hoeffding bound with $\epsilon = p^m/2$ and the loose lower bound $p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} \ge p^m$ gives
 \begin{align*}
 \Pr \left[ \frac{K - 1}{n - 1} > \frac{p^m}{2}  \, \middle| \,  Y = y, I = i  \right]
 & = \Pr \left[ \frac{K - 1}{n - 1} > p^m - \epsilon  \, \middle| \,  Y = y, I = i  \right] \\
@@ -526,27 +537,32 @@ p)^{m - \norm{y}_1} \ge p^m$ and we get
 \end{align*}
 We lower bound $\epsilon = \frac{p^m}{2}$ as
 $$
-\epsilon = p^m/2 > \frac{p^\frac{\ln n}{3 \ln \ln n}}{2} = \frac{1}{2} \left( \frac{1}{\ln n} \right)^\frac{\ln n}{3 \ln \ln n} = \frac{1}{2\sqrt[3]{n}} \; .
+\epsilon = p^m/2 > \frac{1}{2} p^\frac{\ln n}{3 \ln(1/p)} = \frac{1}{2\sqrt[3]{n}} \; .
 $$
 Since the lower bound is uniform for all choices of $y$ and $i$, we can remove
 the conditioning and conclude that
 $$
-\Pr \left[ |K| > 1 + \frac{(n-1)}{2\sqrt[3]{n}} \right] \ge 1 - \exp \left(- \frac{(n-1)}{2 n^{2/3}} \right) \; .
+\Pr \left[ K > 1 + \frac{(n-1)}{2\sqrt[3]{n}} \right] \ge 1 - \exp \left(- \frac{(n-1)}{2 n^{2/3}} \right) \; .
 $$
-For $n \ge 2$, we can simplify it further to
+Since $n \ge 1/p^{12} \ge 4^{12}$, we can simplify it further to
 $$
-\Pr \left[ |K| > 1 + \frac{n^{2/3}}{4} \right] \ge 1 - \exp \left(- \frac{\sqrt[3]{n}}{4} \right) \; .
+\Pr \left[ K \ge \frac{n^{2/3}}{2} \right] \ge 0.999 \; .
 $$
 
-Second, condioned on the set $X=x$, $Y=y$ and $I=i$, the random variable $S - 1$
-is a sum of $|k(x,y)|-1 = K - 1$ Bernoulli random variables with parameter $p$,
-one for each column in $k(x,y)$ except for column $i$. Chernoff-Hoeffding bound with $\epsilon = p/2$
+Second, condioned on $K=r$, the random variable $S$
+is a sum of $r-1$ Bernoulli random variables with parameter $p$
+and one Bernoulli random variable with parameter $1/2$. Hoeffding bound with $\epsilon = p/10$
 gives that
 \begin{align*}
-\Pr \left[ \left| \frac{S - 1}{|k(x,y)| - 1} - p \right| < p/2  \, \middle| \, X = x, Y = y, I = i  \right] \ge 1 - e^{-2 (|k(x,y)| - 1) p^2} \; .
+\Pr \left[ \left| \frac{S}{K} - \frac{p(K - 1) + 1/2}{K} \right| < \frac{p}{10}  \, \middle| \, K = r \right] \ge 1 - e^{-2 r \epsilon^2} \; .
 \end{align*}
-
-TODO
+Thus,
+\begin{align*}
+\Pr \left[ \left| \frac{S}{K} - \frac{p(K - 1) + 1/2}{K} \right| < \frac{p}{10} \right]
+& \ge \sum_{r = \lceil n^{2/3} / 2 \rceil}^n \Pr \left[ \left| \frac{S}{K} - \frac{p(K - 1) + 1/2}{K} \right| < \frac{p}{10}  \, \middle| \,  K = r \right] \cdot \Pr[K = r] \\
+& \ge \sum_{r = \lceil n^{2/3} / 2 \rceil}^n \left( 1 - e^{-2 r \epsilon^2} \right) \cdot \Pr[K = r] \\
+& \ge \left( 1 - e^{-n^{2/3}  \epsilon^2 / 2} \right) \cdot \Pr \left[ K \ge \frac{n^{2/3}}{2} \right] \\
+\end{align*}
 
 \end{proof}
 
@@ -561,8 +577,8 @@ c_I(x) = \bigvee_{i \in I} x_i \; .
 $$
 We define $c_\emptyset$ to be constant zero function.
 
-We consider the same family of distributions $\P_n$ as in the previous section.
-Let $P = P_{Identity} \in \P_n$. We compute the distance $d_P(c_I, c_J)$ between
+We consider the same family of distributions $\P_{n,p}$ as in the previous section.
+Let $P = P_{Identity} \in \P_{n,p}$. We compute the distance $d_P(c_I, c_J)$ between
 any two monotone disjunctions. For any subset $K \subseteq \{1,2,\dots,n\}$, let
 $A_K$ be the event that all for all $i \in K$, $x_i = 0$.
 \begin{align*}
