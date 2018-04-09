@@ -47,6 +47,7 @@ the \emph{value of unlabeled data}.
 
 
 \section{Introduction}
+TODO: it would be great to make it clear that the first algorithm doesn't know the distribution, while the second does. I couldn't find a simple way to say it.
 
 \cite{Hanneke-2016} showed that for any class $C$ of Vapnik-Chervonenkis
 dimension $d$ there exists an algorithm that $\epsilon$-learns any target
@@ -69,7 +70,7 @@ support on a single point has cover of size $2$. That leaves the possibility
 that there exists an algorithm that does \emph{not} depend on the distribution
 and achieves Benedek-Itai bound (or a slightly worse bound) for \emph{every}
 distribution. In fact, one would think that empirical risk minimization (ERM) or
-Hanneke's algorithm could be such algorithm. There is reason good to think that:
+Hanneke's algorithm could be such algorithm. There is a good reason to think that:
 ERM needs significantly less labeled examples to learn any target under some
 unlabeled distributions, e.g. for distributions concentrated on a single point
 ERM needs only one labeled example. If ERM, Hanneke's algorithm, or some other
@@ -153,7 +154,7 @@ The black line is the sample complexity
 of an arbitrary \emph{distribution-independent} algorithm. (For example, the
 reader can think of the ERM or Hanneke's algorithm.) Obviously, the black line
 must lie above the green line. We prove that there exist a distribution where
-the black line is $\Omega(\frac{\log n}{\log \log n})$ times higher than the
+the black line is $\Omega(\log n)$ times higher than the
 green line.} \label{figure:sample-complexity}
 \end{figure}
 
@@ -214,7 +215,7 @@ Solving for $\Pr[Z > \epsilon]$ finishes the proof.
 
 \begin{proposition}[Optimality of Bayes Predictor]
 \label{proposition:bayes}
-Let $\U$ be a finite set. Let $U,V$ be a random variables such that $U \in \U$ and $V \in \{0,1\}$ with probability one.
+Let $\U$ be a finite set. Let $U,V$ be random variables such that $U \in \U$ and $V \in \{0,1\}$ with probability one.
 Let $f:\U \to \{0,1\}$ be a predictor. Then,
 $$
 \Pr\left[ f(U) \neq V \right]
@@ -244,8 +245,8 @@ We used the fact that $\min\{x, 1 - x\} = \frac{1}{2} - \left| \frac{1}{2} - x \
 which can be easily verified by considering two cases: $x \ge \frac{1}{2}$ and $x < \frac{1}{2}$.
 \end{proof}
 
-\begin{theorem}[Hoeffding bound]
-Let $X_1, X_2, \dots, X_n$ be i.i.d. that lie in interval $[a,b]$ with probability one.
+\begin{theorem}[Hoeffding's bounds]
+Let $X_1, X_2, \dots, X_n$ be i.i.d. that lie in interval $[a,b]$ with probability one, and let $p=\frac{1}{n}\sum_{i=1}^n \Exp[X_i]$ be their average expectation.
 Then, for any $\epsilon \ge 0$,
 $$
 \Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \ge p + \epsilon \right] \le e^{ - 2n \epsilon^2/(a-b)^2}  \qquad \text{and} \qquad
@@ -263,7 +264,7 @@ the function $c_i$ is defined as $c_i((x[1], x[2], \dots, x[n])) = x[i]$.
 For any $p \in (0,\frac{1}{4})$ and $n \ge 2$, we consider a family $\P_{n,p}$
 consisting of $n$ probability distributions $P_1, P_2, \dots, P_n$ over the
 Boolean hypercube $\{0,1\}^n$. In order to describe the distribution $P_i$, for
-some $i$, considers a random vector $X = (X[1], X[2], \dots, X[n])$ drawn from
+some $i$, consider a random vector $X = (X[1], X[2], \dots, X[n])$ drawn from
 $P_i$. The distribution $P_i$ is a product distribution, i.e., $\Pr[X = x] =
 \prod_{j=1}^n \Pr[X[j] = x[j]]$ for any $x \in \{0,1\}^n$. The marginal
 distributions of the coordinates are
@@ -293,7 +294,7 @@ Then, there must be at least $2^d$ distinct functions in $C_n$. Hence, $d \le
 On the other hand, we construct a shattered set of size $\lfloor \log_2 n
 \rfloor$. The set will consists of points $x_1, x_2, \dots, x_{\lfloor \log_2 n
 \rfloor} \in \{0,1\}^n$. For any $i \in \{1,2,\dots,\lfloor \log_2 n \rfloor\}$
-and any $j \in \{0,1,2,\dots,n-1\}$, we define $x_i[j]$ to be the $i$-th bit of the
+and any $j \in \{0,1,2,\dots,n-1\}$, we define $x_i[j]$ to be the $i$-th bit
 in the binary representation of the number $j$. (The bit at position $i=1$ is the
 least significant bit.) It is not hard to see that for any $v \in
 \{0,1\}^{\lfloor \log_2 n \rfloor}$, there exists $c \in C_n$ such that $v =
@@ -336,7 +337,7 @@ There are three cases. Either $k = i$, $k = j$, or $k \not \in \{i,j\}$.
 \emph{Case $k=i$.} With probability one, $\widehat \err(c_i) = 0$.
 Since $\indicator{y_t \neq c_j(x_t)}$ is a Bernoulli variable with parameter
 $d_{P_i}(c_k, c_j) = d_{P_i}(c_i, c_j) = \frac{1}{2}$,
-using Chernoff-Heoffding bound with $\epsilon = \frac{1}{2}$,
+using Chernoff-Hoeffding bound with $\epsilon = \frac{1}{2}$,
 $$
 \Pr[\widehat \err(c_j) > \widehat \err(c_i)] = \Pr[\widehat \err(c_j) > 0] = \Pr[\widehat \err(c_j) > 1/2 - \epsilon] \ge 1 - e^{-m/2} \ge 1 - \delta \; .
 $$
@@ -345,7 +346,7 @@ Therefore, with probability $1 - \delta$, the algorithm outputs the correct targ
 \emph{Case $k=j$.} With probability one, $\widehat \err(c_j) = 0$.
 Since $\indicator{y_t \neq c_i(x_t)}$ is a Bernoulli variable with parameter
 $d_{P_i}(c_k, c_i) = d_{P_i}(c_j, c_i) = \frac{1}{2}$,
-using Chernoff-Heoffding bound with $\epsilon = \frac{1}{2}$,
+using Chernoff-Hoeffding bound with $\epsilon = \frac{1}{2}$,
 $$
 \Pr[\widehat \err(c_i) > \widehat \err(c_j)] = \Pr[\widehat \err(c_i) > 0] = \Pr[\widehat \err(c_i) > 1/2 - \epsilon] \ge 1 - e^{-m/2} \ge 1 - \delta \; .
 $$
@@ -356,7 +357,7 @@ Since $\indicator{y_t \neq c_i(x_t)}$ is a Bernoulli variable with parameter
 $d_{P_i}(c_k, c_i) = \frac{1}{2}$ and $\indicator{y_t \neq c_j(x_t)}$ is a Bernoulli variable with parameter
 $d_{P_i}(c_k, c_j) = 2p(1-p)$, and hence $\indicator{y_t \neq c_i(x_t)} - \indicator{y_t \neq c_j(x_t)}$
 is a random variable that lies in $[-1,1]$ and has mean $\frac{1}{2} - 2p(1-p)$.
-Using Chernoff-Heoffding bound with $\epsilon = \frac{1}{2} - 2p(1-p)$,
+Using Chernoff-Hoeffding bound with $\epsilon = \frac{1}{2} - 2p(1-p)$,
 $$
 \Pr[\widehat \err(c_i) > \widehat \err(c_j)] = \Pr[\widehat \err(c_i) - \widehat \err(c_j) > 0] \ge 1 - e^{-m(1 - 4p(1-p))^2/2} \ge 1 - \delta \; .
 $$
@@ -366,9 +367,9 @@ d_{P_i}(c_j, c_k) = 2p(1-p) < 2p \; .
 $$
 \end{proof}
 
-The next theorem states that without knowing the distribution
-learning a target under a distribution from $\P_{n,p}$ the number
-of labeled examples required is at least $\Omega(\log n)$.
+The next theorem states that without knowing the distribution,
+learning a target under a distribution from $\P_{n,p}$ 
+requires at least $\Omega(\log n)$ labeled examples.
 
 \begin{theorem}[Learning without knowledge of the distribution]
 For any distribution-independent algorithm and any $p \in (0,\frac{1}{2})$,
@@ -392,13 +393,13 @@ The rows of the matrix corresponds to unlabeled examples and the vector encodes
 the labels. The output of the $A$ is any function from $\{0,1\}^n \to \{0,1\}$.
 
 Let $n \ge 8$. Fix the number of examples $m$ to be any non-negative integer less than
-$\frac{\ln n}{3 \ln \ln n}$. We demonstrate the existence of a pair $(P,c) \in
-\P_{n,p} \times C_n$ by probabilistic method.
+$\frac{\ln n}{3 \ln(1/p)}$. We demonstrate the existence of a pair $(P,c) \in
+\P_{n,p} \times C_n$ which cannot be learned with $m$ samples by probabilistic method.
 
-Let $I$ be chosen uniformly at from $\{1,2,\dots,n\}$. We consider distribution
+Let $I$ be chosen uniformly at random from $\{1,2,\dots,n\}$. We consider distribution
 $P_I \in \P_{n,p}$ and target $c_I \in C_n$. Let $X_1, X_2, \dots, X_m$ be an
 i.i.d. sample from $P_I$ and let $Y_1 = c_I(X_1), Y_2 = c_I(X_2), \dots, Y_m =
-c_I(X_m)$ be the target labels. Let $X$ be $m \times n$ matrix with entries
+c_I(X_m)$ be the target labels. Let $X$ be the $m \times n$ matrix with entries
 $X_i[j]$ and let $Y = (Y_1, Y_2, \dots, Y_m)$ be the vector of labels. The
 output of the algorithm is $A(X,Y)$. We will show that
 \begin{equation}
