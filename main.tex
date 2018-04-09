@@ -392,7 +392,7 @@ The algorithm receives an $m \times n$ matrix and a binary vector of length $m$.
 The rows of the matrix corresponds to unlabeled examples and the vector encodes
 the labels. The output of the $A$ is any function from $\{0,1\}^n \to \{0,1\}$.
 
-Let $n \ge 8$. Fix the number of examples $m$ to be any non-negative integer less than
+Let $n \ge 4^{12}$. Fix the number of examples $m$ to be any non-negative integer less than
 $\frac{\ln n}{3 \ln(1/p)}$. We demonstrate the existence of a pair $(P,c) \in
 \P_{n,p} \times C_n$ which cannot be learned with $m$ samples by probabilistic method.
 
@@ -487,7 +487,7 @@ Hence,
 & \quad = \frac{\displaystyle 1 - p}{\displaystyle 1 - 2p + \frac{|k(x,y)| \cdot p}{|s(x,y,z)|}} \\
 \end{align*}
 
-We now the now show that the last expression is close to $1/2$. More precisely, if
+We now show that the last expression is close to $1/2$. More precisely, if
 \begin{equation}
 \frac{|k(x,y)| \cdot p}{|s(x,y,z)|} \in \left[\frac{5}{6}, 2 \right]
 \end{equation}
