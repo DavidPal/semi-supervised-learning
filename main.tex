@@ -1,9 +1,12 @@
 \documentclass[10pt]{article}
 
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
 \usepackage{fullpage}
 \usepackage{graphics}
 \usepackage{natbib}
-\usepackage{amssymb,amsthm,amsmath}
+\usepackage{todonotes}
 
 \newtheorem{proposition}{Proposition}
 \newtheorem{lemma}[proposition]{Lemma}
@@ -19,11 +22,16 @@
 \newcommand{\x}{\mathbf{x}}
 \newcommand{\KL}[2]{D\left(#1 \middle\| #2 \right)}
 \newcommand{\norm}[1]{\left\| #1 \right\|}
+\newcommand{\ip}[2]{\left\langle #1, #2 \right\rangle}
 
 \DeclareMathOperator{\argmin}{argmin}
 \DeclareMathOperator{\err}{err}
 \DeclareMathOperator{\Exp}{\mathbf{E}}
 \DeclareMathOperator{\VC}{VC}
+
+\newcommand{\todoBalazs}[1]{\todo[backgroundcolor=blue]{Balazs: #1}}
+\newcommand{\todoDavid}[1]{\todo[backgroundcolor=green]{David: #1}}
+\newcommand{\todoSasha}[1]{\todo[backgroundcolor=orange]{Sasha: #1}}
 
 \begin{document}
 
@@ -47,47 +55,81 @@ the \emph{value of unlabeled data}.
 
 
 \section{Introduction}
-TODO: it would be great to make it clear that the first algorithm doesn't know the distribution, while the second does. I couldn't find a simple way to say it.
+
+\todoSasha{It would be great to make it clear that the first algorithm doesn't know the distribution, while the second does. I couldn't find a simple way to say it.}
+\todoDavid{Done}
 
 \cite{Hanneke-2016} showed that for any class $C$ of Vapnik-Chervonenkis
 dimension $d$ there exists an algorithm that $\epsilon$-learns any target
 function from $C$ under any distribution from $O\left(\frac{d +
 \log(1/\delta)}{\epsilon}\right)$ labeled examples with probability at least
-$1-\delta$. \cite{Benedek-Itai-1991} showed that for any class $C$ and any
+$1-\delta$. For this paper, it is important to stress that Hanneke's algorithm
+does \emph{not} receive the distribution of unlabeled data as input. On the
+other hand, \cite{Benedek-Itai-1991} showed that for any class $C$ and any
 distribution there exists an algorithm that $\epsilon$-learns any target from
-$C$ from $O \left( \frac{\log N_\epsilon + \log (1/\delta)}{\epsilon}\right)$ labeled
-examples with probability at least $1-\delta$ where $N_\epsilon$ is the size of an
-$\epsilon$-covering of $C$ with respect to the disagreement metric $d(f,g) =
-\Pr[f(x) \neq g(x)]$. Ignoring $\log(1/\epsilon)$ factor, Benedek-Itai bound
-is never worse than Hanneke's bound, since $N_\epsilon = O(1/\epsilon)^{O(d)}$; see
-\cite{Dudley-1978}.
+$C$ from $O \left( \frac{\log N_\epsilon + \log (1/\delta)}{\epsilon}\right)$
+labeled examples with probability at least $1-\delta$ where $N_\epsilon$ is the
+size of an $\epsilon$-covering of $C$ with respect to the disagreement metric
+$d(f,g) = \Pr[f(x) \neq g(x)]$. Here, it is important to note that Benedek-Itai
+construct for each distribution a separate algorithm. In other words, they
+construct a family of algorithms indexed by the (uncountably many) distributions
+over the domain. Alternatively, we can think of Benedek-Itai's family of
+algorithms as a single algorithm that receives the distribution as an input. It
+is known that $N_\epsilon = O(1/\epsilon)^{O(d)}$; see \cite{Dudley-1978}. Thus
+ignoring $\log(1/\epsilon)$ factor, Benedek-Itai bound is never worse than
+Hanneke's bound.
 
-Benedek-Itai's algorithm receives as input the distribution of unlabeled data.
-(The algorithm uses it to construct the $\epsilon$-cover.) Unsurprisingly, there
-exist distributions for which Benedek-Itai's bound on the sample complexity is
-significantly lower then the Hanneke's bound. For instance, a distribution with
-support on a single point has cover of size $2$. That leaves the possibility
-that there exists an algorithm that does \emph{not} depend on the distribution
-and achieves Benedek-Itai bound (or a slightly worse bound) for \emph{every}
-distribution. In fact, one would think that empirical risk minimization (ERM) or
-Hanneke's algorithm could be such algorithm. There is a good reason to think that:
-ERM needs significantly less labeled examples to learn any target under some
-unlabeled distributions, e.g. for distributions concentrated on a single point
-ERM needs only one labeled example. If ERM, Hanneke's algorithm, or some other
-distribution-independent algorithm had sample complexity that matches (or nearly
-matches) the optimal distribution-specific sample complexity for \emph{every}
-distribution, we could conclude that the knowledge of unlabeled data
-distribution is completely useless.
+As we already mentioned, Benedek-Itai's algorithm receives as input the
+distribution of unlabeled data. The algorithm uses it to construct an
+$\epsilon$-cover. Unsurprisingly, there exist distributions which have a small
+$\epsilon$-cover and thus sample complexity of Benedek-Itai's algorithm on such
+distributions is significantly lower then the Hanneke's bound. For instance, a
+distribution with support on a single point has an $\epsilon$-cover of size $2$
+for any $\epsilon$.
+
+However, an algorithm does not need to receive the unlabeled distribution in
+order to enjoy low sample complexity. For example, empirical risk minimization
+(ERM) algorithm needs significantly less labeled examples to learn any target
+under some unlabeled distributions. For instance, if a distribution is
+concentrated on a single point, ERM needs only one labeled example to learn it.
+One could be lead to believe that there exists an algorithm that does \emph{not}
+receive the unlabeled distribution as input and achieves Benedek-Itai bound (or
+a slightly worse bound) for \emph{every} distribution. In fact, one could think
+that empirical risk minimization (ERM) or Hanneke's algorithm could be such
+algorithm. If ERM, Hanneke's algorithm, or some other distribution-independent
+algorithm had sample complexity that matches (or nearly matches) the optimal
+distribution-specific sample complexity for \emph{every} distribution, we could
+conclude that the knowledge of unlabeled data distribution is completely
+useless.
 
 As \cite{Darnstadt-Simon-Szorenyi-2013} showed this not the case. They showed
-that any algorithm for learning projections over $\{0,1\}^n$ that does not
-depend on the unlabeled data, requires, for some data distributions, more
-labeled examples than the Benedek-Itai bound. However, they did not quantify
-this gap, beside stating that it grows without bound as $n$ goes to infinity.
+that \emph{any} algorithm for learning projections over $\{0,1\}^n$ that does
+not receive the unlabeled distribution as input, requires, for some data
+unlabeled distributions, more labeled examples than the Benedek-Itai bound.
+However, they did not quantify this gap, beside stating that it grows without
+bound as $n$ goes to infinity.
+
 In this paper, we quantify the gap by showing that \emph{any}
 distribution-independent algorithm for learning the class of projections over
-$\{0,1\}^n$ requires, for some unlabeled distributions, $\Omega(\log
-n)$ times as many labeled examples as Benedek-Itai bound.
+$\{0,1\}^n$ requires, for some unlabeled distributions, $\Omega(\log n)$ times
+as many labeled examples as Benedek-Itai bound. Furthermore, we show similar
+results for the class of monotone disjunctions over the Boolean hypercube
+$\{0,1\}^n$ where we show that any distribution-independent algorithm requires,
+for some distributions, $\Omega(n)$ times as much labeled examples as the
+Benedek-Itai bound. Perhaps most importantly, we show analoguous result for
+halfspaces over $\R^n$, for which we show that \emph{any}
+distribution-independent algorithm requires for some unlabeled distributions
+$\Omega(\frac{n}{\log n})$ times as many labeled examples as the Benedek-Itain
+bound.
+
+\cite{Darnstadt-Simon-Szorenyi-2013} showed the gap for any class with
+Vapnik-Chervonenkis dimension $d$ is at most $O(d)$. It is well known that
+Vapnik-Chervonenkis dimensions of projections over $\{0,1\}^n$, monotone
+disjunctions over $\{0,1\}^n$ and halfspaces over $\R^n$ are $\Theta(\log n)$,
+$\Theta(n)$ and $\Theta(n)$ respectively. Thus our lower bounds match or almost
+match the upper bound $O(d)$. However, it remains an open problem to close the
+mismatch between $\Omega(\frac{n}{\log n})$ lower bound and $O(n)$ upper bound
+for halfspaces over $\R^n$.
 
 \section{Related Work}
 
@@ -119,14 +161,14 @@ For any distribution-independent algorithm and any class $C$ of
 Vapnik-Chervonenkis dimension $d \ge 2$ and any $\epsilon \in (0,1)$ and $\delta
 \in (0,1)$ there exists a distribution over the domain and a concept which
 requires at least $\Omega \left(\frac{d + \log(1/\delta)}{\epsilon}\right)$
-examples to $\epsilon$-learn with probability at least $1 - \delta$;
+labeled examples to $\epsilon$-learn with probability at least $1 - \delta$;
 see~\cite[Theorem 5.3]{Anthony-Bartlett-1999} and
 \cite{Blumer-Ehrenfeucht-Haussler-Warmuth-1989,
 Ehrenfeucht-Haussler-Kearns-Valiant-1989}. The proof of the lower bound
 constructs a distribution that does \emph{not} depend on the algorithm. The
 distribution is a particular distribution over a fixed set shattered by $C$. So
 even an algorithm that knows the distribution requires $\Omega \left(\frac{d +
-\log(1/\delta)}{\epsilon}\right)$ to learn.
+\log(1/\delta)}{\epsilon}\right)$ labeled examples.
 
 To better understand the relationship of the upper and lower bounds, we
 summarize the situation for the class of projections over $\{0,1\}^n$ in
@@ -188,11 +230,29 @@ $$
 \Pr \left[d_P(c,A(T)) \le \epsilon \right]  \ge 1 - \delta \; .
 $$
 
-Below we state two simple propositions that are useful for proving lower bounds
-on the number of labeled samples. The first proposition says that if average
-error $d_P(c,A(T))$ is high, the algorithm can't $\epsilon$-learn. The second
-proposition says that the best algorithm for predicting a bit computes
-conditional expectation of the bit and thresholds it at $1/2$.
+We recall the standard definitions from learning theory.  A set $S \subseteq \X$
+is \emph{shattered} by a concept class $C$ if for any subset $S' \subseteq S$
+there exists a classifier $c \in C$ such that for all $x \in S$, $c(x) =
+\indicator{x \in S'}$. \emph{Vapnik-Chervonenkis dimension} of a concept class
+$C$ is the size of the largest shattered subset by $C$.
+
+To prove our lower bounds we need three general probabilistic results. The first
+one is the standard Hoeffding bound. The other two are simple and intuitive
+propositions. The first proposition says that if average error $d_P(c,A(T))$ is
+high, the algorithm fails to $\epsilon$-learn with high probability. The second
+proposition says that the best algorithm for predicting a bit based on some side
+information, is to compute conditional expectation of the bit and thresholds it
+at $1/2$.
+
+\begin{theorem}[Hoeffding bound]
+Let $X_1, X_2, \dots, X_n$ be i.i.d. random variables that lie in interval
+$[a,b]$ with probability one and let $p=\frac{1}{n}\sum_{i=1}^n \Exp[X_i]$.
+Then, for any $\epsilon \ge 0$,
+$$
+\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \ge p + \epsilon \right] \le e^{ - 2n \epsilon^2/(a-b)^2}  \qquad \text{and} \qquad
+\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \le p - \epsilon \right] \le e^{ - 2n \epsilon^2/(a-b)^2}  \; . \\
+$$
+\end{theorem}
 
 \begin{proposition}[Error probability vs. Expected error]
 \label{proposition:error-probability-vs-expected-error}
@@ -215,8 +275,9 @@ Solving for $\Pr[Z > \epsilon]$ finishes the proof.
 
 \begin{proposition}[Optimality of Bayes Predictor]
 \label{proposition:bayes}
-Let $\U$ be a finite set. Let $U,V$ be random variables such that $U \in \U$ and $V \in \{0,1\}$ with probability one.
-Let $f:\U \to \{0,1\}$ be a predictor. Then,
+Let $\U$ be a finite non-empty set. Let $U,V$ be random variables (possibly
+correlated) such that $U \in \U$ and $V \in \{0,1\}$ with probability one. Let
+$f:\U \to \{0,1\}$ be a predictor. Then,
 $$
 \Pr\left[ f(U) \neq V \right]
 \ge \sum_{u \in \U} \left( \frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[V \, \middle| \, U = u\right] \right| \right) \cdot \Pr[U = u] \; .
@@ -245,21 +306,15 @@ We used the fact that $\min\{x, 1 - x\} = \frac{1}{2} - \left| \frac{1}{2} - x \
 which can be easily verified by considering two cases: $x \ge \frac{1}{2}$ and $x < \frac{1}{2}$.
 \end{proof}
 
-\begin{theorem}[Hoeffding's bounds]
-Let $X_1, X_2, \dots, X_n$ be i.i.d. that lie in interval $[a,b]$ with probability one, and let $p=\frac{1}{n}\sum_{i=1}^n \Exp[X_i]$ be their average expectation.
-Then, for any $\epsilon \ge 0$,
-$$
-\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \ge p + \epsilon \right] \le e^{ - 2n \epsilon^2/(a-b)^2}  \qquad \text{and} \qquad
-\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \le p - \epsilon \right] \le e^{ - 2n \epsilon^2/(a-b)^2}  \; . \\
-$$
-\end{theorem}
+
 
 \section{Projections}
 
-We denote by $C_n$ the class of \emph{projections} over the domain $\X = \{0,1\}^n$. The
-class $C_n$ consists of $n$ functions $c_1, c_2, \dots, c_n$ from $\{0,1\}^n$ to
-$\{0,1\}$. For any $i \in \{1,2,\dots,n\}$, for any $x \in \{0,1\}^n$,
-the function $c_i$ is defined as $c_i((x[1], x[2], \dots, x[n])) = x[i]$.
+In this section, we denote by $C_n$ the class of \emph{projections} over the
+domain $\X = \{0,1\}^n$. The class $C_n$ consists of $n$ functions $c_1, c_2,
+\dots, c_n$ from $\{0,1\}^n$ to $\{0,1\}$. For any $i \in \{1,2,\dots,n\}$, for
+any $x \in \{0,1\}^n$, the function $c_i$ is defined as $c_i((x[1], x[2], \dots,
+x[n])) = x[i]$.
 
 For any $p \in (0,\frac{1}{4})$ and $n \ge 2$, we consider a family $\P_{n,p}$
 consisting of $n$ probability distributions $P_1, P_2, \dots, P_n$ over the
@@ -368,7 +423,7 @@ $$
 \end{proof}
 
 The next theorem states that without knowing the distribution,
-learning a target under a distribution from $\P_{n,p}$ 
+learning a target under a distribution from $\P_{n,p}$
 requires at least $\Omega(\log n)$ labeled examples.
 
 \begin{theorem}[Learning without knowledge of the distribution]
@@ -572,13 +627,14 @@ TODO
 
 \section{Monotone Disjunctions}
 
-Consider the class $C_n$ of monotone disjunctions over $\X = \{0,1\}^n$. There
+In this section, we denote by $C_n$ the class of monotone disjunctions over $\X = \{0,1\}^n$. There
 are $2^n$ functions in $C_n$. For each subset $I \subseteq \{1,2,\dots,n\}$
-there is monotone disjunction $c_I:\X \to \{0,1\}$ defined by
+there is monotone disjunction $c_I:\X \to \{0,1\}$ defined for any $x = (x[1],
+x[2], \dots, x[n]) \in \X$ as
 $$
-c_I(x) = \bigvee_{i \in I} x_i \; .
+c_I(x) = \bigvee_{i \in I} x[i] \; .
 $$
-We define $c_\emptyset$ to be constant zero function.
+If $I = \emptyset$, we define $c_I$ as the constant zero function.
 
 We consider the same family of distributions $\P_{n,p}$ as in the previous section.
 Let $P = P_{Identity} \in \P_{n,p}$. We compute the distance $d_P(c_I, c_J)$ between
@@ -593,6 +649,39 @@ d_P(c_I, c_J)
 & = \Pr[A_I] + \Pr[A_J] - 2 \Pr[A_{I \cup J}] \\
 & = \prod_{i \in I} (1 - p_i) + \prod_{j \in J} (1 - p_j) - 2 \prod_{k \in I \cup J} (1 - p_k) \; . \\
 \end{align*}
+
+\begin{proposition}[Vapnik-Chervonenkis dimension]
+Vapnik-Chervonenkis dimension of the class of monotone disjunctions is $C_n$ is $n$.
+\end{proposition}
+
+\begin{proof}
+Let us denote the Vapnik-Chervonenkis dimension by $d$. Recall that $d$ is the
+size of the largest shattered set. Let $S$ be any shattered set of size $d$.
+Then, there must be at least $2^d$ distinct functions in $C_n$. Hence, $d \le
+\log_2 |C_n| = n$.
+
+On the other hand, we construct a shattered set of size $n$. For any $i \in
+\{1,2,\dots,n\}$, let $e_i = (0, \dots, 0, 1, 0, \dots, 0)$ be vector in
+$\{0,1\}^n$ where the $1$ is at $i$-th position. We claim that the set $\{e_1,
+e_2, \dots, e_n\}$ is shattered. This indeed easy to see since for any binary
+vector $v \in \{0,1\}^n$, consider the set $I(v) = \{ i \in \{1,2,\dots,n\} ~:~
+v[i] = 1 \}$ and the monotone disjunction $c_{I(v)}$. It is not hard to see that
+$(c_{I(v)}(e_1), c_{I(v)}(e_2), \dots, c_{I(v)}(e_n)) = v$ since $c_{I(v)}(e_i) =
+\indicator{i \in I(v)} = \indicator{v[i] = 1} = v[i]$. Thus the set
+$\{e_1, e_2, \dots, e_n\}$ is shattered.
+\end{proof}
+
+
+\section{Halfspaces}
+
+In this section, we denote by $C_n$ the class of halfspaces over $\X = \R^n$. There
+are infinitely many functions in $C_n$. For every non-zero vector $w \in \R^n$, there is a half space
+$$
+c_w(x) = \indicator{\ip{w}{x} \ge 0} \qquad \qquad \text{for any $x \in \R^n$} \; .
+$$
+Note that since only the sign of the inner product $\ip{w}{x}$ plays a role, for any $\alpha > 0$,
+the functions $c_w$ and $c_{\alpha w}$ are the identical.
+
 
 \bibliography{biblio}
 \bibliographystyle{plainnat}
