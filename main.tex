@@ -5,6 +5,7 @@
 \usepackage{amsthm}
 \usepackage{fullpage}
 \usepackage{graphics}
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=blue]{hyperref}
 \usepackage{natbib}
 \usepackage{todonotes}
 
@@ -41,16 +42,20 @@
 \maketitle
 
 \begin{abstract}
-We show a separation of the number of labeled examples required between learning \emph{with}
-and \emph{without} the knowledge of the distribution of the unlabeled data. For
-the class of projections over the Boolean hypercube of dimension $n$, we show a
-separation by $\Theta(\log n)$ multiplicative factor.
+We show a separation of the number of labeled examples required between learning
+\emph{with} and \emph{without} the knowledge of the distribution of the
+unlabeled data. For the class of projections over the Boolean hypercube of
+dimension $n$, we show a separation by $\Theta(\log n)$ multiplicative factor.
+For the class of monotone disjunctions over the Boolean hypercube of dimension
+$n$, we show a separation by $\Theta(n)$ multiplicative factor. For the class of
+halfspaces over $\R^n$, we show a separation by  $\Theta(n/\log n)$
+multiplicative factor.
 
 Learning with the knowledge of the distribution (a.k.a. \emph{fixed-distribution
 learning}) can be viewed as an idealized scenario of semi-supervised learning
 where the number of unlabeled data points is so great that the unlabeled
-distribution is known exactly. For this reason, we call the separation
-the \emph{value of unlabeled data}.
+distribution is known exactly. For this reason, we call the separation the
+\emph{value of unlabeled data}.
 \end{abstract}
 
 
@@ -69,7 +74,7 @@ other hand, \cite{Benedek-Itai-1991} showed that for any class $C$ and any
 distribution there exists an algorithm that $\epsilon$-learns any target from
 $C$ from $O \left( \frac{\log N_\epsilon + \log (1/\delta)}{\epsilon}\right)$
 labeled examples with probability at least $1-\delta$ where $N_\epsilon$ is the
-size of an $\epsilon$-covering of $C$ with respect to the disagreement metric
+size of an $\epsilon$-cover of $C$ with respect to the disagreement metric
 $d(f,g) = \Pr[f(x) \neq g(x)]$. Here, it is important to note that Benedek-Itai
 construct for each distribution a separate algorithm. In other words, they
 construct a family of algorithms indexed by the (uncountably many) distributions
@@ -134,14 +139,16 @@ for halfspaces over $\R^n$.
 \section{Related Work}
 
 The question of whether knowledge of unlabeled data distribution helps was
-proposed and initially studied by \cite{Ben-David-Lu-Pal-2008}. However, their
-paper considers only classes with Vapnik-Chervonenkis dimension at most $1$
-or distributions where the size of the covering is
+proposed and initially studied by \cite{Ben-David-Lu-Pal-2008}; see also
+\cite{Lu-2009}. However, they considered only classes with Vapnik-Chervonenkis
+dimension at most $1$ or distributions where the size of the cover is
 $\Theta(1/\epsilon)^{\Theta(\VC(C))}$ i.e. as large as it can be.\footnote{For
 any concept class and any distribution, the size of the smallest
-$\epsilon$-cover is at most $O(1/\epsilon)^{O(\VC(C))}$.} In these settings,
-separation does not exist and they (incorrectly) concluded that unlabeled data
-are useless.
+$\epsilon$-cover is at most $O(1/\epsilon)^{O(\VC(C))}$.} In these settings, for
+constant $\epsilon$ and $\delta$, the separation is at most a constant and they
+concluded that unlabeled data are useless. However, these settings are
+misleading since they ignore distributions with small cover and/or dependency on
+the Vapnik-Chervonenkis dimension.
 
 The question was studied in earnest by \cite{Darnstadt-Simon-Szorenyi-2013} who
 show two major results. First, they show that for any non-trivial concept class
@@ -155,7 +162,8 @@ by \cite{Benedek-Itai-1991} but the ideas are much older; see
 e.g.~\cite{Dudley-1978, Dudley-1984}. The $O(1/\epsilon)^{O(\VC(C))}$ upper
 bound on size of the smallest $\epsilon$-cover is by \citet[Lemma
 7.13]{Dudley-1978}; see also \citet[Chapter 4]{Devroye-Lugosi-2000} and
-\cite{Haussler-1995}.
+\cite{Haussler-1995} where the result is proved for empirical $\epsilon$-cover.
+We give a clean proof in \autoref{section:epsilon-cover}.
 
 For any distribution-independent algorithm and any class $C$ of
 Vapnik-Chervonenkis dimension $d \ge 2$ and any $\epsilon \in (0,1)$ and $\delta
@@ -184,20 +192,19 @@ Proposition~\ref{proposition:vc-dimension-projections}.
 projections over the domain $\{0,1\}^n$ under various unlabeled distributions.
 We assume that $\epsilon$ and $\delta$ are constant, say, $\epsilon = \delta =
 \frac{1}{10}$. The graph shows three lines. The red horizontal line is the
-optimal Hanneke's bound for the class of projections, which is
-$\Theta(\VC(C_n)) = \Theta(\log n)$. The green line corresponds to to
-Benedek-Itai bound. The green line touches the red line for certain
-distributions, but is lower for other distributions. In particular, for certain
-distributions the green line is $O(1)$. The dashed line corresponds
-to a particular distribution on a shattered set. This is where the green line
-and red line touch. Furthermore, here the the upper bound coincide
-with the lower bound for that particular distribution.
-The black line is the sample complexity
-of an arbitrary \emph{distribution-independent} algorithm. (For example, the
-reader can think of the ERM or Hanneke's algorithm.) Obviously, the black line
-must lie above the green line. We prove that there exist a distribution where
-the black line is $\Omega(\log n)$ times higher than the
-green line.} \label{figure:sample-complexity}
+optimal Hanneke's bound for the class of projections, which is $\Theta(\VC(C_n)) =
+\Theta(\log n)$. The green line corresponds to to Benedek-Itai bound. The green
+line touches the red line for certain distributions, but is lower for other
+distributions. In particular, for certain distributions the green line is
+$O(1)$. The dashed line corresponds to a particular distribution on a shattered
+set. This is where the green line and red line touch. Furthermore, here the the
+upper bound coincide with the lower bound for that particular distribution. The
+black line is the sample complexity of an arbitrary
+\emph{distribution-independent} algorithm. (For example, the reader can think of
+the ERM or Hanneke's algorithm.) Obviously, the black line must lie above the
+green line. We prove that there exist a distribution where the black line is
+$\Omega(\log n)$ times higher than the green line.}
+\label{figure:sample-complexity}
 \end{figure}
 
 \section{Preliminaries}
@@ -212,8 +219,8 @@ $A:\bigcup_{m=0}^\infty \left(\X \times \{0,1\} \right)^m \to \{0,1\}^\X$. In
 other words, the algorithm gets as input a sequence of labeled examples $(x_1,
 y_1), (x_2, y_2), \dots, (x_m, y_m)$ and outputs a function from $\X$ to
 $\{0,1\}$. We allow the algorithm to output function that does not belong to
-$C$, i.e., the algorithm can be improper. A \emph{distribution-dependent algorithm}
-is a function that maps any probability distribution over $\X$ to a
+$C$, i.e., the algorithm can be improper. A \emph{distribution-dependent
+algorithm} is a function that maps any probability distribution over $\X$ to a
 distribution-independent algorithm.
 
 Let $P$ be a probability distribution over a domain $\X$. For any two functions
@@ -682,8 +689,128 @@ $$
 Note that since only the sign of the inner product $\ip{w}{x}$ plays a role, for
 any $\alpha > 0$, the functions $c_w$ and $c_{\alpha w}$ are the identical.
 
-
 \bibliography{biblio}
 \bibliographystyle{plainnat}
+
+\appendix
+
+\section{Size of $\epsilon$-cover}
+\label{section:epsilon-cover}
+
+In this section, we prove $(e/\epsilon)^{VC(C)}$ upper bound on the size of the
+$\epsilon$-cover. To prove our result, we need Sauer's lemma. The lemma
+uses the following notation: For any concept $c:\X \to \{0,1\}$ and
+any $S \subseteq \X$ we define $c(S) = \{x \in S ~:~ c(x) = 1 \}$.
+
+\begin{lemma}[Sauer's lemma]
+Let $\X$ be a non-empty domain and let $C \subseteq \{0,1\}^\X$ be a concept class
+with Vapnik-Chervonenkis dimension $d$. Then, for any $S \subseteq X$,
+$$
+\left| \left\{ c(S) ~:~ c \in C \right\} \right| \le \sum_{i=0}^d \binom{|S|}{i} \; .
+$$
+\end{lemma}
+
+We remark that if $n \ge d \ge 1$ then
+\begin{equation}
+\label{equation:sauer-lemma-estimate}
+\sum_{i=0}^d \binom{n}{i} \le \left( \frac{ne}{d} \right)^d
+\end{equation}
+where $e = 2.71828 \dots$ is the base of the natural logarithm. This follows
+from the following calculation
+$$
+\left( \frac{d}{n} \right)^d \sum_{i=0}^d \binom{n}{d}
+\le \sum_{i=0}^d \binom{n}{d} \left( \frac{d}{n} \right)^i
+\le \sum_{i=0}^n \binom{n}{d} \left( \frac{d}{n} \right)^i
+= \left(1 + \frac{d}{n} \right)^n \le e^d
+$$
+where we used in the last step that $1 + x \le e^x$ for any $x \in \R$.
+
+
+\begin{theorem}[Size of $\epsilon$-cover]
+Let $\X$ be a non-empty domain and let $C \subseteq \{0,1\}^\X$ be a concept
+class with Vapnik-Chervonenkis dimension $d$. Let $P$ be any distribution over
+$X$. For any $\epsilon \in (0,1]$, there exists a set $C' \subseteq C$ such that
+\begin{equation}
+\label{equation:theorem-epsilon-cover}
+|C'| \le \left( \frac{e}{\epsilon} \right)^d
+\end{equation}
+and for any $c \in C$ there exists $c' \in C'$ such that $d_P(c,c') \le \epsilon$.
+\end{theorem}
+
+\begin{proof}
+We say that a set $B \subseteq C$ is an \emph{$\epsilon$-packing} if
+$$
+\forall c,c' \in B \qquad \qquad c \neq c' \quad \Longrightarrow \quad d_P(c,c') > \epsilon
+$$
+We claim that there exists a maximal $\epsilon$-packing. In order to show that a
+maximal set exists we to appeal to Zorn's lemma. Consider the collection of all
+$\epsilon$-packings. We impose partial order on them by set inclusion. Notice
+that any totally ordered collection $\{ B_i ~:~ i \in I \}$ of
+$\epsilon$-packings has an upper bound $\bigcup_{i \in I} B_i$ that is an
+$\epsilon$-packing. Indeed, if $c,c' \in \bigcup_{i \in I} B_i$ such that $c
+\neq c'$ then there exists $i \in I$ such that $c,c' \in B_i$ since $\{ B_i ~:~
+i \in I \}$ is totally ordered. Since $B_i$ is $\epsilon$-packing, $d_P(c,c') >
+\epsilon$ and thus $\bigcup_{i \in I} B_i$ is an $\epsilon$-packing.
+By Zorn's lemma, there exists a maximal set.
+
+Let $C'$ be a maximal $\epsilon$-packing. We claim that $C'$ is also an
+$\epsilon$-cover of $C$. Indeed, for any $c \in C$ there exists $c' \in C'$ such
+that $d_P(c,c') \le \epsilon$ since otherwise $c$ can be added to $C'$
+contradicting its maximality.
+
+It remains to upper bound $|C'|$. Consider any finite subset $C'' \subseteq C'$.
+It suffices to show an upper bound on $|C''|$ and since $C''$ is arbitary, the
+same upper bound holds for $|C'|$. Let $M = |C''|$ and let $c_1, c_2, \dots,
+c_M$ be concepts in $C''$. For any $i,j \in \{1,2,\dots,M\}$, $i < j$, let
+$$
+A_{i,j} = \{ x \in \X ~:~ c_i(x) \neq c_j(x) \} \; .
+$$
+Let $X_1, X_2, \dots, X_K$ be an i.i.d. sample from $P$. We will chose $K$ later.
+Since $d_P(c_i, c_j) > \epsilon$,
+$$
+\Pr[X_k \in A_{i,j}] > \epsilon \qquad \qquad \text{for $k=1,2,\dots,K$}.
+$$
+Since there are $\binom{M}{2}$ subsets $A_{i,j}$, we have
+\begin{align*}
+\Pr\left[\forall i,j, i < j, \ \exists k, \ Y_k \in A_{i,j} \right]
+& = 1 - \Pr\left[\exists i,j, i < j, \ \forall k, \ Y_k \not \in A_{i,j} \right] \\
+& \ge 1 - \sum_{1 \le i < j \le M} \Pr\left[\forall k, \ Y_k \not \in A_{i,j} \right] \\
+& \ge 1 - \sum_{1 \le i < j \le M} (1 - \epsilon)^K \\
+& = 1 - \binom{M}{2} (1 - \epsilon)^K \; .
+\end{align*}
+For $K = \left\lceil \frac{\ln \binom{M}{2}}{\epsilon} \right\rceil +
+1$, the above probability is strictly positive. This means there exists a set $S =
+\{x_1, x_2, \dots, x_K\} \subseteq X$ such that $A_{i,j} \cap S$ is non-empty
+for every $i < j$. This means that for every for every $i \neq j$, $c_i(S) \neq
+c_j(S)$ and hence $M = |C''| = \left| \left\{ c(S) ~:~ c \in C \right\} \right|$.
+Thus by Sauer's lemma
+$$
+M \le \sum_{i=0}^d \binom{K}{i} \; .
+$$
+We now show that this inequality implies that $M \le (e/\epsilon)^d$. We consider five cases.
+
+Case 1: $d = -\infty$. Then $C$ is empty. Hence $M \le 0$ and inequality trivially follows.
+
+Case 2: $d = 0$. Only empty set can be shattered by $C$ and thus $|C| \le 1$. Hence $M \le 1$ and the inequality trivially follows.
+
+Case 3: $d \ge 1$ and $M \le 2$. Clearly, $M \le 2 \le e \le e^d \le (e/\epsilon)^d$.
+
+Case 4: $d \ge 1$ and $M \ge 3$ and $K < d/\epsilon$. Then
+$\left\lceil \frac{\ln \binom{M}{2}}{\epsilon} \right\rceil + 1 < d/\epsilon$
+which implies that $\ln \binom{M}{2} < d$ and hence $\binom{M}{2} \le e^d$.
+Since $M \le \binom{M}{2}$ for $M \ge 3$,
+$$
+M \le \binom{M}{2} \le e^d \le \left( \frac{e}{\epsilon} \right)^d \; .
+$$
+
+Case 5: $d \ge 1$ and $M \ge 3$ and $K \ge d/\epsilon$. Clearly, $K \ge d$ hence by \eqref{equation:sauer-lemma-estimate},
+\begin{align*}
+M
+\le \sum_{i=0}^d \binom{K}{i}
+\le \left( \frac{Ke}{d} \right)^d
+\le \left( \frac{e}{\epsilon} \right)^d \; .
+\end{align*}
+\end{proof}
+
 
 \end{document}
