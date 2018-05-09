@@ -1,13 +1,20 @@
 \documentclass[10pt]{article}
 
+\usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage[english]{babel}
 \usepackage{fullpage}
 \usepackage{graphics}
 \usepackage[colorlinks=true,citecolor=blue,linkcolor=blue]{hyperref}
 \usepackage{natbib}
 \usepackage{todonotes}
+
+% autoref fix for Chapter
+\addto\extrasenglish{%
+  \renewcommand{\sectionautorefname}{Section}%
+}
 
 \newtheorem{proposition}{Proposition}
 \newtheorem{lemma}[proposition]{Lemma}
@@ -80,7 +87,7 @@ construct for each distribution a separate algorithm. In other words, they
 construct a family of algorithms indexed by the (uncountably many) distributions
 over the domain. Alternatively, we can think of Benedek-Itai's family of
 algorithms as a single algorithm that receives the distribution as an input. It
-is known that $N_\epsilon = O(1/\epsilon)^{O(d)}$; see \cite{Dudley-1978}. Thus
+is known that $N_\epsilon = O(1/\epsilon)^{O(d)}$; see \cite{Dudley-1978}. Thus,
 ignoring $\log(1/\epsilon)$ factor, Benedek-Itai bound is never worse than
 Hanneke's bound.
 
@@ -121,10 +128,10 @@ as many labeled examples as Benedek-Itai bound. Furthermore, we show similar
 results for the class of monotone disjunctions over the Boolean hypercube
 $\{0,1\}^n$ where we show that any distribution-independent algorithm requires,
 for some distributions, $\Omega(n)$ times as much labeled examples as the
-Benedek-Itai bound. Perhaps most importantly, we show analoguous result for
+Benedek-Itai bound. Perhaps most importantly, we show analogous result for
 halfspaces over $\R^n$, for which we show that \emph{any}
 distribution-independent algorithm requires for some unlabeled distributions
-$\Omega(\frac{n}{\log n})$ times as many labeled examples as the Benedek-Itain
+$\Omega(\frac{n}{\log n})$ times as many labeled examples as the Benedek-Itai
 bound.
 
 \cite{Darnstadt-Simon-Szorenyi-2013} showed the gap for any class with
@@ -135,48 +142,6 @@ $\Theta(n)$ and $\Theta(n)$ respectively. Thus our lower bounds match or almost
 match the upper bound $O(d)$. However, it remains an open problem to close the
 mismatch between $\Omega(\frac{n}{\log n})$ lower bound and $O(n)$ upper bound
 for halfspaces over $\R^n$.
-
-\section{Related Work}
-
-The question of whether knowledge of unlabeled data distribution helps was
-proposed and initially studied by \cite{Ben-David-Lu-Pal-2008}; see also
-\cite{Lu-2009}. However, they considered only classes with Vapnik-Chervonenkis
-dimension at most $1$ or distributions where the size of the cover is
-$\Theta(1/\epsilon)^{\Theta(\VC(C))}$ i.e. as large as it can be.\footnote{For
-any concept class and any distribution, the size of the smallest
-$\epsilon$-cover is at most $O(1/\epsilon)^{O(\VC(C))}$.} In these settings, for
-constant $\epsilon$ and $\delta$, the separation is at most a constant and they
-concluded that unlabeled data are useless. However, these settings are
-misleading since they ignore distributions with small cover and/or dependency on
-the Vapnik-Chervonenkis dimension.
-
-The question was studied in earnest by \cite{Darnstadt-Simon-Szorenyi-2013} who
-show two major results. First, they show that for any non-trivial concept class
-$C$ and for every distribution the ratio of the sample complexities between
-distribution-independent and distribution-dependent algorithms is at most
-$\VC(C)$. Second, they show that for the class of projections over $\{0,1\}^n$,
-there are distributions where the ratio grows to infinity as a function of $n$.
-
-In learning theory, the disagreement metric and $\epsilon$-cover was  introduced
-by \cite{Benedek-Itai-1991} but the ideas are much older; see
-e.g.~\cite{Dudley-1978, Dudley-1984}. The $O(1/\epsilon)^{O(\VC(C))}$ upper
-bound on size of the smallest $\epsilon$-cover is by \citet[Lemma
-7.13]{Dudley-1978}; see also \citet[Chapter 4]{Devroye-Lugosi-2000} and
-\cite{Haussler-1995} where the result is proved for empirical $\epsilon$-cover.
-We give a clean proof in \autoref{section:epsilon-cover}.
-
-For any distribution-independent algorithm and any class $C$ of
-Vapnik-Chervonenkis dimension $d \ge 2$ and any $\epsilon \in (0,1)$ and $\delta
-\in (0,1)$ there exists a distribution over the domain and a concept which
-requires at least $\Omega \left(\frac{d + \log(1/\delta)}{\epsilon}\right)$
-labeled examples to $\epsilon$-learn with probability at least $1 - \delta$;
-see~\cite[Theorem 5.3]{Anthony-Bartlett-1999} and
-\cite{Blumer-Ehrenfeucht-Haussler-Warmuth-1989,
-Ehrenfeucht-Haussler-Kearns-Valiant-1989}. The proof of the lower bound
-constructs a distribution that does \emph{not} depend on the algorithm. The
-distribution is a particular distribution over a fixed set shattered by $C$. So
-even an algorithm that knows the distribution requires $\Omega \left(\frac{d +
-\log(1/\delta)}{\epsilon}\right)$ labeled examples.
 
 To better understand the relationship of the upper and lower bounds, we
 summarize the situation for the class of projections over $\{0,1\}^n$ in
@@ -191,23 +156,76 @@ Proposition~\ref{proposition:vc-dimension-projections}.
 \caption{The graph shows sample complexity bounds of learning a class of
 projections over the domain $\{0,1\}^n$ under various unlabeled distributions.
 We assume that $\epsilon$ and $\delta$ are constant, say, $\epsilon = \delta =
-\frac{1}{10}$. The graph shows three lines. The red horizontal line is the
-optimal Hanneke's bound for the class of projections, which is $\Theta(\VC(C_n)) =
-\Theta(\log n)$. The green line corresponds to to Benedek-Itai bound. The green
+\frac{1}{10}$. The graph shows three lines. The red horizontal line is
+Hanneke's bound for the class of projections, which is $\Theta(\VC(C_n)) =
+\Theta(\log n)$. The green line is the Benedek-Itai bound. The green
 line touches the red line for certain distributions, but is lower for other
 distributions. In particular, for certain distributions the green line is
 $O(1)$. The dashed line corresponds to a particular distribution on a shattered
 set. This is where the green line and red line touch. Furthermore, here the the
 upper bound coincide with the lower bound for that particular distribution. The
 black line is the sample complexity of an arbitrary
-\emph{distribution-independent} algorithm. (For example, the reader can think of
-the ERM or Hanneke's algorithm.) Obviously, the black line must lie above the
-green line. We prove that there exist a distribution where the black line is
-$\Omega(\log n)$ times higher than the green line.}
+\emph{distribution-independent} algorithm. For example, the reader can think of
+the ERM or Hanneke's algorithm.
+We prove that there exist a distribution where the black line is
+$\Omega(\log n)$ times higher than the green line. This separation is indicated
+by the double arrow.}
 \label{figure:sample-complexity}
 \end{figure}
 
+The paper is organized as follows. In \autoref{section:related-work} we review
+prior work. \autoref{section:preliminaries} gives the necessary definitions and
+basic probabilistic tools. Sections \ref{section:projections},
+\ref{section:monotone-dijsunctions}, \ref{section:halfspaces} prove the
+separation results for projections, monotone disjunctions, and halfspaces,
+respectively. For completeness, in \autoref{section:epsilon-cover} we give a
+proof of a simple upper bound $(e/\epsilon)^d$ on the size of the minimum
+$\epsilon$-cover.
+
+\section{Related Work}
+\label{section:related-work}
+
+The question of whether knowledge of unlabeled data distribution helps was
+proposed and initially studied by \cite{Ben-David-Lu-Pal-2008}; see also
+\cite{Lu-2009}. However, they considered only classes with Vapnik-Chervonenkis
+dimension at most $1$ or distributions where the size of the cover is
+$\Theta(1/\epsilon)^{\Theta(\VC(C))}$ i.e. as large as it can be.\footnote{For
+any concept class and any distribution, the size of the smallest
+$\epsilon$-cover is at most $O(1/\epsilon)^{O(\VC(C))}$.} In these settings, for
+constant $\epsilon$ and $\delta$, the separation of labeled sample complexities
+is at most a constant factor. These result suggest that unlabeled data are
+useless. However, these settings ignore distributions with small cover and/or
+dependency on the Vapnik-Chervonenkis dimension.
+
+The question was studied in earnest by \cite{Darnstadt-Simon-Szorenyi-2013} who
+show two major results. First, they show that for any non-trivial concept class
+$C$ and for every distribution the ratio of the sample complexities between
+distribution-independent and distribution-dependent algorithms is at most
+$\VC(C)$. Second, they show that for the class of projections over $\{0,1\}^n$,
+there are distributions where the ratio grows to infinity as a function of $n$.
+
+In learning theory, the disagreement metric and $\epsilon$-cover was  introduced
+by \cite{Benedek-Itai-1991} but the ideas are much older; see
+e.g.~\cite{Dudley-1978, Dudley-1984}. The $O(1/\epsilon)^{O(\VC(C))}$ upper
+bound on size of the smallest $\epsilon$-cover is by \citet[Lemma
+7.13]{Dudley-1978}; see also \citet[Chapter 4]{Devroye-Lugosi-2000} and
+\cite{Haussler-1995} where the result is proved for empirical $\epsilon$-cover.
+
+For any distribution-independent algorithm and any class $C$ of
+Vapnik-Chervonenkis dimension $d \ge 2$ and any $\epsilon \in (0,1)$ and $\delta
+\in (0,1)$ there exists a distribution over the domain and a concept which
+requires at least $\Omega \left(\frac{d + \log(1/\delta)}{\epsilon}\right)$
+labeled examples to $\epsilon$-learn with probability at least $1 - \delta$;
+see~\cite[Theorem 5.3]{Anthony-Bartlett-1999} and
+\cite{Blumer-Ehrenfeucht-Haussler-Warmuth-1989,
+Ehrenfeucht-Haussler-Kearns-Valiant-1989}. The proof of the lower bound
+constructs a distribution that does \emph{not} depend on the algorithm. The
+distribution is a particular distribution over a fixed set shattered by $C$. So
+even an algorithm that knows the distribution requires $\Omega \left(\frac{d +
+\log(1/\delta)}{\epsilon}\right)$ labeled examples.
+
 \section{Preliminaries}
+\label{section:preliminaries}
 
 Let $\X$ be a non-empty set. We denote by $\{0,1\}^\X$ the class of all
 functions from $\X$ to $\{0,1\}$. A \emph{concept class over a domain $\X$} is a
@@ -313,9 +331,8 @@ We used the fact that $\min\{x, 1 - x\} = \frac{1}{2} - \left| \frac{1}{2} - x \
 which can be easily verified by considering two cases: $x \ge \frac{1}{2}$ and $x < \frac{1}{2}$.
 \end{proof}
 
-
-
 \section{Projections}
+\label{section:projections}
 
 In this section, we denote by $C_n$ the class of \emph{projections} over the
 domain $\X = \{0,1\}^n$. The class $C_n$ consists of $n$ functions $c_1, c_2,
@@ -384,7 +401,7 @@ labeled examples, with probability at least $1 - \delta$, it $2p$-learns the tar
 \begin{proof}
 Given a distribution $P_i \in \P_{n,p}$ for some $i \in \{1,2,\dots,n\}$, the
 algorithm chooses two candidate functions $c_i, c_j \in C_n$ where $j$ is
-arbitary index in $\{1,2,\dots,n\} \setminus \{j\}$. Given a sample $T =
+arbitrary index in $\{1,2,\dots,n\} \setminus \{j\}$. Given a sample $T =
 ((x_1, y_1), (x_2, y_2), \dots, (x_m,y_m))$ it outputs either $c_i$ or $c_j$
 depending on which one has smaller empirical error. Recall that
 empirical error of a classifier $h:\X \to \{0,1\}$ is
@@ -612,7 +629,7 @@ $$
 \Pr \left[ K \ge \frac{n^{2/3}}{2} \right] \ge 0.999 \; .
 $$
 
-Second, condioned on $K=r$, the random variable $S$
+Second, conditioned on $K=r$, the random variable $S$
 is a sum of $r-1$ Bernoulli random variables with parameter $p$
 and one Bernoulli random variable with parameter $1/2$. Hoeffding bound with $\epsilon = p/10$
 gives that
@@ -633,6 +650,7 @@ TODO
 
 
 \section{Monotone Disjunctions}
+\label{section:monotone-dijsunctions}
 
 In this section, we denote by $C_n$ the class of monotone disjunctions over $\X = \{0,1\}^n$. There
 are $2^n$ functions in $C_n$. For each subset $I \subseteq \{1,2,\dots,n\}$
@@ -680,6 +698,7 @@ $\{e_1, e_2, \dots, e_n\}$ is shattered.
 
 
 \section{Halfspaces}
+\label{section:halfspaces}
 
 In this section, we denote by $C_n$ the class of halfspaces over $\X = \R^n$. There
 are infinitely many functions in $C_n$. For every non-zero vector $w \in \R^n$, there is a half space
@@ -759,7 +778,7 @@ that $d_P(c,c') \le \epsilon$ since otherwise $c$ can be added to $C'$
 contradicting its maximality.
 
 It remains to upper bound $|C'|$. Consider any finite subset $C'' \subseteq C'$.
-It suffices to show an upper bound on $|C''|$ and since $C''$ is arbitary, the
+It suffices to show an upper bound on $|C''|$ and since $C''$ is arbitrary, the
 same upper bound holds for $|C'|$. Let $M = |C''|$ and let $c_1, c_2, \dots,
 c_M$ be concepts in $C''$. For any $i,j \in \{1,2,\dots,M\}$, $i < j$, let
 $$

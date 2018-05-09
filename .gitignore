@@ -12,3 +12,6 @@ main.pdf
 # Vim temporary files
 *.swp
 *.swo
+
+# Spell-check backup files
+*.bak
