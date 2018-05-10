@@ -1,0 +1,46 @@
+\section{Monotone Disjunctions}
+\label{section:monotone-dijsunctions}
+
+In this section, we denote by $C_n$ the class of monotone disjunctions over $\X = \{0,1\}^n$. There
+are $2^n$ functions in $C_n$. For each subset $I \subseteq \{1,2,\dots,n\}$
+there is monotone disjunction $c_I:\X \to \{0,1\}$ defined for any $x = (x[1],
+x[2], \dots, x[n]) \in \X$ as
+$$
+c_I(x) = \bigvee_{i \in I} x[i] \; .
+$$
+If $I = \emptyset$, we define $c_I$ as the constant zero function.
+
+We consider the same family of distributions $\P_{n,p}$ as in the previous section.
+Let $P = P_{Identity} \in \P_{n,p}$. We compute the distance $d_P(c_I, c_J)$ between
+any two monotone disjunctions. For any subset $K \subseteq \{1,2,\dots,n\}$, let
+$A_K$ be the event that all for all $i \in K$, $x_i = 0$.
+\begin{align*}
+d_P(c_I, c_J)
+& = \Pr_{x \sim P}[c_I(x) \neq c_J(x)] \\
+& = \Pr_{x \sim P}[A_{I \cap J} \wedge ((A_{I \setminus J} \wedge \overline{A_{J \setminus I}}) \vee (\overline{A_{I \setminus J}} \wedge A_{J \setminus I} )) ] \\
+& = \Pr[A_{I \cap J}] \cdot \left\{ \Pr[A_{I \setminus J}] (1 - \Pr[A_{J \setminus I}]) + (1 - \Pr[A_{I \setminus J}]) \Pr[A_{J \setminus I}] \right\} \\
+& = \Pr[A_{I \cap J}] \cdot \left\{ \Pr[A_{I \setminus J}] + \Pr[A_{J \setminus I}] - 2 \Pr[A_{I \setminus J}] \Pr[A_{J \setminus I}] \right\} \\
+& = \Pr[A_I] + \Pr[A_J] - 2 \Pr[A_{I \cup J}] \\
+& = \prod_{i \in I} (1 - p_i) + \prod_{j \in J} (1 - p_j) - 2 \prod_{k \in I \cup J} (1 - p_k) \; . \\
+\end{align*}
+
+\begin{proposition}[Vapnik-Chervonenkis dimension]
+Vapnik-Chervonenkis dimension of the class of monotone disjunctions is $C_n$ is $n$.
+\end{proposition}
+
+\begin{proof}
+Let us denote the Vapnik-Chervonenkis dimension by $d$. Recall that $d$ is the
+size of the largest shattered set. Let $S$ be any shattered set of size $d$.
+Then, there must be at least $2^d$ distinct functions in $C_n$. Hence, $d \le
+\log_2 |C_n| = n$.
+
+On the other hand, we construct a shattered set of size $n$. For any $i \in
+\{1,2,\dots,n\}$, let $e_i = (0, \dots, 0, 1, 0, \dots, 0)$ be vector in
+$\{0,1\}^n$ where the $1$ is at $i$-th position. We claim that the set $\{e_1,
+e_2, \dots, e_n\}$ is shattered. This indeed easy to see since for any binary
+vector $v \in \{0,1\}^n$, consider the set $I(v) = \{ i \in \{1,2,\dots,n\} ~:~
+v[i] = 1 \}$ and the monotone disjunction $c_{I(v)}$. It is not hard to see that
+$(c_{I(v)}(e_1), c_{I(v)}(e_2), \dots, c_{I(v)}(e_n)) = v$ since $c_{I(v)}(e_i) =
+\indicator{i \in I(v)} = \indicator{v[i] = 1} = v[i]$. Thus the set
+$\{e_1, e_2, \dots, e_n\}$ is shattered.
+\end{proof}

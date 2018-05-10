@@ -1,0 +1,117 @@
+\section{Size of $\epsilon$-cover}
+\label{section:epsilon-cover}
+
+In this section, we prove $(e/\epsilon)^{VC(C)}$ upper bound on the size of the
+$\epsilon$-cover. To prove our result, we need Sauer's lemma. The lemma
+uses the following notation: For any concept $c:\X \to \{0,1\}$ and
+any $S \subseteq \X$ we define $c(S) = \{x \in S ~:~ c(x) = 1 \}$.
+
+\begin{lemma}[Sauer's lemma]
+Let $\X$ be a non-empty domain and let $C \subseteq \{0,1\}^\X$ be a concept class
+with Vapnik-Chervonenkis dimension $d$. Then, for any $S \subseteq X$,
+$$
+\left| \left\{ c(S) ~:~ c \in C \right\} \right| \le \sum_{i=0}^d \binom{|S|}{i} \; .
+$$
+\end{lemma}
+
+We remark that if $n \ge d \ge 1$ then
+\begin{equation}
+\label{equation:sauer-lemma-estimate}
+\sum_{i=0}^d \binom{n}{i} \le \left( \frac{ne}{d} \right)^d
+\end{equation}
+where $e = 2.71828 \dots$ is the base of the natural logarithm. This follows
+from the following calculation
+$$
+\left( \frac{d}{n} \right)^d \sum_{i=0}^d \binom{n}{d}
+\le \sum_{i=0}^d \binom{n}{d} \left( \frac{d}{n} \right)^i
+\le \sum_{i=0}^n \binom{n}{d} \left( \frac{d}{n} \right)^i
+= \left(1 + \frac{d}{n} \right)^n \le e^d
+$$
+where we used in the last step that $1 + x \le e^x$ for any $x \in \R$.
+
+
+\begin{theorem}[Size of $\epsilon$-cover]
+Let $\X$ be a non-empty domain and let $C \subseteq \{0,1\}^\X$ be a concept
+class with Vapnik-Chervonenkis dimension $d$. Let $P$ be any distribution over
+$X$. For any $\epsilon \in (0,1]$, there exists a set $C' \subseteq C$ such that
+\begin{equation}
+\label{equation:theorem-epsilon-cover}
+|C'| \le \left( \frac{e}{\epsilon} \right)^d
+\end{equation}
+and for any $c \in C$ there exists $c' \in C'$ such that $d_P(c,c') \le \epsilon$.
+\end{theorem}
+
+\begin{proof}
+We say that a set $B \subseteq C$ is an \emph{$\epsilon$-packing} if
+$$
+\forall c,c' \in B \qquad \qquad c \neq c' \quad \Longrightarrow \quad d_P(c,c') > \epsilon
+$$
+We claim that there exists a maximal $\epsilon$-packing. In order to show that a
+maximal set exists we to appeal to Zorn's lemma. Consider the collection of all
+$\epsilon$-packings. We impose partial order on them by set inclusion. Notice
+that any totally ordered collection $\{ B_i ~:~ i \in I \}$ of
+$\epsilon$-packings has an upper bound $\bigcup_{i \in I} B_i$ that is an
+$\epsilon$-packing. Indeed, if $c,c' \in \bigcup_{i \in I} B_i$ such that $c
+\neq c'$ then there exists $i \in I$ such that $c,c' \in B_i$ since $\{ B_i ~:~
+i \in I \}$ is totally ordered. Since $B_i$ is $\epsilon$-packing, $d_P(c,c') >
+\epsilon$ and thus $\bigcup_{i \in I} B_i$ is an $\epsilon$-packing.
+By Zorn's lemma, there exists a maximal set.
+
+Let $C'$ be a maximal $\epsilon$-packing. We claim that $C'$ is also an
+$\epsilon$-cover of $C$. Indeed, for any $c \in C$ there exists $c' \in C'$ such
+that $d_P(c,c') \le \epsilon$ since otherwise $c$ can be added to $C'$
+contradicting its maximality.
+
+It remains to upper bound $|C'|$. Consider any finite subset $C'' \subseteq C'$.
+It suffices to show an upper bound on $|C''|$ and since $C''$ is arbitrary, the
+same upper bound holds for $|C'|$. Let $M = |C''|$ and let $c_1, c_2, \dots,
+c_M$ be concepts in $C''$. For any $i,j \in \{1,2,\dots,M\}$, $i < j$, let
+$$
+A_{i,j} = \{ x \in \X ~:~ c_i(x) \neq c_j(x) \} \; .
+$$
+Let $X_1, X_2, \dots, X_K$ be an i.i.d. sample from $P$. We will chose $K$ later.
+Since $d_P(c_i, c_j) > \epsilon$,
+$$
+\Pr[X_k \in A_{i,j}] > \epsilon \qquad \qquad \text{for $k=1,2,\dots,K$}.
+$$
+Since there are $\binom{M}{2}$ subsets $A_{i,j}$, we have
+\begin{align*}
+\Pr\left[\forall i,j, i < j, \ \exists k, \ Y_k \in A_{i,j} \right]
+& = 1 - \Pr\left[\exists i,j, i < j, \ \forall k, \ Y_k \not \in A_{i,j} \right] \\
+& \ge 1 - \sum_{1 \le i < j \le M} \Pr\left[\forall k, \ Y_k \not \in A_{i,j} \right] \\
+& \ge 1 - \sum_{1 \le i < j \le M} (1 - \epsilon)^K \\
+& = 1 - \binom{M}{2} (1 - \epsilon)^K \; .
+\end{align*}
+For $K = \left\lceil \frac{\ln \binom{M}{2}}{\epsilon} \right\rceil +
+1$, the above probability is strictly positive. This means there exists a set $S =
+\{x_1, x_2, \dots, x_K\} \subseteq X$ such that $A_{i,j} \cap S$ is non-empty
+for every $i < j$. This means that for every for every $i \neq j$, $c_i(S) \neq
+c_j(S)$ and hence $M = |C''| = \left| \left\{ c(S) ~:~ c \in C \right\} \right|$.
+Thus by Sauer's lemma
+$$
+M \le \sum_{i=0}^d \binom{K}{i} \; .
+$$
+We now show that this inequality implies that $M \le (e/\epsilon)^d$. We consider five cases.
+
+Case 1: $d = -\infty$. Then $C$ is empty. Hence $M \le 0$ and inequality trivially follows.
+
+Case 2: $d = 0$. Only empty set can be shattered by $C$ and thus $|C| \le 1$. Hence $M \le 1$ and the inequality trivially follows.
+
+Case 3: $d \ge 1$ and $M \le 2$. Clearly, $M \le 2 \le e \le e^d \le (e/\epsilon)^d$.
+
+Case 4: $d \ge 1$ and $M \ge 3$ and $K < d/\epsilon$. Then
+$\left\lceil \frac{\ln \binom{M}{2}}{\epsilon} \right\rceil + 1 < d/\epsilon$
+which implies that $\ln \binom{M}{2} < d$ and hence $\binom{M}{2} \le e^d$.
+Since $M \le \binom{M}{2}$ for $M \ge 3$,
+$$
+M \le \binom{M}{2} \le e^d \le \left( \frac{e}{\epsilon} \right)^d \; .
+$$
+
+Case 5: $d \ge 1$ and $M \ge 3$ and $K \ge d/\epsilon$. Clearly, $K \ge d$ hence by \eqref{equation:sauer-lemma-estimate},
+\begin{align*}
+M
+\le \sum_{i=0}^d \binom{K}{i}
+\le \left( \frac{Ke}{d} \right)^d
+\le \left( \frac{e}{\epsilon} \right)^d \; .
+\end{align*}
+\end{proof}
