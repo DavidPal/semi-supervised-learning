@@ -33,7 +33,10 @@ We recall the standard definitions from learning theory.  A set $S \subseteq \X$
 is \emph{shattered} by a concept class $C$ if for any subset $S' \subseteq S$
 there exists a classifier $c \in C$ such that for all $x \in S$, $c(x) =
 \indicator{x \in S'}$. \emph{Vapnik-Chervonenkis dimension} of a concept class
-$C$ is the size of the largest shattered subset by $C$.
+$C$ is the size of the largest shattered subset by $C$. A subset $C'$ of a
+concept class $C$ is an \emph{$\epsilon$-cover} of $C$ for a probability
+distribution $P$ if for any $c \in C$ there exists $c' \in C'$ such that
+$d_P(c,c') \le \epsilon$.
 
 To prove our lower bounds we need three general probabilistic results. The first
 one is the standard Hoeffding bound. The other two are simple and intuitive

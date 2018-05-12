@@ -13,18 +13,18 @@ $O(1/\epsilon)^{O(d)}$. In fact, as we show in \autoref{section:epsilon-cover},
 the size of the smallest $\epsilon$-cover is at most $(e/\epsilon)^d$.} In these
 settings, for constant $\epsilon$ and $\delta$, the separation of labeled sample
 complexities is at most a constant factor, which is exactly what
-\cite{Ben-David-Lu-Pal-2008} proved. Their result seem to suggest that unlabeled
-data are useless. However, these settings ignore distributions with small
-$\epsilon$-cover and/or ignore the dependency on the Vapnik-Chervonenkis
-dimension.
+\cite{Ben-David-Lu-Pal-2008} proved. In these settings, unlabeled data are
+indeed useless. However, these results say nothing about distributions with
+$\epsilon$-cover of small size and it ignores the dependency on the
+Vapnik-Chervonenkis dimension.
 
 The question was studied in earnest by \cite{Darnstadt-Simon-Szorenyi-2013} who
 showed two major results. First, they show that for any non-trivial concept
 class $C$ and for every distribution the ratio of the labeled sample
 complexities between distribution-independent and distribution-dependent
-algorithms is bounded by the Vapnik-Chervonenkis dimension (up to a constant
-factor). Second, they show that for the class of projections over $\{0,1\}^n$,
-there are distributions where the ratio grows to infinity as a function of $n$.
+algorithms is bounded by the Vapnik-Chervonenkis dimension. Second, they show
+that for the class of projections over $\{0,1\}^n$, there are distributions
+where the ratio grows to infinity as a function of $n$.
 
 In learning theory, the disagreement metric and $\epsilon$-cover was  introduced
 by \cite{Benedek-Itai-1991} but the ideas are much older; see

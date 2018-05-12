@@ -18,13 +18,13 @@ $$
 \Pr[X[j] = 1] =
 \begin{cases}
 \frac{1}{2} & \text{if $j = i$,} \\
-p & \text{if $j\neq i$.} \\
+p & \text{if $j\neq i$,} \\
 \end{cases}
 \qquad \qquad \text{for $j=1,2,\dots,n$.}
 $$
-Throughout the paper, we treat $p$ as a constant that does not depend on $n$.
-Theorems below we will place some further constraints on $p$. As we will see any
-$p \in (0,\frac{1}{16})$ works.
+Throughout this section, we treat $p$ as a constant that does not depend on $n$.
+Theorems below we will place some further constraints on $p$. As we will see,
+any $p \in (0,\frac{1}{16})$ works.
 
 \begin{proposition}
 \label{proposition:vc-dimension-projections}
@@ -121,12 +121,12 @@ requires at least $\Omega(\log n)$ labeled examples.
 \begin{theorem}[Learning without knowledge of the distribution]
 For any distribution-independent algorithm, any $p \in (0,\frac{1}{16})$, and any
 $n \ge 600/p^3$ there exists a distribution $P \in \P_{n,p}$ and a target
-concept $c \in C_n$ such that if the number of labeled examples is less than or equal to
+concept $c \in C_n$ such that if the algorithm gets
 $$
-\frac{\ln n}{3 \ln (1/p)}
+m \le \frac{\ln n}{3 \ln (1/p)}
 $$
-the algorithm fails to $2p$-learn the
-target concept with probability more than $\frac{1}{8} - 2p$.
+labeled examples, it fails to $2p$-learn the target concept with probability
+more than $\frac{1}{8} - 2p$.
 \end{theorem}
 
 \begin{proof}
@@ -138,14 +138,11 @@ The algorithm receives an $m \times n$ matrix and a binary vector of length $m$.
 The rows of the matrix corresponds to unlabeled examples and the vector encodes
 the labels. The output of the $A$ is any function from $\{0,1\}^n \to \{0,1\}$.
 
-Fix the number of examples $m$ to be any non-negative integer less than or equal
-to  $\frac{\ln n}{3 \ln(1/p)}$. We demonstrate the existence of a pair $(P,c)
-\in \P_{n,p} \times C_n$ which cannot be learned with $m$ samples by
-probabilistic method.
-
-Let $I$ be chosen uniformly at random from $\{1,2,\dots,n\}$. We consider distribution
-$P_I \in \P_{n,p}$ and target $c_I \in C_n$. Let $X_1, X_2, \dots, X_m$ be an
-i.i.d. sample from $P_I$ and let $Y_1 = c_I(X_1), Y_2 = c_I(X_2), \dots, Y_m =
+We demonstrate the existence of a pair $(P,c) \in \P_{n,p} \times C_n$ which
+cannot be learned with $m$ samples by probabilistic method. Let $I$ be chosen
+uniformly at random from $\{1,2,\dots,n\}$. We consider distribution $P_I \in
+\P_{n,p}$ and target $c_I \in C_n$. Let $X_1, X_2, \dots, X_m$ be an i.i.d.
+sample from $P_I$ and let $Y_1 = c_I(X_1), Y_2 = c_I(X_2), \dots, Y_m =
 c_I(X_m)$ be the target labels. Let $X$ be the $m \times n$ matrix with entries
 $X_i[j]$ and let $Y = (Y_1, Y_2, \dots, Y_m)$ be the vector of labels. The
 output of the algorithm is $A(X,Y)$. We will show that
