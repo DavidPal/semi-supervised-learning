@@ -1,16 +1,19 @@
 \section{Size of $\epsilon$-cover}
 \label{section:epsilon-cover}
 
-In this section, we prove $(e/\epsilon)^{VC(C)}$ upper bound on the size of the
-$\epsilon$-cover. To prove our result, we need Sauer's lemma. The lemma
-uses the following notation: For any concept $c:\X \to \{0,1\}$ and
-any $S \subseteq \X$ we define $c(S) = \{x \in S ~:~ c(x) = 1 \}$.
+In this section, we prove $(e/\epsilon)^d$ upper bound on the size of the
+$\epsilon$-cover of any concept class of Vapnik-Chervonenkis dimension $d$. To
+prove our result, we need Sauer's lemma; see e.g.~\cite[Chapter
+3]{Anthony-Bartlett-1999}.  The lemma uses the following notation: For any
+concept $c:\X \to \{0,1\}$ and any $S \subseteq \X$ we define $\pi(c,S) = \{x
+\in S ~:~ c(x) = 1 \}$. In other words, $\pi(C,S)$ is the set of examples in $S$
+labeled $1$ by $c$.
 
 \begin{lemma}[Sauer's lemma]
 Let $\X$ be a non-empty domain and let $C \subseteq \{0,1\}^\X$ be a concept class
-with Vapnik-Chervonenkis dimension $d$. Then, for any $S \subseteq X$,
+with Vapnik-Chervonenkis dimension $d$. Then, for any $S \subseteq \X$,
 $$
-\left| \left\{ c(S) ~:~ c \in C \right\} \right| \le \sum_{i=0}^d \binom{|S|}{i} \; .
+\left| \left\{ \pi(c, S) ~:~ c \in C \right\} \right| \le \sum_{i=0}^d \binom{|S|}{i} \; .
 $$
 \end{lemma}
 
@@ -22,9 +25,9 @@ We remark that if $n \ge d \ge 1$ then
 where $e = 2.71828 \dots$ is the base of the natural logarithm. This follows
 from the following calculation
 $$
-\left( \frac{d}{n} \right)^d \cdot \sum_{i=0}^d \binom{n}{d}
-\le \sum_{i=0}^d \binom{n}{d} \left( \frac{d}{n} \right)^i
-\le \sum_{i=0}^n \binom{n}{d} \left( \frac{d}{n} \right)^i
+\left( \frac{d}{n} \right)^d \cdot \sum_{i=0}^d \binom{n}{i}
+\le \sum_{i=0}^d \binom{n}{i} \left( \frac{d}{n} \right)^i
+\le \sum_{i=0}^n \binom{n}{i} \left( \frac{d}{n} \right)^i
 = \left(1 + \frac{d}{n} \right)^n \le e^d
 $$
 where we used in the last step that $1 + x \le e^x$ for any $x \in \R$.
@@ -86,7 +89,7 @@ For $K = \left\lceil \frac{\ln \binom{M}{2}}{\epsilon} \right\rceil +
 1$, the above probability is strictly positive. This means there exists a set $S =
 \{x_1, x_2, \dots, x_K\} \subseteq X$ such that $A_{i,j} \cap S$ is non-empty
 for every $i < j$. This means that for every for every $i \neq j$, $c_i(S) \neq
-c_j(S)$ and hence $M = |C''| = \left| \left\{ c(S) ~:~ c \in C \right\} \right|$.
+c_j(S)$ and hence $M = |C''| = \left| \left\{ \pi(c, S) ~:~ c \in C \right\} \right|$.
 Thus by Sauer's lemma
 $$
 M \le \sum_{i=0}^d \binom{K}{i} \; .
