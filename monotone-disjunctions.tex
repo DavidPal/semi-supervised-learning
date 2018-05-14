@@ -11,11 +11,11 @@ c_I(x) = \bigvee_{i \in I} x[i] \; .
 $$
 If $I = \emptyset$, we define $c_I$ as the constant zero function.
 
-For any even $n \ge 2$ and any $\epsilon \in (0,\frac{1}{2})$, we consider a
+For any even $n \ge 4$ and any $\epsilon \in (0,\frac{1}{2})$, we consider a
 family of probability distributions $\P_{n,\epsilon}$ over the Boolean hypercube $\X =
 \{0,1\}^n$. The family consists of $\binom{n}{n/2}$ probability distributions.
-For each subset $J \subseteq \{1,2,\dots,n\}$ of size $|J| = n/2$ there is a
-probability distribution $P_J \in \P_{n,\epsilon}$. To describe a distribution $P_J$
+For each subset $J \subseteq \{1,2,\dots,n\}$ of size $|J| = n/2$
+there is a probability distribution $P_J \in \P_{n,\epsilon}$. To describe a distribution $P_J$
 for some $J \subseteq \{1,2,\dots,n\}$, consider a random vector $X = (X[1],
 X[2], \dots, X[n])$ drawn from $P_J$. The distribution $P_J$ is a product
 distribution, i.e., $\Pr[X=x] = \prod_{j=1}^n \Pr[X[j] = x[j]]$ for any $x \in
@@ -23,12 +23,12 @@ distribution, i.e., $\Pr[X=x] = \prod_{j=1}^n \Pr[X[j] = x[j]]$ for any $x \in
 \begin{align*}
 \Pr[X[j] = 1] =
 \begin{cases}
-1 - \sqrt[n/2]{1 - \epsilon}  & \text{if $j \in J$,} \\
+1 - \sqrt[n/2 - 1]{1 - \epsilon}  & \text{if $j \in J$,} \\
 1 - \epsilon & \text{if $j \not \in J$,}
 \end{cases}
 && \text{for $j=1,2,\dots,n$.}
 \end{align*}
-Note that $1 - \sqrt[n/2]{1 - \epsilon} < \frac{1}{2}$ and $1 - \epsilon > \frac{1}{2}$.
+Note that $1 - \sqrt[n/2-1]{1 - \epsilon} < \frac{1}{2}$ and $1 - \epsilon > \frac{1}{2}$.
 
 \begin{proposition}[Vapnik-Chervonenkis dimension]
 Vapnik-Chervonenkis dimension of the class of monotone disjunctions is $C_n$ is $n$.
@@ -42,30 +42,33 @@ Then, there must be at least $2^d$ distinct functions in $C_n$. Hence, $d \le
 
 On the other hand, we construct a shattered set of size $n$. For any $i \in
 \{1,2,\dots,n\}$, let $e_i = (0, \dots, 0, 1, 0, \dots, 0)$ be vector in
-$\{0,1\}^n$ where the $1$ is at $i$-th position. We claim that the set $\{e_1,
-e_2, \dots, e_n\}$ is shattered. This indeed easy to see since for any binary
-vector $v \in \{0,1\}^n$, consider the set $I(v) = \{ i \in \{1,2,\dots,n\} ~:~
-v[i] = 1 \}$ and the monotone disjunction $c_{I(v)}$. It is not hard to see that
-$(c_{I(v)}(e_1), c_{I(v)}(e_2), \dots, c_{I(v)}(e_n)) = v$ since $c_{I(v)}(e_i) =
-\indicator{i \in I(v)} = \indicator{v[i] = 1} = v[i]$. Thus the set
-$\{e_1, e_2, \dots, e_n\}$ is shattered.
+$\{0,1\}^n$ with all coordinate equal to zero except for the $i$-th coordinate
+which is equal to $1$. We claim that the set $S = \{e_1, e_2, \dots, e_n\}$ is
+shattered. For any binary vector $S' \subseteq S$, consider the set $I = \{ i
+\in \{1,2,\dots,n\} ~:~ e_i \in S' \}$ and the monotone disjunction $c_I$. It is
+not hard to see that $S' = \pi(c, S)$ since $c_I(e_i) = \indicator{i \in I} =
+\indicator{e_i \in S'}$. Thus the set $\{e_1, e_2, \dots, e_n\}$ is shattered.
 \end{proof}
 
 \begin{lemma}
-For any even $n \ge 2$, any $\epsilon \in (0,\frac{1}{2})$, and any $P_J \in
-\P_{n,\epsilon}$ where $J \subseteq \{1,2,\dots,n\}$, $|J| = n/2$, there exists
-an $\epsilon$-cover of the class of monote disjunctions $C_n$ of size $2$.
+For any even $n \ge 4$, any $\epsilon \in (0,\frac{1}{2})$, and any distribution
+from $\P_{n,\epsilon}$ there exists an $\epsilon$-cover of the class of monote
+disjunctions $C_n$ of size $3$.
 \end{lemma}
 
 \begin{proof}
-Let $C' = \{c_\emptyset, c_{\{1,2,\dots,n\}}\}$. We claim that $C'$ is an
-$\epsilon$-cover $C_n$ under the distribution $P_J$. Let $I \subseteq
-\{1,2,\dots,n\}$ be arbitrary and let $c_I \in C_n$ be the corresponding
-disjunction. We need to show that $d_{P_J}(c_I, c_\emptyset) \le \epsilon$ or
-$d_{P_J}(c_I, c_{\{1,2,\dots,n\}}) \le \epsilon$. We consider two cases.
+Let $J \subseteq \{1,2,\dots,n\}$ such that $|J| = n/2$ and let $P_J
+\subseteq P_{n,\epsilon}$. Let $C' = \{c_J, c_\emptyset, c_{\{1,2,\dots,n\}}\}$.
+We claim that $C'$ is an $\epsilon$-cover $C_n$ under the distribution $P_J$.
+Let $I \subseteq \{1,2,\dots,n\}$ be arbitrary and let $c_I \in C_n$ be the
+corresponding disjunction. We need to show that $d_{P_J}(c_I, c_J) \le \epsilon$
+or $d_{P_J}(c_I, c_\emptyset) \le \epsilon$ or $d_{P_J}(c_I,
+c_{\{1,2,\dots,n\}}) \le \epsilon$. We consider three cases.
 
-Case 1: $I \subset J$. We show that $d_{P_J}(c_I, c_\emptyset) \le \epsilon$.
-Let $X \sim P_J$. Then,
+Case 1: $I = J$. Clearly, $d_{P_J}(c_I, c_J) = 0$.
+
+Case 2: $I \subseteq J$ and $I \neq J$. We show that $d_{P_J}(c_I, c_\emptyset) \le \epsilon$.
+Note that $|I| \le n/2 - 1$. Let $X \sim P_J$. Then,
 \begin{align*}
 d_{P_J}(c_I, c_\emptyset)
 & = \Pr[c_I(X) \neq c_\emptyset(X)] \\
@@ -73,13 +76,14 @@ d_{P_J}(c_I, c_\emptyset)
 & = \Pr \left[ \bigvee_{i \in I} (X[i] = 1) \right] \\
 & = 1 - \Pr \left[ \bigwedge_{i \in I} (X[i] = 0) \right] \\
 & = 1 - \prod_{i \in I} \Pr \left[ X[i] = 0 \right] \\
-& = 1 - \prod_{i \in I} \sqrt[n/2]{1 - \epsilon} \\
-& \le 1 - \prod_{i \in J} \sqrt[n/2]{1 - \epsilon} \\
-& = 1 - \bigg( \sqrt[n/2]{1 - \epsilon} \bigg)^{n/2} \\
-& = \epsilon \; .
+& = 1 - \prod_{i \in I} \sqrt[n/2 - 1]{1 - \epsilon} \\
+& \le 1 - \bigg( \sqrt[n/2-1]{1 - \epsilon} \bigg)^{(n-1)/2} \\
+& = 1 - \sqrt{1 - \epsilon} \\
+& = \epsilon
 \end{align*}
+where the last inequality is valid for any $\epsilon \le 1/2$.
 
-Case 2: If $I \not \subseteq J$. We show that $d_{P_J}(c_I, c_{\{1,2,\dots,n\}}) \le \epsilon$.
+Case 3: If $I \not \subseteq J$. We show that $d_{P_J}(c_I, c_{\{1,2,\dots,n\}}) \le \epsilon$.
 Since $I \not \subseteq J$, there exists $k \in I \setminus J$. Let $X \sim P_J$. Then,
 \begin{align*}
 d_{P_J}(c_I, c_{\{1,2,\dots,n\}})
@@ -92,6 +96,21 @@ d_{P_J}(c_I, c_{\{1,2,\dots,n\}})
 & = \epsilon \; .
 \end{align*}
 \end{proof}
+
+\begin{theorem}[Learning with knowledge of distribution]
+For any even $n \ge 4$, there exists a distribution-dependent algorithm
+such that for any any $\epsilon \in (0,\frac{1}{2})$, and any distribution from $\P_{n,\epsilon}$,
+any $\delta \in (0,1)$, any target $c \in C_n$, if the algorithm gets
+$$
+m \ge ???
+$$
+labeled examples, with probability at least $1-\delta$ the algorithm $\epsilon$-learns the target.
+\end{theorem}
+
+\begin{proof}
+???
+\end{proof}
+
 
 \subsection{Old Junk}
 

@@ -3,11 +3,8 @@
 
 In this section, we prove $(e/\epsilon)^d$ upper bound on the size of the
 $\epsilon$-cover of any concept class of Vapnik-Chervonenkis dimension $d$. To
-prove our result, we need Sauer's lemma; see e.g.~\cite[Chapter
-3]{Anthony-Bartlett-1999}.  The lemma uses the following notation: For any
-concept $c:\X \to \{0,1\}$ and any $S \subseteq \X$ we define $\pi(c,S) = \{x
-\in S ~:~ c(x) = 1 \}$. In other words, $\pi(C,S)$ is the set of examples in $S$
-labeled $1$ by $c$.
+prove our result, we need Sauer's lemma. Its proof can be found, for example,
+in~\cite[Chapter 3]{Anthony-Bartlett-1999}.
 
 \begin{lemma}[Sauer's lemma]
 Let $\X$ be a non-empty domain and let $C \subseteq \{0,1\}^\X$ be a concept class
@@ -32,11 +29,10 @@ $$
 $$
 where we used in the last step that $1 + x \le e^x$ for any $x \in \R$.
 
-
 \begin{theorem}[Size of $\epsilon$-cover]
 Let $\X$ be a non-empty domain and let $C \subseteq \{0,1\}^\X$ be a concept
 class with Vapnik-Chervonenkis dimension $d$. Let $P$ be any distribution over
-$X$. For any $\epsilon \in (0,1]$, there exists a set $C' \subseteq C$ such that
+$\X$. For any $\epsilon \in (0,1]$, there exists a set $C' \subseteq C$ such that
 \begin{equation}
 \label{equation:theorem-epsilon-cover}
 |C'| \le \left( \frac{e}{\epsilon} \right)^d
