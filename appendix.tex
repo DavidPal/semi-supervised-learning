@@ -1,3 +1,87 @@
+\section{Fixed distribution learning}
+\label{section:fixed-distribution-learning}
+
+\begin{theorem}[Chernoff bound]
+Let $X_1, X_2, \dots, X_n$ be i.i.d. Bernoulli random variables with $\Exp[X_i] = p$.
+Then, for any $\epsilon \in [0, \min\{p,1-p\})$,
+$$
+\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \ge p + \epsilon \right] \le e^{ - n \KL{p + \epsilon}{p}}  \qquad \text{and} \qquad
+\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \le p - \epsilon \right] \le e^{ - n \KL{p - \epsilon}{p}}  \; . \\
+$$
+where
+$$
+\KL{x}{y} = x \ln \left( \frac{x}{y} \right) + (1 - x) \ln \left( \frac{1-x}{1-y} \right)
+$$
+is the Kullback-Leibler divergence between Bernoulli distributions with parameters $x, y \in [0,1]$.
+\end{theorem}
+
+We further use the following inequality
+$$
+\KL{x}{y} \ge \frac{(x-y)^2}{2 \max\{x, y\}}
+$$
+
+
+\begin{theorem}[Benedek-Itai]
+Let $C \subseteq \{0,1\}^\X$ be a concept class over a non-empty domain $\X$.
+Let $P$ be a distribution over $\X$. Let $\epsilon \in (0,1]$ and assume that
+$C$ has an $(\epsilon/2)$-cover of size at most $N$. Then, there exists an algorithm, such
+that for any $\delta \in (0,1)$, any target $c \in C$, if it gets
+$$
+m \ge 24 \left(\frac{\ln N + \ln(1/\delta)}{\epsilon}\right)
+$$
+labeled samples then with probability at least $1 - \delta$, it
+$\epsilon$-learns the target.
+\end{theorem}
+
+\begin{proof}
+Given a labeled sample $T = (x_1, y_1), \dots, (x_m, y_m)$, for any $c \in C$,
+we define
+$$
+\err_T(c) = \frac{1}{m} \sum_{i=1}^m \indicator{c(x_i) \neq y_i} \; .
+$$
+
+Let $C' \subseteq C$ be an $(\epsilon/2)$-cover of size at most $N$.
+Condiser the algorithm $A$ that given a labeled sample $T$ outputs
+$$
+\widehat c = \argmin_{c' \in C'} \err_T(c')
+$$
+breaking ties arbitrarily. We prove that $A$, with probability at least
+$1-\delta$, $\epsilon$-learns any target $c \in C$ under the distribution $P$.
+
+Consider any target $c \in C$. Then there exists $\widetilde c \in C'$ such that
+$d_P(c,\widetilde c) \le \epsilon/2$. Let $C'' = \{ c' ~:~ d_P(c,c') > \epsilon \}$.
+We claim that with probability at least $1 - \delta$, for all $c' \in C''$,
+$\err_T(c') > \frac{2}{3} \epsilon$ and $\err_T(\widetilde{c}) <
+\frac{2}{3}\epsilon$ and hence $A$ outputs $\widehat c \in C' \setminus C''$.
+
+Consider any $c' \in C''$ and note that $\err_T(c')$ is an average of Bernoulli
+random variables with mean $d_P(c,c') > \epsilon$. Thus, by Chernoff bound,
+\begin{align*}
+\Pr \left[ \err_T(c') > \frac{2}{3} \epsilon \right]
+& > 1 - \exp \left( - m \KL{\frac{2}{3} \epsilon}{d_P(c,c')} \right) \\
+& > 1 - \exp \left( - m \frac{(\frac{2}{3} \epsilon - d_P(c,c'))^2}{2 d_P(c,c')} \right) \\
+& > 1 - \exp \left( - m \epsilon/18 \right)
+\end{align*}
+where the last inequality follows from the inequality
+$$
+\left( \frac{2}{3} \epsilon - x \right)^2 \ge \frac{1}{9} \epsilon x
+$$
+valid for any $x \ge \epsilon > 0$.
+Similarly, $\err_T(\widetilde{c})$ is an average of Bernoulli random variables with mean $d_P(c, \widetilde{c}) < \epsilon/2$.
+Thus, by Chernoff bound,
+\begin{align*}
+\Pr \left[ \err_T(\widetilde{c}) < \frac{2}{3} \epsilon \right]
+& > 1 - \exp \left( - m \KL{\frac{2}{3} \epsilon}{d_P(c, \widetilde{c})} \right) \\
+& > 1 - \exp \left( - m \frac{(\frac{2}{3} \epsilon - d_P(c, \widetilde{c}))^2}{\frac{2}{3} \epsilon} \right) \\
+& > 1 - \exp \left( - m \epsilon / 24 \right) \; .
+\end{align*}
+Since $|C''| \le N - 1$, by union bound, with probability at least $1 - (N - 1)
+\exp(-m \epsilon/24)$, for all $c' \in C''$, $\err_T(c') > \frac{2}{3}
+\epsilon$. Finally, with probability at least $1 - N \exp(-m \epsilon/24) \ge 1 -
+\delta$, $\err_T(\widetilde{c}) < \frac{2}{3}\epsilon$ and for all $c' \in C''$,
+$\err_T(c') > \frac{2}{3} \epsilon$.
+\end{proof}
+
 \section{Size of $\epsilon$-cover}
 \label{section:epsilon-cover}
 
