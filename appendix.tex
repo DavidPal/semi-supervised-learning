@@ -27,7 +27,7 @@ Let $P$ be a distribution over $\X$. Let $\epsilon \in (0,1]$ and assume that
 $C$ has an $(\epsilon/2)$-cover of size at most $N$. Then, there exists an algorithm, such
 that for any $\delta \in (0,1)$, any target $c \in C$, if it gets
 $$
-m \ge 24 \left(\frac{\ln N + \ln(1/\delta)}{\epsilon}\right)
+m \ge 48\left(\frac{\ln N + \ln(1/\delta)}{\epsilon}\right)
 $$
 labeled samples then with probability at least $1 - \delta$, it
 $\epsilon$-learns the target.
@@ -72,12 +72,12 @@ Thus, by Chernoff bound,
 \begin{align*}
 \Pr \left[ \err_T(\widetilde{c}) < \frac{2}{3} \epsilon \right]
 & > 1 - \exp \left( - m \KL{\frac{2}{3} \epsilon}{d_P(c, \widetilde{c})} \right) \\
-& > 1 - \exp \left( - m \frac{(\frac{2}{3} \epsilon - d_P(c, \widetilde{c}))^2}{\frac{2}{3} \epsilon} \right) \\
-& > 1 - \exp \left( - m \epsilon / 24 \right) \; .
+& > 1 - \exp \left( - m \frac{(\frac{2}{3} \epsilon - d_P(c, \widetilde{c}))^2}{\frac{4}{3} \epsilon} \right) \\
+& > 1 - \exp \left( - m \epsilon / 48 \right) \; .
 \end{align*}
 Since $|C''| \le N - 1$, by union bound, with probability at least $1 - (N - 1)
-\exp(-m \epsilon/24)$, for all $c' \in C''$, $\err_T(c') > \frac{2}{3}
-\epsilon$. Finally, with probability at least $1 - N \exp(-m \epsilon/24) \ge 1 -
+\exp(-m \epsilon/48)$, for all $c' \in C''$, $\err_T(c') > \frac{2}{3}
+\epsilon$. Finally, with probability at least $1 - N \exp(-m \epsilon/48) \ge 1 -
 \delta$, $\err_T(\widetilde{c}) < \frac{2}{3}\epsilon$ and for all $c' \in C''$,
 $\err_T(c') > \frac{2}{3} \epsilon$.
 \end{proof}
