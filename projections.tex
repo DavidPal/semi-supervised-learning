@@ -7,24 +7,23 @@ domain $\X = \{0,1\}^n$. The class $C_n$ consists of $n$ functions $c_1, c_2,
 any $x \in \{0,1\}^n$, the function $c_i$ is defined as $c_i((x[1], x[2], \dots,
 x[n])) = x[i]$.
 
-For any $p \in (0,\frac{1}{2})$ and $n \ge 2$, we consider a family $\P_{n,p}$
-consisting of $n$ probability distributions $P_1, P_2, \dots, P_n$ over the
-Boolean hypercube $\{0,1\}^n$. In order to describe the distribution $P_i$, for
-some $i$, consider a random vector $X = (X[1], X[2], \dots, X[n])$ drawn from
-$P_i$. The distribution $P_i$ is a product distribution, i.e., $\Pr[X = x] =
-\prod_{j=1}^n \Pr[X[j] = x[j]]$ for any $x \in \{0,1\}^n$. The marginal
-distributions of the coordinates are
+For any $\epsilon \in (0,\frac{1}{2})$ and $n \ge 2$, we consider a family
+$\P_{n,\epsilon}$ consisting of $n$ probability distributions $P_1, P_2, \dots,
+P_n$ over the Boolean hypercube $\{0,1\}^n$. In order to describe the
+distribution $P_i$, for some $i$, consider a random vector $X = (X[1], X[2],
+\dots, X[n])$ drawn from $P_i$. The distribution $P_i$ is a product
+distribution, i.e., $\Pr[X = x] = \prod_{j=1}^n \Pr[X[j] = x[j]]$ for any $x \in
+\{0,1\}^n$. The marginal distributions of the coordinates are
 $$
 \Pr[X[j] = 1] =
 \begin{cases}
 \frac{1}{2} & \text{if $j = i$,} \\
-p & \text{if $j\neq i$,} \\
+\epsilon & \text{if $j\neq i$,} \\
 \end{cases}
 \qquad \qquad \text{for $j=1,2,\dots,n$.}
 $$
-Throughout this section, we treat $p$ as a constant that does not depend on $n$.
-Theorems below we will place some further constraints on $p$. As we will see,
-any $p \in (0,\frac{1}{16})$ works.
+The reader should think of $\epsilon$ as a constant that does not depend on $n$,
+say, $\epsilon=\frac{1}{100}$.
 
 \begin{proposition}
 \label{proposition:vc-dimension-projections}
@@ -50,83 +49,63 @@ let $k \in \{0,1,\dots,2^{\lfloor \log_2 n \rfloor} - 1\}$ be the number with
 binary representation $v$, then we can take $c = c_{k+1}$.
 \end{proof}
 
-The following theorem states that under any distribution from $\P_{n,p}$, if the
-distribution is known, for learning any target from $C_n$, the number of
-labeled examples that are required does not depend on $n$. In other
-words, the distribution-dependent complexity is $O(1)$.
 
-\begin{theorem}[Learning with knowledge of the distribution]
-For any $n \ge 2$, there exists a distribution-dependent algorithm such that
-for any $p \in (0,\frac{1}{4})$, any distribution from $\P_{n,p}$, any $\delta
-\in (0,1)$, any target function $c \in C_n$,
-if the algorithm gets
-$$
-m \ge \frac{2\ln(1/\delta)}{(1 - 4p(1-p))^2}
-$$
-labeled examples, with probability at least $1 - \delta$, it $2p$-learns the target.
-\end{theorem}
+\begin{lemma}[Small cover]
+Let $n \ge 2$ and $\epsilon \in (0,\frac{1}{2})$. Any distribution in $\P_{n,\epsilon}$
+has $2\epsilon$-cover of size $2$.
+\end{lemma}
 
 \begin{proof}
-Given a distribution $P_i \in \P_{n,p}$ for some $i \in \{1,2,\dots,n\}$, the
-algorithm chooses two candidate functions $c_i, c_j \in C_n$ where $j$ is
-arbitrary index in $\{1,2,\dots,n\} \setminus \{j\}$. Given a sample $T =
-((x_1, y_1), (x_2, y_2), \dots, (x_m,y_m))$ it outputs either $c_i$ or $c_j$
-depending on which one has smaller empirical error. Recall that
-empirical error of a classifier $h:\X \to \{0,1\}$ is
-$$
-\widehat \err(h) = \frac{1}{m} \sum_{t=1}^m \indicator{y_t \neq h(x_t)} \; .
-$$
-If $x_1, x_2, \dots, x_m$ are drawn i.i.d. from $P_i$
-and the target function is $c_k \in C_n$ then
-$\Exp[\indicator{y_t \neq h(x_t)}] = \Exp[\widehat \err(h)] = d_{P_i}(c_k, h)$.
-There are three cases. Either $k = i$, $k = j$, or $k \not \in \{i,j\}$.
+Consider a distribution $P_i \in \P_{n,\epsilon}$ for some $i \in \{1,2,\dots,n\}$.
+Let $j$ be an arbitrary index in $\{1,2,\dots,n\} \setminus \{i\}$.
+Consider the projections $c_i, c_j \in C_n$. We claim that $C' = \{c_i, c_j\}$
+an $2\epsilon$-cover of $C_n$.
 
-\emph{Case $k=i$.} With probability one, $\widehat \err(c_i) = 0$.
-Since $\indicator{y_t \neq c_j(x_t)}$ is a Bernoulli variable with parameter
-$d_{P_i}(c_k, c_j) = d_{P_i}(c_i, c_j) = \frac{1}{2}$,
-using Hoeffding bound with $\epsilon = \frac{1}{2}$,
-$$
-\Pr[\widehat \err(c_j) > \widehat \err(c_i)] = \Pr[\widehat \err(c_j) > 0] = \Pr[\widehat \err(c_j) > 1/2 - \epsilon] \ge 1 - e^{-m/2} \ge 1 - \delta \; .
-$$
-Therefore, with probability $1 - \delta$, the algorithm outputs the correct target $c_i$.
-
-\emph{Case $k=j$.} With probability one, $\widehat \err(c_j) = 0$.
-Since $\indicator{y_t \neq c_i(x_t)}$ is a Bernoulli variable with parameter
-$d_{P_i}(c_k, c_i) = d_{P_i}(c_j, c_i) = \frac{1}{2}$,
-using Hoeffding bound with $\epsilon = \frac{1}{2}$,
-$$
-\Pr[\widehat \err(c_i) > \widehat \err(c_j)] = \Pr[\widehat \err(c_i) > 0] = \Pr[\widehat \err(c_i) > 1/2 - \epsilon] \ge 1 - e^{-m/2} \ge 1 - \delta \; .
-$$
-Therefore, with probability $1 - \delta$, the algorithm outputs the correct target $c_j$.
-
-\emph{Case $k \not \in \{i,j\}$.}
-Since $\indicator{y_t \neq c_i(x_t)}$ is a Bernoulli variable with parameter
-$d_{P_i}(c_k, c_i) = \frac{1}{2}$ and $\indicator{y_t \neq c_j(x_t)}$ is a Bernoulli variable with parameter
-$d_{P_i}(c_k, c_j) = 2p(1-p)$, and hence $\indicator{y_t \neq c_i(x_t)} - \indicator{y_t \neq c_j(x_t)}$
-is a random variable that lies in $[-1,1]$ and has mean $\frac{1}{2} - 2p(1-p)$.
-Using Hoeffding bound with $\epsilon = \frac{1}{2} - 2p(1-p)$,
-$$
-\Pr[\widehat \err(c_i) > \widehat \err(c_j)] = \Pr[\widehat \err(c_i) - \widehat \err(c_j) > 0] \ge 1 - e^{-m(1 - 4p(1-p))^2/2} \ge 1 - \delta \; .
-$$
-Therefore, with probability $1 - \delta$, the algorithm outputs $c_j$ which satisfies
-$$
-d_{P_i}(c_j, c_k) = 2p(1-p) < 2p \; .
-$$
+To see that $C'$ is an $2\epsilon$-cover of $C_n$, consider any $c_k \in C_n$.
+We need to show that $d_{P_i}(c_i, c_k) \le 2\epsilon$ or $d_{P_i}(c_j, c_k)
+\le 2\epsilon$. If $k = i$ or $k = j$, the condition is trivially satisfied.
+Consider $k \in \{1,2,\dots,n\} \setminus \{i,j\}$. Then
+\begin{align*}
+d_{P_i}(c_j, c_k)
+& = \Pr_{X \sim P_i}[c_j(X) \neq c_k(X)] \\
+& = \Pr_{X \sim P_i}[c_j(X) = 1 \wedge c_k(X) = 0] + \Pr_{X \sim P_i}[c_j(X) = 0 \wedge c_k(X) = 1] \\
+& = \Pr_{X \sim P_i}[X[j] = 1 \wedge X[k] = 0] + \Pr_{X \sim P_i}[X[j] = 0 \wedge X[k] = 1] \\
+& = \Pr[X[j] = 1] \Pr[X[k] = 0] + \Pr[X[j] = 0] \Pr[X[k] = 1] \\
+& = 2 \epsilon \left( 1 - \epsilon \right)  \\
+& < 2 \epsilon \; .
+\end{align*}
 \end{proof}
 
+Using Bedek-Itai bound (Theorem~\ref{theorem:benedek-itai} in
+\autoref{section:fixed-distribution-learning}) we obtain the corollary below.
+The corollary states that the distribution-dependent sample complexity
+of learning target in $C_n$ under any distribution from $P_{n,\epsilon}$
+does \emph{not} depend on $n$.
+
+\begin{corollary}
+Let $n \ge 2$ and $\epsilon \in (0,\frac{1}{2})$.  There exists a
+distribution-dependent algorithm such that for any distribution from $\P_{n,\epsilon}$,
+any $\delta \in (0,1)$, any target function $c \in C_n$, if the algorithm gets
+$$
+m \ge \frac{12\ln(2/\delta)}{\epsilon}
+$$
+labeled examples, with
+probability at least $1 - \delta$, it $4\epsilon$-learns the target.
+\end{corollary}
+
 The next theorem states that without knowing the distribution,
-learning a target under a distribution from $\P_{n,p}$
+learning a target under a distribution from $\P_{n,\epsilon}$
 requires at least $\Omega(\log n)$ labeled examples.
 
 \begin{theorem}[Learning without knowledge of the distribution]
-For any distribution-independent algorithm, any $p \in (0,\frac{1}{16})$, and any
-$n \ge 600/p^3$ there exists a distribution $P \in \P_{n,p}$ and a target
+For any distribution-independent algorithm, any $\epsilon \in (0,\frac{1}{2})$ and any
+$n \ge 600/\epsilon^3$ there exists a distribution $P \in \P_{n,\epsilon}$ and a target
 concept $c \in C_n$ such that if the algorithm gets
 $$
-m \le \frac{\ln n}{3 \ln (1/p)}
+m \le \frac{\ln n}{3 \ln (1/\epsilon)}
 $$
-labeled examples, it fails to $2p$-learn the target concept with probability
-more than $\frac{1}{8} - 2p$.
+labeled examples, it fails to $\frac{1}{16}$-learn the target concept with probability
+more than $\frac{1}{16}$.
 \end{theorem}
 
 \begin{proof}
@@ -138,10 +117,10 @@ The algorithm receives an $m \times n$ matrix and a binary vector of length $m$.
 The rows of the matrix corresponds to unlabeled examples and the vector encodes
 the labels. The output of the $A$ is any function from $\{0,1\}^n \to \{0,1\}$.
 
-We demonstrate the existence of a pair $(P,c) \in \P_{n,p} \times C_n$ which
+We demonstrate the existence of a pair $(P,c) \in \P_{n,\epsilon} \times C_n$ which
 cannot be learned with $m$ samples by probabilistic method. Let $I$ be chosen
 uniformly at random from $\{1,2,\dots,n\}$. We consider distribution $P_I \in
-\P_{n,p}$ and target $c_I \in C_n$. Let $X_1, X_2, \dots, X_m$ be an i.i.d.
+\P_{n,\epsilon}$ and target $c_I \in C_n$. Let $X_1, X_2, \dots, X_m$ be an i.i.d.
 sample from $P_I$ and let $Y_1 = c_I(X_1), Y_2 = c_I(X_2), \dots, Y_m =
 c_I(X_m)$ be the target labels. Let $X$ be the $m \times n$ matrix with entries
 $X_i[j]$ and let $Y = (Y_1, Y_2, \dots, Y_m)$ be the vector of labels. The
@@ -152,11 +131,11 @@ output of the algorithm is $A(X,Y)$. We will show that
 \end{equation}
 This means that there exists $i \in \{1,2,\dots,n\}$ such that
 $$
-\Exp \left[d_{P_i}(c_i, A(X,Y)) \right] \ge \frac{1}{8}
+\Exp \left[d_{P_i}(c_i, A(X,Y)) \right] \ge \frac{1}{8} \; .
 $$
-which, by Proposition~\ref{proposition:error-probability-vs-expected-error} with $\epsilon=2p$, implies that
+By Proposition~\ref{proposition:error-probability-vs-expected-error},
 $$
-\Pr \left[ d_{P_i}(c_i, A(X,Y)) > 2p \right] \ge \frac{\frac{1}{8} - 2p}{1 - 2p} > \frac{1}{8} - 2p \; .
+\Pr \left[ d_{P_i}(c_i, A(X,Y)) > \frac{1}{16} \right] \ge \frac{\frac{1}{8} - \frac{1}{16}}{1 - \frac{1}{16}} > \frac{1}{16} \; .
 $$
 
 It remains to prove \eqref{equation:failure-probability}.
@@ -192,8 +171,8 @@ for any $x \in \{0,1\}^n$, and $i = 1,2,\dots,n$,
 & = \Pr \left[Z = z \, \middle| \, I = i \right] \\
 & =
 \begin{cases}
-\frac{1}{2} p^{\norm{z}_1 - 1} (1 - p)^{n - \norm{z}_1} & \text{if $z[i] = 1$,} \\
-\frac{1}{2} p^{\norm{z}_1} (1-p)^{n-1 - \norm{z}_1}& \text{if $z[i] = 0$.} \\
+\frac{1}{2} \epsilon^{\norm{z}_1 - 1} (1 - \epsilon)^{n - \norm{z}_1} & \text{if $z[i] = 1$,} \\
+\frac{1}{2} \epsilon^{\norm{z}_1} (1 - \epsilon)^{n-1 - \norm{z}_1}& \text{if $z[i] = 0$.} \\
 \end{cases}
 \end{align*}
 This allows us to compute the conditional probability
@@ -202,8 +181,8 @@ This allows us to compute the conditional probability
 & \quad = \Pr \left[Z = z \, \middle| \, I = i, X = x, Y = y \right] \cdot \Pr \left[I = i \, \middle| \, X = x, Y = y \right] \\
 & \quad =
 \begin{cases}
-\frac{1}{2|k(x,y)|} p^{\norm{z}_1 - 1} (1 - p)^{n - \norm{z}_1} & \text{if $i \in k(x,y)$ and $z[i] = 1$,} \\
-\frac{1}{2|k(x,y)|} p^{\norm{z}_1} (1 - p)^{n - 1 - \norm{z}_1} & \text{if $i \in k(x,y)$ and $z[i] = 0$,} \\
+\frac{1}{2|k(x,y)|} \epsilon^{\norm{z}_1 - 1} (1 - \epsilon)^{n - \norm{z}_1} & \text{if $i \in k(x,y)$ and $z[i] = 1$,} \\
+\frac{1}{2|k(x,y)|} \epsilon^{\norm{z}_1} (1 - \epsilon)^{n - 1 - \norm{z}_1} & \text{if $i \in k(x,y)$ and $z[i] = 0$,} \\
 0 & \text{if $i \not \in k(x,y)$.} \\
 \end{cases}
 \end{align*}
@@ -218,8 +197,8 @@ Then,
 & \quad = \sum_{i=1}^n \Pr \left[Z = z, I = i \, \middle| \, X = x, Y = y \right] \\
 & \quad = \sum_{i \in k(x,y)} \Pr \left[Z = z, I = i \, \middle| \, X = x, Y = y \right] \\
 & \quad = \sum_{i \in s(x,y,x)} \Pr \left[Z = z, I = i \, \middle| \, X = x, Y = y \right] + \sum_{i \in k(x,y) \setminus s(x,y,z)} \Pr \left[Z = z, I = i \, \middle| \, X = x, Y = y \right] \\
-& \quad = \frac{1}{2|k(x,y)|} \cdot |s(x,y,z)| \cdot p^{\norm{z}_1 - 1} (1 - p)^{n - \norm{z}_1} + \frac{1}{2|k(x,y)|} \cdot (|k(x,y)| - |s(x,y,z)|) \cdot p^{\norm{z}_1} (1 - p)^{n - 1 - \norm{z}_1} \\
-& \quad = \frac{p^{\norm{z}_1 - 1} (1 - p)^{n - 1 - \norm{z}_1}}{2|k(x,y)|} \cdot \left( |s(x,y,z)| \cdot (1 - 2p) + |k(x,y)| \cdot p \right) \; .
+& \quad = \frac{1}{2|k(x,y)|} \cdot |s(x,y,z)| \cdot \epsilon^{\norm{z}_1 - 1} (1 - \epsilon)^{n - \norm{z}_1} + \frac{1}{2|k(x,y)|} \cdot (|k(x,y)| - |s(x,y,z)|) \cdot \epsilon^{\norm{z}_1} (1 - \epsilon)^{n - 1 - \norm{z}_1} \\
+& \quad = \frac{\epsilon^{\norm{z}_1 - 1} (1 - \epsilon)^{n - 1 - \norm{z}_1}}{2|k(x,y)|} \cdot \left( |s(x,y,z)| \cdot (1 - 2\epsilon) + |k(x,y)| \cdot \epsilon \right) \; .
 \end{align*}
 Hence,
 \begin{align*}
@@ -227,47 +206,47 @@ Hence,
 & \quad = \Pr \left[ Z[I] = 1 \, \middle| \, X = x, Y = y, Z = z \right] \\
 & \quad = \frac{\displaystyle \Pr \left[ Z[I] = 1, Z = z \, \middle| \, X = x, Y = y \right]}{\displaystyle \Pr \left[ Z = z \, \middle| \, X = x, Y = y \right]} \\
 & \quad = \frac{\displaystyle \sum_{i=1}^n \Pr \left[ I = i, Z[i] = 1, Z = z \, \middle| \, X = x, Y = y \right]}{\displaystyle \Pr \left[ Z = z \, \middle| \, X = x, Y = y \right]} \\
-& \quad = \frac{\displaystyle \frac{|s(x,y,z)|}{2|k(x,y)|} \cdot p^{\norm{z}_1 - 1} (1 - p)^{n - \norm{z}_1}}{\displaystyle \frac{p^{\norm{z}_1 - 1} (1 - p)^{n - 1 - \norm{z}_1}}{2|k(x,y)|} \cdot \left( |s(x,y,z)| \cdot (1 - 2p) + |k(x,y,z)| \cdot p \right) } \\
-& \quad = \frac{\displaystyle |s(x,y,z)| \cdot (1 - p)}{\displaystyle |s(x,y,z)| \cdot (1 - 2p) + |k(x,y)| \cdot p } \\
-& \quad = \frac{\displaystyle 1 - p}{\displaystyle 1 - 2p + \frac{|k(x,y)| \cdot p}{|s(x,y,z)|}} \\
+& \quad = \frac{\displaystyle \frac{|s(x,y,z)|}{2|k(x,y)|} \cdot \epsilon^{\norm{z}_1 - 1} (1 - \epsilon)^{n - \norm{z}_1}}{\displaystyle \frac{\epsilon^{\norm{z}_1 - 1} (1 - \epsilon)^{n - 1 - \norm{z}_1}}{2|k(x,y)|} \cdot \left( |s(x,y,z)| \cdot (1 - 2\epsilon) + |k(x,y,z)| \cdot \epsilon \right) } \\
+& \quad = \frac{\displaystyle |s(x,y,z)| \cdot (1 - \epsilon)}{\displaystyle |s(x,y,z)| \cdot (1 - 2\epsilon) + |k(x,y)| \cdot \epsilon } \\
+& \quad = \frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + \frac{|k(x,y)| \cdot \epsilon}{|s(x,y,z)|}} \\
 \end{align*}
 
 We now show that the last expression is close to $1/2$. More precisely, if
 \begin{equation}
-\frac{|k(x,y)| \cdot p}{|s(x,y,z)|} \in \left[\frac{5}{6}, 2 \right]
+\frac{|k(x,y)| \cdot \epsilon}{|s(x,y,z)|} \in \left[\frac{5}{6}, 2 \right]
 \end{equation}
-then since $p \in (0,\frac{1}{4})$,
+then since $\epsilon \in (0,\frac{1}{4})$,
 $$
-\frac{\displaystyle 1 - p}{\displaystyle 1 - 2p + \frac{|k(x,y)| \cdot p}{|s(x,y,z)|}} \ge
-\frac{\displaystyle 1 - p}{\displaystyle 1 - 2p + 2} \ge \frac{\displaystyle 1 - 1/4}{\displaystyle 1 + 2} = \frac{1}{4}
+\frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + \frac{|k(x,y)| \cdot \epsilon}{|s(x,y,z)|}} \ge
+\frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + 2} \ge \frac{\displaystyle 1 - 1/4}{\displaystyle 1 + 2} = \frac{1}{4}
 $$
 and
 $$
-\frac{\displaystyle 1 - p}{\displaystyle 1 - 2p + \frac{|k(x,y)| \cdot p}{|s(x,y,z)|}} \le
-\frac{\displaystyle 1 - p}{\displaystyle 1 - 2p + 5/6} \le \frac{\displaystyle 1}{\displaystyle 1 - 1/2 + 5/6} = \frac{3}{4} \; .
+\frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + \frac{|k(x,y)| \cdot \epsilon}{|s(x,y,z)|}} \le
+\frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + 5/6} \le \frac{\displaystyle 1}{\displaystyle 1 - 1/2 + 5/6} = \frac{3}{4} \; .
 $$
 We now substitute this into the \eqref{equation:expected-error-lower-bound}. We have
 \begin{align*}
 & \sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n}} \frac{1}{2} - \left| \frac{1}{2} - \Exp\left[ c_I(Z) \, \middle| \, X = x, Y = y, Z = z \right] \right| \cdot \Pr \left[X = x, Y = y, Z = z \right] \\
-& = \sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n}} \frac{1}{2} - \left| \frac{1}{2} - \frac{\displaystyle 1 - p}{\displaystyle 1 - 2p + \frac{|k(x,y)| \cdot p}{|s(x,y,z)|}} \right| \cdot \Pr \left[X = x, Y = y, Z = z \right] \\
+& = \sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n}} \frac{1}{2} - \left| \frac{1}{2} - \frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + \frac{|k(x,y)| \cdot \epsilon}{|s(x,y,z)|}} \right| \cdot \Pr \left[X = x, Y = y, Z = z \right] \\
 & \ge
-\sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n \\ \frac{|k(x,y,z)| p}{|s(x,y,z)|} \in [\frac{5}{6},2]}} \left( \frac{1}{2} - \left| \frac{1}{2} - \frac{\displaystyle 1 - p}{\displaystyle 1 - 2p + \frac{|k(x,y)| \cdot p}{|s(x,y,z)|}} \right|  \right) \cdot \Pr \left[X = x, Y = y, Z = z \right] \\
+\sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n \\ \frac{|k(x,y,z)| \epsilon}{|s(x,y,z)|} \in [\frac{5}{6},2]}} \left( \frac{1}{2} - \left| \frac{1}{2} - \frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + \frac{|k(x,y)| \cdot \epsilon}{|s(x,y,z)|}} \right|  \right) \cdot \Pr \left[X = x, Y = y, Z = z \right] \\
 & \ge
-\sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n \\ \frac{|k(x,y,z)| p}{|s(x,y,z)|} \in [\frac{5}{6},2]}} \left( \frac{1}{2} - \frac{1}{4} \right) \cdot \Pr \left[X = x, Y = y, Z = z \right] \\
+\sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n \\ \frac{|k(x,y,z)| \epsilon}{|s(x,y,z)|} \in [\frac{5}{6},2]}} \left( \frac{1}{2} - \frac{1}{4} \right) \cdot \Pr \left[X = x, Y = y, Z = z \right] \\
 & =
-\frac{1}{4} \Pr \left[ \frac{|k(X,Y)| \cdot p}{|s(X,Y,Z)|} \in \left[\frac{5}{6}, 2 \right]  \right] \\
+\frac{1}{4} \Pr \left[ \frac{|k(X,Y)| \cdot \epsilon}{|s(X,Y,Z)|} \in \left[\frac{5}{6}, 2 \right]  \right] \\
 \end{align*}
 In order to prove \eqref{equation:failure-probability}, we need to show that
-$\frac{|k(X,Y)| \cdot p}{|s(X,Y,Z)|} \in \left[\frac{5}{6}, 2 \right]$ with
+$\frac{|k(X,Y)| \cdot \epsilon}{|s(X,Y,Z)|} \in \left[\frac{5}{6}, 2 \right]$ with
 probability at least $1/2$. To that end, we define two additional random
 variables
 $$
 K = |k(X,Y)| \qquad \text{and} \qquad S = |s(X,Y,Z)| \; .
 $$
-The condition $\frac{|k(X,Y)| \cdot p}{|s(X,Y,Z)|} \in \left[\frac{5}{6}, 2 \right]$ is equivalent to
+The condition $\frac{|k(X,Y)| \cdot \epsilon}{|s(X,Y,Z)|} \in \left[\frac{5}{6}, 2 \right]$ is equivalent to
 \begin{equation}
 \label{equation:ratio-condition}
-\frac{1}{2} p \le \frac{S}{K} \le \frac{6}{5} p \; .
+\frac{1}{2} \epsilon \le \frac{S}{K} \le \frac{6}{5} \epsilon \; .
 \end{equation}
 
 First, we lower bound $K$. For any $y \in \{0,1\}^m$ and any $i,j \in \{1,2,\dots,n\}$,
@@ -276,21 +255,21 @@ $$
 =
 \begin{cases}
 1 & \text{if $j = i$,} \\
-p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} & \text{if $j \neq j$.}
+\epsilon^{\norm{y}_1} (1 - \epsilon)^{m - \norm{y}_1} & \text{if $j \neq j$.}
 \end{cases}
 $$
 Conditioned on $Y = y$ and $I=i$, the random variable $K - 1 = |k(X,Y) \setminus \{I\}|$ is
-a sum of $n-1$ Bernoulli variables with parameter $p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1}$, one for each column except for column $i$.
-Hoeffding bound with $\epsilon = p^m/2$ and the loose lower bound $p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} \ge p^m$ gives
+a sum of $n-1$ Bernoulli variables with parameter $\epsilon^{\norm{y}_1} (1 - \epsilon)^{m - \norm{y}_1}$, one for each column except for column $i$.
+Hoeffding bound with $t = \epsilon^m/2$ and the loose lower bound $\epsilon^{\norm{y}_1} (1 - \epsilon)^{m - \norm{y}_1} \ge \epsilon^m$ gives
 \begin{align*}
-\Pr \left[ \frac{K - 1}{n - 1} > \frac{p^m}{2}  \, \middle| \,  Y = y, I = i  \right]
-& = \Pr \left[ \frac{K - 1}{n - 1} > p^m - \epsilon  \, \middle| \,  Y = y, I = i  \right] \\
-& \ge \Pr \left[ \frac{K - 1}{n - 1} > p^{\norm{y}_1} (1 - p)^{m - \norm{y}_1} - \epsilon  \, \middle| \,  Y = y, I = i  \right] \\
-& \ge 1 - e^{-2(n-1) \epsilon^2} \; .
+\Pr \left[ \frac{K - 1}{n - 1} > \frac{\epsilon^m}{2}  \, \middle| \,  Y = y, I = i  \right]
+& = \Pr \left[ \frac{K - 1}{n - 1} > \epsilon^m - t  \, \middle| \,  Y = y, I = i  \right] \\
+& \ge \Pr \left[ \frac{K - 1}{n - 1} > \epsilon^{\norm{y}_1} (1 - \epsilon)^{m - \norm{y}_1} - t  \, \middle| \,  Y = y, I = i  \right] \\
+& \ge 1 - e^{-2(n-1) t^2} \; .
 \end{align*}
-Since $m \le \frac{\ln n}{3 \ln (1/p)}$, we lower bound $\epsilon = \frac{p^m}{2}$ as
+Since $m \le \frac{\ln n}{3 \ln (1/\epsilon)}$, we lower bound $t = \frac{\epsilon^m}{2}$ as
 $$
-\epsilon = p^m/2 > \frac{1}{2} p^\frac{\ln n}{3 \ln(1/p)} = \frac{1}{2\sqrt[3]{n}} \; .
+t = \epsilon^m/2 > \frac{1}{2} \epsilon^\frac{\ln n}{3 \ln(1/\epsilon)} = \frac{1}{2\sqrt[3]{n}} \; .
 $$
 Since the lower bound is uniform for all choices of $y$ and $i$, we can remove
 the conditioning and conclude that
@@ -303,46 +282,46 @@ $$
 $$
 
 Second, conditioned on $K=r$, the random variable $S$
-is a sum of $r-1$ Bernoulli random variables with parameter $p$
-and one Bernoulli random variable with parameter $1/2$. Hoeffding bound for any $\epsilon > 0$
+is a sum of $r-1$ Bernoulli random variables with parameter $\epsilon$
+and one Bernoulli random variable with parameter $1/2$. Hoeffding bound for any $t \ge 0$
 gives that
 \begin{align*}
-\Pr \left[ \left| \frac{S}{K} - \frac{p(K - 1) + 1/2}{K} \right| < \epsilon \, \middle| \, K = r \right] \ge 1 - 2 e^{-2 r \epsilon^2} \; .
+\Pr \left[ \left| \frac{S}{K} - \frac{\epsilon(K - 1) + 1/2}{K} \right| < t \, \middle| \, K = r \right] \ge 1 - 2 e^{-2 r t^2} \; .
 \end{align*}
 Thus,
 \begin{align*}
-\Pr \left[ \left| \frac{S}{K} - \frac{p(K - 1) + 1/2}{K} \right| < \epsilon \ \text{and} \ K \ge \frac{n^{2/3}}{2} \right]
-& \ge \sum_{r = \lceil n^{2/3} / 2 \rceil}^n \Pr \left[ \left| \frac{S}{K} - \frac{p(K - 1) + 1/2}{K} \right| < \epsilon  \, \middle| \,  K = r \right] \cdot \Pr[K = r] \\
-& \ge \sum_{r = \lceil n^{2/3} / 2 \rceil}^n \left( 1 - 2 e^{-2 r \epsilon^2} \right) \cdot \Pr[K = r] \\
-& \ge \left( 1 - 2 e^{-n^{2/3}  \epsilon^2 / 2} \right) \cdot \Pr \left[ K \ge \frac{n^{2/3}}{2} \right] \; .
+\Pr \left[ \left| \frac{S}{K} - \frac{\epsilon(K - 1) + 1/2}{K} \right| < t \ \text{and} \ K \ge \frac{n^{2/3}}{2} \right]
+& \ge \sum_{r = \lceil n^{2/3} / 2 \rceil}^n \Pr \left[ \left| \frac{S}{K} - \frac{\epsilon(K - 1) + 1/2}{K} \right| < t  \, \middle| \,  K = r \right] \cdot \Pr[K = r] \\
+& \ge \sum_{r = \lceil n^{2/3} / 2 \rceil}^n \left( 1 - 2 e^{-2 r t^2} \right) \cdot \Pr[K = r] \\
+& \ge \left( 1 - 2 e^{-n^{2/3}  t^2 / 2} \right) \cdot \Pr \left[ K \ge \frac{n^{2/3}}{2} \right] \; .
 \end{align*}
-We choose $\epsilon = p/4$. Since $n \ge 600/p^3$, we have $e^{-n^{2/3}  \epsilon^2 / 2} < \frac{1}{8}$
+We choose $t = \epsilon/4$. Since $n \ge 600/\epsilon^3$, we have $e^{-n^{2/3}  t^2 / 2} < \frac{1}{8}$ and thus
 \begin{align*}
-\Pr \left[ \left| \frac{S}{K} - \frac{p(K - 1) + 1/2}{K} \right| < \epsilon \ \text{and} \ K \ge \frac{n^{2/3}}{2} \right]
-& \ge \left( 1 - 2 e^{-n^{2/3}  \epsilon^2 / 2} \right) \cdot \Pr \left[ K \ge \frac{n^{2/3}}{2} \right] \\
-& \ge \frac{3}{4} \left( 1 - 2 e^{-n^{2/3}  \epsilon^2 / 2} \right) \\
+\Pr \left[ \left| \frac{S}{K} - \frac{\epsilon(K - 1) + 1/2}{K} \right| < t \ \text{and} \ K \ge \frac{n^{2/3}}{2} \right]
+& \ge \left( 1 - 2 e^{-n^{2/3}  t^2 / 2} \right) \cdot \Pr \left[ K \ge \frac{n^{2/3}}{2} \right] \\
+& \ge \frac{3}{4} \left( 1 - 2 e^{-n^{2/3}  t^2 / 2} \right) \\
 & > \frac{3}{4} \left( 1 - \frac{1}{4} \right) \\
 & = \frac{9}{16}  \\
 & > \frac{1}{2} \; .
 \end{align*}
-We claim that $\epsilon = p/4$,
-$\left| \frac{S}{K} - \frac{p(K - 1) + 1/2}{K} \right| < \epsilon$
+We claim that $t = \epsilon/4$,
+$\left| \frac{S}{K} - \frac{\epsilon(K - 1) + 1/2}{K} \right| < t$
 and $K \ge \frac{n^{2/3}}{2}$ imply \eqref{equation:ratio-condition}.
-To see that, note that $\left| \frac{S}{K} - \frac{p(K - 1) + 1/2}{K} \right| < \epsilon$ is equivalent to
+To see that, note that $\left| \frac{S}{K} - \frac{\epsilon(K - 1) + 1/2}{K} \right| < t$ is equivalent to
 $$
-\frac{p(K - 1) + 1/2}{K} - \epsilon < \frac{S}{K} < \frac{p(K - 1) + 1/2}{K} + \epsilon
+\frac{\epsilon(K - 1) + 1/2}{K} - t < \frac{S}{K} < \frac{\epsilon(K - 1) + 1/2}{K} + t
 $$
 which implies that
 $$
-p \left(1 - \frac{1}{K} \right) - \epsilon < \frac{S}{K} < p \left(1 - \frac{1}{K} \right) + \frac{1}{2K} + \epsilon \; .
+p \left(1 - \frac{1}{K} \right) - t < \frac{S}{K} < \epsilon \left(1 - \frac{1}{K} \right) + \frac{1}{2K} + t \; .
 $$
 Since $K \ge \frac{n^{2/3}}{2}$ and $n \ge 25$ we have $K > 4$, which implies that
 $$
-\frac{3}{4} p - \epsilon < \frac{S}{K} < \frac{3}{4} p + \frac{1}{2K} + \epsilon \; .
+\frac{3}{4} \epsilon - t < \frac{S}{K} < \frac{3}{4} \epsilon + \frac{1}{2K} + t \; .
 $$
-Since $K \ge \frac{n^{2/3}}{2}$ and $n \ge \frac{12}{p^{3/2}}$ we have $K > \frac{5}{2p}$, which implies that
+Since $K \ge \frac{n^{2/3}}{2}$ and $n \ge \frac{12}{\epsilon^{3/2}}$ we have $K > \frac{5}{2\epsilon}$, which implies that
 $$
-\frac{3}{4} p - \epsilon < \frac{S}{K} < \frac{3}{4} p + \frac{p}{5} + \epsilon \; .
+\frac{3}{4} \epsilon - t < \frac{S}{K} < \frac{3}{4} \epsilon + \frac{\epsilon}{5} + t \; .
 $$
-Since $\epsilon = p/4$, condition \eqref{equation:ratio-condition} follows.
+Since $t = \epsilon/4$, condition \eqref{equation:ratio-condition} follows.
 \end{proof}

@@ -31,14 +31,14 @@ $$
 
 We recall the standard definitions from learning theory. For any concept $c:\X
 \to \{0,1\}$ and any $S \subseteq \X$ we define $\pi(c,S) = \{x \in S ~:~ c(x) =
-1 \}$. In other words, $\pi(C,S)$ is the set of examples in $S$ which $c$ labels
+1 \}$. In other words, $\pi(c,S)$ is the set of examples in $S$ which $c$ labels
 $1$. A set $S \subseteq \X$ is \emph{shattered} by a concept class $C$ if for
-any subset $S' \subseteq S$ there exists a classifier $c \in C$ such that for
-all $\pi(c,S) = S'$. \emph{Vapnik-Chervonenkis dimension} of a concept class $C$
-is the size of the largest shattered subset by $C$. A subset $C'$ of a concept
-class $C$ is an \emph{$\epsilon$-cover} of $C$ for a probability distribution
-$P$ if for any $c \in C$ there exists $c' \in C'$ such that $d_P(c,c') \le
-\epsilon$.
+any subset $S' \subseteq S$ there exists a classifier $c \in C$ such that
+$\pi(c,S) = S'$. \emph{Vapnik-Chervonenkis dimension} of a concept class $C$ is
+the size of the largest set $S \subseteq \X$ shattered by $C$. A subset $C'$ of
+a concept class $C$ is an \emph{$\epsilon$-cover} of $C$ for a probability
+distribution $P$ if for any $c \in C$ there exists $c' \in C'$ such that
+$d_P(c,c') \le \epsilon$.
 
 To prove our lower bounds we need three general probabilistic results. The first
 one is the standard Hoeffding bound. The other two are simple and intuitive
@@ -51,10 +51,10 @@ at $1/2$.
 \begin{theorem}[Hoeffding bound]
 Let $X_1, X_2, \dots, X_n$ be i.i.d. random variables that lie in interval
 $[a,b]$ with probability one and let $p=\frac{1}{n}\sum_{i=1}^n \Exp[X_i]$.
-Then, for any $\epsilon \ge 0$,
+Then, for any $t \ge 0$,
 $$
-\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \ge p + \epsilon \right] \le e^{ - 2n \epsilon^2/(a-b)^2}  \qquad \text{and} \qquad
-\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \le p - \epsilon \right] \le e^{ - 2n \epsilon^2/(a-b)^2}  \; . \\
+\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \ge p + t \right] \le e^{ - 2n t^2/(a-b)^2}  \qquad \text{and} \qquad
+\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \le p - t \right] \le e^{ - 2n t^2/(a-b)^2}  \; . \\
 $$
 \end{theorem}
 
@@ -63,7 +63,7 @@ $$
 Let $Z$ be a random variable such that $Z \le 1$ with probability one.
 Then,
 $$
-\Pr[Z > \epsilon] \ge \frac{\Exp[Z] - \epsilon}{1 - \epsilon} \qquad \text{for any $\epsilon \in [0, 1)$.}
+\Pr[Z > t] \ge \frac{\Exp[Z] - t}{1 - t} \qquad \text{for any $t \in [0, 1)$.}
 $$
 \end{proposition}
 
@@ -71,13 +71,13 @@ $$
 We have
 $$
 \Exp[Z]
-\le \epsilon \cdot \Pr[Z \le \epsilon] + 1 \cdot \Pr[Z > \epsilon]
-= \epsilon \cdot (1 - \Pr[Z > \epsilon]) + \Pr[Z > \epsilon] \; .  \qquad \qedhere
+\le t \cdot \Pr[Z \le t] + 1 \cdot \Pr[Z > t]
+= t \cdot (1 - \Pr[Z > t]) + \Pr[Z > t] \; .  \qquad \qedhere
 $$
-Solving for $\Pr[Z > \epsilon]$ finishes the proof.
+Solving for $\Pr[Z > t]$ finishes the proof.
 \end{proof}
 
-\begin{proposition}[Optimality of Bayes Predictor]
+\begin{proposition}[Predicting Single Bit]
 \label{proposition:bayes}
 Let $\U$ be a finite non-empty set. Let $U,V$ be random variables (possibly
 correlated) such that $U \in \U$ and $V \in \{0,1\}$ with probability one. Let

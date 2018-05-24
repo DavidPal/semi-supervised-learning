@@ -26,9 +26,9 @@ $1-\delta$. For this paper, it is important to stress that Hanneke's algorithm
 does \emph{not} receive the distribution of unlabeled data as input. On the
 other hand, \cite{Benedek-Itai-1991} showed that for any class $C$ and any
 distribution there exists an algorithm that $\epsilon$-learns any target from
-$C$ from $O \left( \frac{\log N_\epsilon + \log (1/\delta)}{\epsilon}\right)$
-labeled examples with probability at least $1-\delta$ where $N_\epsilon$ is the
-size of an $\epsilon$-cover of $C$ with respect to the disagreement metric
+$C$ from $O \left( \frac{\log N_{\epsilon/2} + \log (1/\delta)}{\epsilon}\right)$
+labeled examples with probability at least $1-\delta$ where $N_{\epsilon/2}$ is the
+size of an $\frac{\epsilon}{2}$-cover of $C$ with respect to the disagreement metric
 $d(f,g) = \Pr[f(x) \neq g(x)]$. Here, it is important to note that Benedek-Itai
 construct for each distribution a separate algorithm. In other words, they
 construct a family of algorithms indexed by the (uncountably many) distributions
@@ -40,11 +40,11 @@ Hanneke's bound.
 
 As we already mentioned, Benedek-Itai's algorithm receives as input the
 distribution of unlabeled data. The algorithm uses it to construct an
-$\epsilon$-cover. Unsurprisingly, there exist distributions which have a small
-$\epsilon$-cover and thus sample complexity of Benedek-Itai's algorithm on such
-distributions is significantly lower then the Hanneke's bound. For instance, a
-distribution with support on a single point has an $\epsilon$-cover of size $2$
-for any $\epsilon$.
+$\frac{\epsilon}{2}$-cover. Unsurprisingly, there exist distributions which have
+a small $\frac{\epsilon}{2}$-cover and thus sample complexity of Benedek-Itai's
+algorithm on such distributions is significantly lower then the Hanneke's bound.
+For instance, a distribution concentrated on a single point has an
+$\frac{\epsilon}{2}$-cover of size $2$ for any positive $\epsilon$.
 
 However, an algorithm does not need to receive the unlabeled distribution in
 order to enjoy low sample complexity. For example, empirical risk minimization
@@ -75,11 +75,10 @@ as many labeled examples as Benedek-Itai bound. Furthermore, we show similar
 results for the class of monotone disjunctions over the Boolean hypercube
 $\{0,1\}^n$ where we show that any distribution-independent algorithm requires,
 for some distributions, $\Omega(n)$ times as much labeled examples as the
-Benedek-Itai bound. Perhaps most importantly, we show analogous result for
-halfspaces over $\R^n$, for which we show that \emph{any}
-distribution-independent algorithm requires for some unlabeled distributions
-$\Omega(\frac{n}{\log n})$ times as many labeled examples as the Benedek-Itai
-bound.
+Benedek-Itai bound. We show analogous result for halfspaces over $\R^n$, for
+which we show that \emph{any} distribution-independent algorithm requires for
+some unlabeled distributions $\Omega(\frac{n}{\log n})$ times as many labeled
+examples as the Benedek-Itai bound.
 
 \cite{Darnstadt-Simon-Szorenyi-2013} showed the gap for any class with
 Vapnik-Chervonenkis dimension $d$ is at most $O(d)$. It is well known that
@@ -91,7 +90,7 @@ mismatch between $\Omega(\frac{n}{\log n})$ lower bound and $O(n)$ upper bound
 for halfspaces over $\R^n$.
 
 To better understand the relationship of the upper and lower bounds, we
-summarize the situation for the class of projections over $\{0,1\}^n$ in
+illustrate the situation for the class of projections over $\{0,1\}^n$ in
 Figure~\ref{figure:sample-complexity}. Recall that Vapnik-Chervonenkis dimension
 of projections over $\{0,1\}^n$ is $\lfloor \log_2 n \rfloor$. This is a
 folklore result, which we re-prove as
@@ -109,8 +108,8 @@ Hanneke's bound for the class of projections, which is $\Theta(\VC(C_n)) =
 line touches the red line for certain distributions, but is lower for other
 distributions. In particular, for certain distributions the green line is
 $O(1)$. The dashed line corresponds to a particular distribution on a shattered
-set. This is where the green line and red line touch. Furthermore, here the the
-upper bound coincide with the lower bound for that particular distribution. The
+set. This is where the green line and red line touch. Furthermore, here the
+upper bound coincides with the lower bound for that particular distribution. The
 black line is the sample complexity of an arbitrary
 \emph{distribution-independent} algorithm. For example, the reader can think of
 the ERM or Hanneke's algorithm.
@@ -127,7 +126,9 @@ basic probabilistic tools. Sections \ref{section:projections},
 separation results for projections, monotone disjunctions, and halfspaces,
 respectively. For completeness, in \autoref{section:epsilon-cover} we give a
 proof of a simple upper bound $(e/\epsilon)^d$ on the size of the minimum
-$\epsilon$-cover.
+$\epsilon$-cover, and in \autoref{section:fixed-distribution-learning}, we re-prove
+Benedek-Itai's $O \left( \frac{\log N_{\epsilon/2} + \log
+(1/\delta)}{\epsilon}\right)$ sample complexity upper bound.
 
 The proof technique in Sections \ref{section:projections}
 \ref{section:monotone-dijsunctions}, \ref{section:halfspaces} is the same. The
