@@ -1,12 +1,12 @@
 \begin{abstract}
-We show a separation of the number of labeled examples required between learning
-\emph{with} and \emph{without} the knowledge of the distribution of the
-unlabeled data. For the class of projections over the Boolean hypercube of
-dimension $n$, we show a separation by $\Theta(\log n)$ multiplicative factor.
-For the class of monotone disjunctions over the Boolean hypercube of dimension
-$n$, we show a separation by $\Theta(n)$ multiplicative factor. For the class of
-halfspaces over $\R^n$, we show a separation by  $\Theta(n/\log n)$
-multiplicative factor.
+We show a separation of the number of labeled examples required to learn between
+two settings: Settings \emph{with} and \emph{without} the knowledge of the
+distribution of the unlabeled data. For the class of projections over the
+Boolean hypercube of dimension $n$, we show a separation by $\Theta(\log n)$
+multiplicative factor. For the class of monotone disjunctions over the Boolean
+hypercube of dimension $n$, we show a separation by $\Theta(n)$ multiplicative
+factor. For the class of halfspaces over $\R^n$, we show a separation by
+$\Theta(n/\log n)$ multiplicative factor.
 
 Learning with the knowledge of the distribution (a.k.a. \emph{fixed-distribution
 learning}) can be viewed as an idealized scenario of semi-supervised learning
@@ -65,7 +65,7 @@ As \cite{Darnstadt-Simon-Szorenyi-2013} showed this not the case. They showed
 that \emph{any} algorithm for learning projections over $\{0,1\}^n$ that does
 not receive the unlabeled distribution as input, requires, for some data
 unlabeled distributions, more labeled examples than the Benedek-Itai bound.
-However, they did not quantify this gap, beside stating that it grows without
+However, they did not quantify this gap beside stating that it grows without
 bound as $n$ goes to infinity.
 
 In this paper, we quantify the gap by showing that \emph{any}
@@ -102,7 +102,7 @@ Proposition~\ref{proposition:vc-dimension-projections}.
 \caption{\small The graph shows sample complexity bounds of learning a class of
 projections over the domain $\{0,1\}^n$ under various unlabeled distributions.
 We assume that $\epsilon$ and $\delta$ are constant, say, $\epsilon = \delta =
-\frac{1}{10}$. The graph shows three lines. The red horizontal line is
+\frac{1}{100}$. The graph shows three lines. The red horizontal line is
 Hanneke's bound for the class of projections, which is $\Theta(\VC(C_n)) =
 \Theta(\log n)$. The green line is the Benedek-Itai bound. The green
 line touches the red line for certain distributions, but is lower for other

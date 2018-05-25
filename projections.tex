@@ -64,12 +64,12 @@ an $2\epsilon$-cover of $C_n$.
 To see that $C'$ is an $2\epsilon$-cover of $C_n$, consider any $c_k \in C_n$.
 We need to show that $d_{P_i}(c_i, c_k) \le 2\epsilon$ or $d_{P_i}(c_j, c_k)
 \le 2\epsilon$. If $k = i$ or $k = j$, the condition is trivially satisfied.
-Consider $k \in \{1,2,\dots,n\} \setminus \{i,j\}$. Then
+Consider $k \in \{1,2,\dots,n\} \setminus \{i,j\}$. Let $X \sim P_i$. Then,
 \begin{align*}
 d_{P_i}(c_j, c_k)
-& = \Pr_{X \sim P_i}[c_j(X) \neq c_k(X)] \\
-& = \Pr_{X \sim P_i}[c_j(X) = 1 \wedge c_k(X) = 0] + \Pr_{X \sim P_i}[c_j(X) = 0 \wedge c_k(X) = 1] \\
-& = \Pr_{X \sim P_i}[X[j] = 1 \wedge X[k] = 0] + \Pr_{X \sim P_i}[X[j] = 0 \wedge X[k] = 1] \\
+& = \Pr[c_j(X) \neq c_k(X)] \\
+& = \Pr[c_j(X) = 1 \wedge c_k(X) = 0] + \Pr[c_j(X) = 0 \wedge c_k(X) = 1] \\
+& = \Pr[X[j] = 1 \wedge X[k] = 0] + \Pr[X[j] = 0 \wedge X[k] = 1] \\
 & = \Pr[X[j] = 1] \Pr[X[k] = 0] + \Pr[X[j] = 0] \Pr[X[k] = 1] \\
 & = 2 \epsilon \left( 1 - \epsilon \right)  \\
 & < 2 \epsilon \; .
@@ -82,7 +82,7 @@ The corollary states that the distribution-dependent sample complexity
 of learning target in $C_n$ under any distribution from $P_{n,\epsilon}$
 does \emph{not} depend on $n$.
 
-\begin{corollary}
+\begin{corollary}[Learning with knowledge of the distribution]
 Let $n \ge 2$ and $\epsilon \in (0,\frac{1}{2})$.  There exists a
 distribution-dependent algorithm such that for any distribution from $\P_{n,\epsilon}$,
 any $\delta \in (0,1)$, any target function $c \in C_n$, if the algorithm gets
@@ -98,7 +98,7 @@ learning a target under a distribution from $\P_{n,\epsilon}$
 requires at least $\Omega(\log n)$ labeled examples.
 
 \begin{theorem}[Learning without knowledge of the distribution]
-For any distribution-independent algorithm, any $\epsilon \in (0,\frac{1}{2})$ and any
+For any distribution-independent algorithm, any $\epsilon \in (0,\frac{1}{4})$ and any
 $n \ge 600/\epsilon^3$ there exists a distribution $P \in \P_{n,\epsilon}$ and a target
 concept $c \in C_n$ such that if the algorithm gets
 $$
@@ -126,26 +126,28 @@ c_I(X_m)$ be the target labels. Let $X$ be the $m \times n$ matrix with entries
 $X_i[j]$ and let $Y = (Y_1, Y_2, \dots, Y_m)$ be the vector of labels. The
 output of the algorithm is $A(X,Y)$. We will show that
 \begin{equation}
-\label{equation:failure-probability}
+\label{equation:projections-failure-probability}
 \Exp \left[d_{P_I}(c_I, A(X,Y)) \right] \ge \frac{1}{8} \; .
 \end{equation}
 This means that there exists $i \in \{1,2,\dots,n\}$ such that
 $$
-\Exp \left[d_{P_i}(c_i, A(X,Y)) \right] \ge \frac{1}{8} \; .
+\Exp \left[d_{P_i}(c_i, A(X,Y)) ~\middle|~ I = i \right] \ge \frac{1}{8} \; .
 $$
 By Proposition~\ref{proposition:error-probability-vs-expected-error},
 $$
-\Pr \left[ d_{P_i}(c_i, A(X,Y)) > \frac{1}{16} \right] \ge \frac{\frac{1}{8} - \frac{1}{16}}{1 - \frac{1}{16}} > \frac{1}{16} \; .
+\Pr \left[ d_{P_i}(c_i, A(X,Y)) > \frac{1}{16} ~\middle|~ I = i \right] \ge \frac{\frac{1}{8} - \frac{1}{16}}{1 - \frac{1}{16}} > \frac{1}{16} \; .
 $$
 
-It remains to prove \eqref{equation:failure-probability}.
-Let $Z$ be a test sample drawn from $P_I$. That is, conditioned on $I$, the sequence $X_1, X_2, \dots, X_m, Z$ is i.i.d. drawn from $P_I$.
-Then, by Proposition~\ref{proposition:bayes},
-\begin{align}
-& \Exp \left[d_{P_I}(c_I, A(X,Y))\right] \notag \\
-& = \Pr\left[ A(X,Y)(Z) \neq c_I(Z) \right] \notag \\
-& \ge \sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n}} \left( \frac{1}{2} - \left| \frac{1}{2} - \Exp\left[ c_I(Z) \, \middle| \, X = x, Y = y, Z = z \right] \right| \right) \cdot \Pr \left[X = x, Y = y, Z = z \right] \label{equation:expected-error-lower-bound} \; .
-\end{align}
+It remains to prove \eqref{equation:projections-failure-probability}. Let $Z$ be
+a test sample drawn from $P_I$. That is, conditioned on $I$, the sequence $X_1,
+X_2, \dots, X_m, Z$ is i.i.d. drawn from $P_I$. Then, by
+Proposition~\ref{proposition:single-bit},
+\begin{multline}
+\label{equation:projections-expected-error-lower-bound}
+\Exp \left[d_{P_I}(c_I, A(X,Y))\right]
+\Pr\left[ A(X,Y)(Z) \neq c_I(Z) \right] \\
+\ge \sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n}} \left( \frac{1}{2} - \left| \frac{1}{2} - \Exp\left[ c_I(Z) \, \middle| \, X = x, Y = y, Z = z \right] \right| \right) \cdot \Pr \left[X = x, Y = y, Z = z \right]  \; .
+\end{multline}
 We need to compute $\Exp\left[ c_I(Z) \, \middle| \, X = x, Y = y, Z = z \right]$.
 For that we need some additional notation.
 For any matrix $x \in \{0,1\}^{m \times n}$, let $x[1], x[2], \dots, x[n]$ be its columns.
@@ -153,17 +155,29 @@ For any matrix $x \in \{0,1\}^{m \times n}$ and vector $y \in \{0,1\}^m$ let
 $$
 k(x,y) = \{ i \in \{1,2,\dots,n\} ~:~ x[i] = y \}
 $$
-be the set of indices of columns of $x$ equal to the vector $y$. The key
-observation is that due to the symmetry of the uniform distribution from which
-$I$ chosen, for any $i = 1,2,\dots,n$,
+be the set of indices of columns of $x$ equal to the vector $y$. We also define $\norm{\cdot}$
+to mean the sum of absolute values of entries of a vector or a matrix.
+
+For any $i \in \{1,2,\dots,n\}$,
+$$
+\Pr \left[I = i, X = x, Y = y \right] =
+\begin{cases}
+\frac{1}{n} \left( \frac{1}{2} \right)^m \epsilon^{\norm{x} - \norm{y}} (1 - \epsilon)^{mn - \norm{x} + \norm{y}} & \text{if $i \in k(x,y)$.} \\
+0 & \text{if $i \not \in k(x,y)$.} \\
+\end{cases}
+$$
+Therefore, for any $i \in \{1,2,\dots,n\}$,
 \begin{align*}
 \Pr \left[I = i \, \middle| \, X = x, Y = y \right]
-=
+& = \frac{\Pr \left[I = i, X = x, Y = y \right]}{\Pr \left[ X = x, Y = y \right]} \\
+& = \frac{\Pr \left[I = i, X = x, Y = y \right]}{\sum_{j \in k(x,y)} \Pr \left[ I = j, X = x, Y = y \right]} \\
+& =
 \begin{cases}
 \frac{1}{|k(x,y)|} & \text{if $i \in k(x,y)$,} \\
 0 & \text{if $i \not \in k(x,y)$,} \\
 \end{cases}
 \end{align*}
+
 Conditioned on $I$, the variables $Z$ and $(X,Y)$ are independent. Thus,
 for any $x \in \{0,1\}^n$, and $i = 1,2,\dots,n$,
 \begin{align*}
@@ -171,8 +185,8 @@ for any $x \in \{0,1\}^n$, and $i = 1,2,\dots,n$,
 & = \Pr \left[Z = z \, \middle| \, I = i \right] \\
 & =
 \begin{cases}
-\frac{1}{2} \epsilon^{\norm{z}_1 - 1} (1 - \epsilon)^{n - \norm{z}_1} & \text{if $z[i] = 1$,} \\
-\frac{1}{2} \epsilon^{\norm{z}_1} (1 - \epsilon)^{n-1 - \norm{z}_1}& \text{if $z[i] = 0$.} \\
+\frac{1}{2} \epsilon^{\norm{z} - 1} (1 - \epsilon)^{n - \norm{z}} & \text{if $z[i] = 1$,} \\
+\frac{1}{2} \epsilon^{\norm{z}} (1 - \epsilon)^{n-1 - \norm{z}}& \text{if $z[i] = 0$.} \\
 \end{cases}
 \end{align*}
 This allows us to compute the conditional probability
@@ -181,8 +195,8 @@ This allows us to compute the conditional probability
 & \quad = \Pr \left[Z = z \, \middle| \, I = i, X = x, Y = y \right] \cdot \Pr \left[I = i \, \middle| \, X = x, Y = y \right] \\
 & \quad =
 \begin{cases}
-\frac{1}{2|k(x,y)|} \epsilon^{\norm{z}_1 - 1} (1 - \epsilon)^{n - \norm{z}_1} & \text{if $i \in k(x,y)$ and $z[i] = 1$,} \\
-\frac{1}{2|k(x,y)|} \epsilon^{\norm{z}_1} (1 - \epsilon)^{n - 1 - \norm{z}_1} & \text{if $i \in k(x,y)$ and $z[i] = 0$,} \\
+\frac{1}{2|k(x,y)|} \epsilon^{\norm{z} - 1} (1 - \epsilon)^{n - \norm{z}} & \text{if $i \in k(x,y)$ and $z[i] = 1$,} \\
+\frac{1}{2|k(x,y)|} \epsilon^{\norm{z}} (1 - \epsilon)^{n - 1 - \norm{z}} & \text{if $i \in k(x,y)$ and $z[i] = 0$,} \\
 0 & \text{if $i \not \in k(x,y)$.} \\
 \end{cases}
 \end{align*}
@@ -197,8 +211,8 @@ Then,
 & \quad = \sum_{i=1}^n \Pr \left[Z = z, I = i \, \middle| \, X = x, Y = y \right] \\
 & \quad = \sum_{i \in k(x,y)} \Pr \left[Z = z, I = i \, \middle| \, X = x, Y = y \right] \\
 & \quad = \sum_{i \in s(x,y,x)} \Pr \left[Z = z, I = i \, \middle| \, X = x, Y = y \right] + \sum_{i \in k(x,y) \setminus s(x,y,z)} \Pr \left[Z = z, I = i \, \middle| \, X = x, Y = y \right] \\
-& \quad = \frac{1}{2|k(x,y)|} \cdot |s(x,y,z)| \cdot \epsilon^{\norm{z}_1 - 1} (1 - \epsilon)^{n - \norm{z}_1} + \frac{1}{2|k(x,y)|} \cdot (|k(x,y)| - |s(x,y,z)|) \cdot \epsilon^{\norm{z}_1} (1 - \epsilon)^{n - 1 - \norm{z}_1} \\
-& \quad = \frac{\epsilon^{\norm{z}_1 - 1} (1 - \epsilon)^{n - 1 - \norm{z}_1}}{2|k(x,y)|} \cdot \left( |s(x,y,z)| \cdot (1 - 2\epsilon) + |k(x,y)| \cdot \epsilon \right) \; .
+& \quad = \frac{1}{2|k(x,y)|} \cdot |s(x,y,z)| \cdot \epsilon^{\norm{z} - 1} (1 - \epsilon)^{n - \norm{z}} + \frac{1}{2|k(x,y)|} \cdot (|k(x,y)| - |s(x,y,z)|) \cdot \epsilon^{\norm{z}} (1 - \epsilon)^{n - 1 - \norm{z}} \\
+& \quad = \frac{\epsilon^{\norm{z} - 1} (1 - \epsilon)^{n - 1 - \norm{z}}}{2|k(x,y)|} \cdot \left( |s(x,y,z)| \cdot (1 - 2\epsilon) + |k(x,y)| \cdot \epsilon \right) \; .
 \end{align*}
 Hence,
 \begin{align*}
@@ -206,16 +220,16 @@ Hence,
 & \quad = \Pr \left[ Z[I] = 1 \, \middle| \, X = x, Y = y, Z = z \right] \\
 & \quad = \frac{\displaystyle \Pr \left[ Z[I] = 1, Z = z \, \middle| \, X = x, Y = y \right]}{\displaystyle \Pr \left[ Z = z \, \middle| \, X = x, Y = y \right]} \\
 & \quad = \frac{\displaystyle \sum_{i=1}^n \Pr \left[ I = i, Z[i] = 1, Z = z \, \middle| \, X = x, Y = y \right]}{\displaystyle \Pr \left[ Z = z \, \middle| \, X = x, Y = y \right]} \\
-& \quad = \frac{\displaystyle \frac{|s(x,y,z)|}{2|k(x,y)|} \cdot \epsilon^{\norm{z}_1 - 1} (1 - \epsilon)^{n - \norm{z}_1}}{\displaystyle \frac{\epsilon^{\norm{z}_1 - 1} (1 - \epsilon)^{n - 1 - \norm{z}_1}}{2|k(x,y)|} \cdot \left( |s(x,y,z)| \cdot (1 - 2\epsilon) + |k(x,y,z)| \cdot \epsilon \right) } \\
+& \quad = \frac{\displaystyle \frac{|s(x,y,z)|}{2|k(x,y)|} \cdot \epsilon^{\norm{z} - 1} (1 - \epsilon)^{n - \norm{z}}}{\displaystyle \frac{\epsilon^{\norm{z} - 1} (1 - \epsilon)^{n - 1 - \norm{z}}}{2|k(x,y)|} \cdot \left( |s(x,y,z)| \cdot (1 - 2\epsilon) + |k(x,y,z)| \cdot \epsilon \right) } \\
 & \quad = \frac{\displaystyle |s(x,y,z)| \cdot (1 - \epsilon)}{\displaystyle |s(x,y,z)| \cdot (1 - 2\epsilon) + |k(x,y)| \cdot \epsilon } \\
 & \quad = \frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + \frac{|k(x,y)| \cdot \epsilon}{|s(x,y,z)|}} \\
 \end{align*}
 
-We now show that the last expression is close to $1/2$. More precisely, if
-\begin{equation}
-\frac{|k(x,y)| \cdot \epsilon}{|s(x,y,z)|} \in \left[\frac{5}{6}, 2 \right]
-\end{equation}
-then since $\epsilon \in (0,\frac{1}{4})$,
+We now show that the last expression is close to $1/2$. It is easy to check that
+$$
+\frac{|k(x,y)| \cdot \epsilon}{|s(x,y,z)|} \in \left[\frac{5}{6}, 2 \right] \qquad \Longrightarrow \qquad \frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + \frac{|k(x,y)| \cdot \epsilon}{|s(x,y,z)|}} \in \left[ \frac{1}{4}, \frac{3}{4} \right] \; .
+$$
+Indeed, since $\epsilon \in (0,\frac{1}{4})$,
 $$
 \frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + \frac{|k(x,y)| \cdot \epsilon}{|s(x,y,z)|}} \ge
 \frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + 2} \ge \frac{\displaystyle 1 - 1/4}{\displaystyle 1 + 2} = \frac{1}{4}
@@ -225,10 +239,10 @@ $$
 \frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + \frac{|k(x,y)| \cdot \epsilon}{|s(x,y,z)|}} \le
 \frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + 5/6} \le \frac{\displaystyle 1}{\displaystyle 1 - 1/2 + 5/6} = \frac{3}{4} \; .
 $$
-We now substitute this into the \eqref{equation:expected-error-lower-bound}. We have
+We now substitute this into the \eqref{equation:projections-expected-error-lower-bound}. We have
 \begin{align*}
-& \sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n}} \frac{1}{2} - \left| \frac{1}{2} - \Exp\left[ c_I(Z) \, \middle| \, X = x, Y = y, Z = z \right] \right| \cdot \Pr \left[X = x, Y = y, Z = z \right] \\
-& = \sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n}} \frac{1}{2} - \left| \frac{1}{2} - \frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + \frac{|k(x,y)| \cdot \epsilon}{|s(x,y,z)|}} \right| \cdot \Pr \left[X = x, Y = y, Z = z \right] \\
+& \sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n}} \left( \frac{1}{2} - \left| \frac{1}{2} - \Exp\left[ c_I(Z) \, \middle| \, X = x, Y = y, Z = z \right] \right| \right) \cdot \Pr \left[X = x, Y = y, Z = z \right] \\
+& = \sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n}} \left( \frac{1}{2} - \left| \frac{1}{2} - \frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + \frac{|k(x,y)| \cdot \epsilon}{|s(x,y,z)|}} \right| \right) \cdot \Pr \left[X = x, Y = y, Z = z \right] \\
 & \ge
 \sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n \\ \frac{|k(x,y,z)| \epsilon}{|s(x,y,z)|} \in [\frac{5}{6},2]}} \left( \frac{1}{2} - \left| \frac{1}{2} - \frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + \frac{|k(x,y)| \cdot \epsilon}{|s(x,y,z)|}} \right|  \right) \cdot \Pr \left[X = x, Y = y, Z = z \right] \\
 & \ge
@@ -236,7 +250,7 @@ We now substitute this into the \eqref{equation:expected-error-lower-bound}. We 
 & =
 \frac{1}{4} \Pr \left[ \frac{|k(X,Y)| \cdot \epsilon}{|s(X,Y,Z)|} \in \left[\frac{5}{6}, 2 \right]  \right] \\
 \end{align*}
-In order to prove \eqref{equation:failure-probability}, we need to show that
+In order to prove \eqref{equation:projections-failure-probability}, we need to show that
 $\frac{|k(X,Y)| \cdot \epsilon}{|s(X,Y,Z)|} \in \left[\frac{5}{6}, 2 \right]$ with
 probability at least $1/2$. To that end, we define two additional random
 variables
@@ -255,16 +269,16 @@ $$
 =
 \begin{cases}
 1 & \text{if $j = i$,} \\
-\epsilon^{\norm{y}_1} (1 - \epsilon)^{m - \norm{y}_1} & \text{if $j \neq j$.}
+\epsilon^{\norm{y}} (1 - \epsilon)^{m - \norm{y}} & \text{if $j \neq j$.}
 \end{cases}
 $$
 Conditioned on $Y = y$ and $I=i$, the random variable $K - 1 = |k(X,Y) \setminus \{I\}|$ is
-a sum of $n-1$ Bernoulli variables with parameter $\epsilon^{\norm{y}_1} (1 - \epsilon)^{m - \norm{y}_1}$, one for each column except for column $i$.
-Hoeffding bound with $t = \epsilon^m/2$ and the loose lower bound $\epsilon^{\norm{y}_1} (1 - \epsilon)^{m - \norm{y}_1} \ge \epsilon^m$ gives
+a sum of $n-1$ Bernoulli variables with parameter $\epsilon^{\norm{y}} (1 - \epsilon)^{m - \norm{y}}$, one for each column except for column $i$.
+Hoeffding bound with $t = \epsilon^m/2$ and the loose lower bound $\epsilon^{\norm{y}} (1 - \epsilon)^{m - \norm{y}} \ge \epsilon^m$ gives
 \begin{align*}
 \Pr \left[ \frac{K - 1}{n - 1} > \frac{\epsilon^m}{2}  \, \middle| \,  Y = y, I = i  \right]
 & = \Pr \left[ \frac{K - 1}{n - 1} > \epsilon^m - t  \, \middle| \,  Y = y, I = i  \right] \\
-& \ge \Pr \left[ \frac{K - 1}{n - 1} > \epsilon^{\norm{y}_1} (1 - \epsilon)^{m - \norm{y}_1} - t  \, \middle| \,  Y = y, I = i  \right] \\
+& \ge \Pr \left[ \frac{K - 1}{n - 1} > \epsilon^{\norm{y}} (1 - \epsilon)^{m - \norm{y}} - t  \, \middle| \,  Y = y, I = i  \right] \\
 & \ge 1 - e^{-2(n-1) t^2} \; .
 \end{align*}
 Since $m \le \frac{\ln n}{3 \ln (1/\epsilon)}$, we lower bound $t = \frac{\epsilon^m}{2}$ as

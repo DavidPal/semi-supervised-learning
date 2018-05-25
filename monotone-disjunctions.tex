@@ -28,7 +28,9 @@ distribution, i.e., $\Pr[X=x] = \prod_{j=1}^n \Pr[X[j] = x[j]]$ for any $x \in
 \end{cases}
 && \text{for $j=1,2,\dots,n$.}
 \end{align*}
-Note that $1 - \sqrt[n/2-1]{1 - \epsilon} < \frac{1}{2}$ and $1 - \epsilon > \frac{1}{2}$.
+Note that $1 - \sqrt[n/2-1]{1 - \epsilon} < \frac{1}{2}$ and $1 - \epsilon >
+\frac{1}{2}$. Same as before, the reader should think of $\epsilon$ as a
+constant that does not depend on $n$, say, $\epsilon=\frac{1}{100}$.
 
 \begin{proposition}[Vapnik-Chervonenkis dimension]
 Vapnik-Chervonenkis dimension of the class of monotone disjunctions $C_n$ is $n$.
@@ -57,9 +59,9 @@ disjunctions $C_n$ of size $3$.
 \end{lemma}
 
 \begin{proof}
-Let $J \subseteq \{1,2,\dots,n\}$ such that $|J| = n/2$ and let $P_J
-\subseteq P_{n,\epsilon}$. Let $C' = \{c_J, c_\emptyset, c_{\{1,2,\dots,n\}}\}$.
-We claim that $C'$ is an $\epsilon$-cover $C_n$ under the distribution $P_J$.
+Let $J \subseteq \{1,2,\dots,n\}$ such that $|J| = n/2$ and let $P_J \in \P_{n,\epsilon}$.
+Let $C' = \{c_J, c_\emptyset, c_{\{1,2,\dots,n\}}\}$.
+We claim that $C'$ is an $\epsilon$-cover of $C_n$ under the distribution $P_J$.
 Let $I \subseteq \{1,2,\dots,n\}$ be arbitrary and let $c_I \in C_n$ be the
 corresponding disjunction. We need to show that $d_{P_J}(c_I, c_J) \le \epsilon$
 or $d_{P_J}(c_I, c_\emptyset) \le \epsilon$ or $d_{P_J}(c_I,
@@ -77,19 +79,18 @@ d_{P_J}(c_I, c_\emptyset)
 & = 1 - \Pr \left[ \bigwedge_{i \in I} (X[i] = 0) \right] \\
 & = 1 - \prod_{i \in I} \Pr \left[ X[i] = 0 \right] \\
 & = 1 - \prod_{i \in I} \sqrt[n/2 - 1]{1 - \epsilon} \\
-& \le 1 - \bigg( \sqrt[n/2-1]{1 - \epsilon} \bigg)^{(n-1)/2} \\
-& = 1 - \sqrt{1 - \epsilon} \\
+& \le 1 - \bigg( \sqrt[n/2-1]{1 - \epsilon} \bigg)^{n/2-1} \\
+& = 1 - (1 - \epsilon) \\
 & = \epsilon
 \end{align*}
-where the last inequality is valid for any $\epsilon \le 1/2$.
 
 Case 3: If $I \not \subseteq J$. We show that $d_{P_J}(c_I, c_{\{1,2,\dots,n\}}) \le \epsilon$.
 Since $I \not \subseteq J$, there exists $k \in I \setminus J$. Let $X \sim P_J$. Then,
 \begin{align*}
 d_{P_J}(c_I, c_{\{1,2,\dots,n\}})
-& = \Pr [c_I(X) \neq c_{\{1,2,\dots,n\}}(x)] \\
-& = \Pr [c_I(X) = 0 \ \text{and} \ X \neq (0,0,\dots,0) ] \\
-& <  \Pr [c_I(X) = 0 ] \\
+& = \Pr [c_I(X) \neq c_{\{1,2,\dots,n\}}(X)] \\
+& = \Pr [c_I(X) = 0 \ \text{and} \ c_{\{1,2,\dots,n\}}(X) = 1] \\
+& \le  \Pr [c_I(X) = 0 ] \\
 & = \Pr \left[ \bigwedge_{i \in I} (X[i] = 0) \right] \\
 & = \prod_{i \in I} \Pr \left[ X[i] = 0 \right] \\
 & \le \Pr \left[ X[k] = 0 \right] \\
@@ -97,18 +98,79 @@ d_{P_J}(c_I, c_{\{1,2,\dots,n\}})
 \end{align*}
 \end{proof}
 
-\begin{theorem}[Learning with knowledge of distribution]
-For any even $n \ge 4$, there exists a distribution-dependent algorithm
-such that for any any $\epsilon \in (0,\frac{1}{2})$, and any distribution from $\P_{n,\epsilon}$,
-any $\delta \in (0,1)$, any target $c \in C_n$, if the algorithm gets
+Using Bedek-Itai bound (Theorem~\ref{theorem:benedek-itai} in
+\autoref{section:fixed-distribution-learning}) we obtain the corollary below.
+The corollary states that the distribution-dependent sample complexity
+of learning target in $C_n$ under any distribution from $P_{n,\epsilon}$
+does \emph{not} depend on $n$.
+
+\begin{corollary}[Learning with knowledge of the distribution]
+Let $n \ge 4$ and $\epsilon \in (0,\frac{1}{2})$.  There exists a
+distribution-dependent algorithm such that for any distribution from $\P_{n,\epsilon}$,
+any $\delta \in (0,1)$, any target function $c \in C_n$, if the algorithm gets
 $$
-m \ge ???
+m \ge \frac{24\ln(3/\delta)}{\epsilon}
 $$
-labeled examples, with probability at least $1-\delta$ the algorithm $\epsilon$-learns the target.
+labeled examples, with
+probability at least $1 - \delta$, it $2\epsilon$-learns the target.
+\end{corollary}
+
+The next theorem states that without knowing the distribution,
+learning a target under a distribution from $\P_{n,\epsilon}$
+requires at least $\Omega(n)$ labeled examples.
+
+\begin{theorem}[Learning without knowledge of the distribution]
+For any distribution-independent algorithm, any $\epsilon \in (0,\frac{1}{4})$ and any
+$n \ge ???$ there exists a distribution $P \in \P_{n,\epsilon}$ and a target
+concept $c \in C_n$ such that if the algorithm gets
+$$
+m \le n ???
+$$
+labeled examples, it fails to $\frac{1}{16}$-learn the target concept with probability
+more than $\frac{1}{16}$.
 \end{theorem}
 
 \begin{proof}
-???
+Let $A$ be any learning algorithm. For ease of notation, we formalize it is as a function
+$$
+A:\bigcup_{m=0}^\infty \left(\{0,1\}^{m \times n} \times \{0,1\}^m\right) \to \{0,1\}^{\{0,1\}^n} \; .
+$$
+The algorithm receives an $m \times n$ matrix and a binary vector of length $m$.
+The rows of the matrix corresponds to unlabeled examples and the vector encodes
+the labels. The output of the $A$ is any function from $\{0,1\}^n \to \{0,1\}$.
+
+We demonstrate the existence of a pair $(P,c) \in \P_{n,\epsilon} \times C_n$
+which cannot be learned with $m$ samples by probabilistic method. Let $E
+\subseteq \{1,2,\dots,n\}$ be a random subset of size $n/2$. That is, $\Pr[E =
+I] = 1/\binom{n}{n/2}$ for any fixed set $I \subseteq \{1,2,\dots,n\}$ of
+size $n/2$. We consider distribution $P_E \in \P_{n,\epsilon}$ and target $c_E
+\in C_n$. Let $X_1, X_2, \dots, X_m$ be an i.i.d. sample from $P_E$ and let $Y_1 =
+c_E(X_1), Y_2 = c_E(X_2), \dots, Y_m = c_E(X_m)$ be the target labels. Let $X$
+be the $m \times n$ matrix with entries $X_i[j]$ and let $Y = (Y_1, Y_2, \dots,
+Y_m)$ be the vector of labels. The output of the algorithm is $A(X,Y)$. We will
+show that
+\begin{equation}
+\label{equation:monotone-disjunctions-failure-probability}
+\Exp \left[d_{P_E}(c_E, A(X,Y)) \right] \ge \frac{1}{8} \; .
+\end{equation}
+This means that there exists $I \subseteq \{1,2,\dots,n\}$ of size $|I|=n/2$ such that
+$$
+\Exp \left[d_{P_I}(c_I, A(X,Y)) ~\middle|~ E = I \right] \ge \frac{1}{8} \; .
+$$
+By Proposition~\ref{proposition:error-probability-vs-expected-error},
+$$
+\Pr \left[ d_{P_I}(c_I, A(X,Y)) > \frac{1}{16} ~\middle|~ E = I \right] \ge \frac{\frac{1}{8} - \frac{1}{16}}{1 - \frac{1}{16}} > \frac{1}{16} \; .
+$$
+It remains to prove \eqref{equation:monotone-disjunctions-failure-probability}.
+Let $Z$ be a test sample drawn from $P_I$. That is, conditioned on $I$, the sequence $X_1, X_2, \dots, X_m, Z$ is i.i.d. drawn from $P_I$.
+Then, by Proposition~\ref{proposition:single-bit},
+\begin{multline}
+\label{equation:monotone-disjuctions-xpected-error-lower-bound}
+\Exp \left[d_{P_E}(c_E, A(X,Y))\right]
+= \Pr\left[ A(X,Y)(Z) \neq c_E(Z) \right] \\
+\ge \sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n}} \left( \frac{1}{2} - \left| \frac{1}{2} - \Exp\left[ c_E(Z) \, \middle| \, X = x, Y = y, Z = z \right] \right| \right) \cdot \Pr \left[X = x, Y = y, Z = z \right]  \; .
+\end{multline}
+We need to compute $\Exp\left[ c_E(Z) \, \middle| \, X = x, Y = y, Z = z \right]$.
 \end{proof}
 
 
