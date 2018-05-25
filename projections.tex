@@ -145,7 +145,7 @@ Proposition~\ref{proposition:single-bit},
 \begin{multline}
 \label{equation:projections-expected-error-lower-bound}
 \Exp \left[d_{P_I}(c_I, A(X,Y))\right]
-\Pr\left[ A(X,Y)(Z) \neq c_I(Z) \right] \\
+= \Pr\left[ A(X,Y)(Z) \neq c_I(Z) \right] \\
 \ge \sum_{\substack{x \in \{0,1\}^{m \times n} \\ y \in \{0,1\}^m \\ z \in \{0,1\}^n}} \left( \frac{1}{2} - \left| \frac{1}{2} - \Exp\left[ c_I(Z) \, \middle| \, X = x, Y = y, Z = z \right] \right| \right) \cdot \Pr \left[X = x, Y = y, Z = z \right]  \; .
 \end{multline}
 We need to compute $\Exp\left[ c_I(Z) \, \middle| \, X = x, Y = y, Z = z \right]$.
@@ -155,8 +155,10 @@ For any matrix $x \in \{0,1\}^{m \times n}$ and vector $y \in \{0,1\}^m$ let
 $$
 k(x,y) = \{ i \in \{1,2,\dots,n\} ~:~ x[i] = y \}
 $$
-be the set of indices of columns of $x$ equal to the vector $y$. We also define $\norm{\cdot}$
-to mean the sum of absolute values of entries of a vector or a matrix.
+be the set of indices of columns of $x$ equal to the vector $y$. Also, we define
+$\norm{\cdot}$ to be the sum of absolute values of entries of a vector or a
+matrix. (Since we use $\norm{\cdot}$ only for binary matrices and binary
+vectors, it will be just the number of ones.)
 
 For any $i \in \{1,2,\dots,n\}$,
 $$
