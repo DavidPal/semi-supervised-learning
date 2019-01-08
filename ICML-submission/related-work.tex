@@ -1,0 +1,46 @@
+\section{Related Work}
+\label{section:related-work}
+
+The question of whether knowledge of unlabeled data distribution helps was
+proposed and initially studied by \citet{Ben-David-Lu-Pal-2008}; see also
+\citet{Lu-2009}. However, they considered only classes with Vapnik-Chervonenkis
+dimension at most $1$, or classes with Vapnik-Chervonenkis dimension $d$ but
+only distributions for which the size of the $\epsilon$-cover is
+$\Theta(1/\epsilon)^{\Theta(d)}$, i.e. the $\epsilon$-cover is as large as it
+can be.\footnote{For any concept class with Vapnik-Chervonenkis dimension $d$
+and any distribution, the size of the smallest $\epsilon$-cover is at most
+$O(1/\epsilon)^{O(d)}$. In fact, as we show in \autoref{section:epsilon-cover},
+the size of the smallest $\epsilon$-cover is at most $(e/\epsilon)^d$.} In these
+settings, for constant $\epsilon$ and $\delta$, the separation of labeled sample
+complexities is at most a constant factor, which is exactly what
+\citet{Ben-David-Lu-Pal-2008} proved. In these settings, unlabeled data are
+indeed useless. However, these results say nothing about distributions with
+$\epsilon$-cover of small size and it ignores the dependency on the
+Vapnik-Chervonenkis dimension.
+
+The question was studied in earnest by \citet{Darnstadt-Simon-Szorenyi-2013} who
+showed two major results. First, they show that for any non-trivial concept
+class $C$ and for every distribution the ratio of the labeled sample
+complexities between distribution-independent and distribution-dependent
+algorithms is bounded by the Vapnik-Chervonenkis dimension. Second, they show
+that for the class of projections over $\{0,1\}^n$, there are distributions
+where the ratio grows to infinity as a function of $n$.
+
+In learning theory, the disagreement metric and $\epsilon$-cover was  introduced
+by \citet{Benedek-Itai-1991} but the ideas are much older; see
+e.g.~\citet{Dudley-1978, Dudley-1984}. The $O(1/\epsilon)^{O(d)}$ upper bound on
+size of the smallest $\epsilon$-cover is by \citet[Lemma 7.13]{Dudley-1978}; see
+also \citet[Chapter 4]{Devroye-Lugosi-2000} and \citet{Haussler-1995}.
+
+For any distribution-independent algorithm and any class $C$ of
+Vapnik-Chervonenkis dimension $d \ge 2$ and any $\epsilon \in (0,1)$ and $\delta
+\in (0,1)$ there exists a distribution over the domain and a concept which
+requires at least $\Omega \left(\frac{d + \log(1/\delta)}{\epsilon}\right)$
+labeled examples to $\epsilon$-learn with probability at least $1 - \delta$;
+see~\citet[Theorem 5.3]{Anthony-Bartlett-1999} and
+\citet{Blumer-Ehrenfeucht-Haussler-Warmuth-1989,
+Ehrenfeucht-Haussler-Kearns-Valiant-1989}. The proof of the lower bound
+constructs a distribution that does \emph{not} depend on the algorithm. The
+distribution is a particular distribution over a fixed set shattered by $C$. So
+even an algorithm that knows the distribution requires $\Omega \left(\frac{d +
+\log(1/\delta)}{\epsilon}\right)$ labeled examples.

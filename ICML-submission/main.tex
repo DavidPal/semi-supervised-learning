@@ -52,20 +52,7 @@
 \twocolumn[
 \icmltitle{The information-theoretic value of unlabeled data in semi-supervised learning}
 
-% It is OKAY to include author information, even for blind
-% submissions: the style file will automatically remove it for you
-% unless you've provided the [accepted] option to the icml2019
-% package.
-
-% List of affiliations: The first argument should be a (short)
-% identifier you will use later to specify author affiliations
-% Academic affiliations should list Department, University, City, Region, Country
-% Industry affiliations should list Company, City, Region, Country
-
-% You can specify symbols, otherwise they are numbered in order.
-% Ideally, you should not use this facility. Affiliations will be numbered
-% in order of appearance and this is the preferred way.
-\icmlsetsymbol{equal}{*}
+%\icmlsetsymbol{equal}{*}
 
 \begin{icmlauthorlist}
 \icmlauthor{Alexander Golovnev}{harvard}
@@ -78,34 +65,19 @@
 
 \icmlcorrespondingauthor{D\'avid P\'al}{davidko.pal@gmail.com}
 
-% You may provide any keywords that you
-% find helpful for describing your paper; these are used to populate
-% the "keywords" metadata in the PDF but will not be shown in the document
 \icmlkeywords{semi-supervised learning, PAC learning, sample complexity, unlabeled data}
 
 \vskip 0.3in
 ]
 
-% this must go after the closing bracket ] following \twocolumn[ ...
-
-% This command actually creates the footnote in the first column
-% listing the affiliations and the copyright notice.
-% The command takes one argument, which is text to display at the start of the footnote.
-% The \icmlEqualContribution command is standard text for equal contribution.
-% Remove it (just {}) if you do not need this facility.
-
-\printAffiliationsAndNotice{}  % leave blank if no need to mention equal contribution
-%\printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
+\printAffiliationsAndNotice{}
 
 \begin{abstract}
-We show a separation of the number of labeled examples required to learn between
-two settings: Settings \emph{with} and \emph{without} the knowledge of the
-distribution of the unlabeled data. For the class of projections over the
-Boolean hypercube of dimension $n$, we show a separation by $\Theta(\log n)$
-multiplicative factor. For the class of monotone disjunctions over the Boolean
-hypercube of dimension $n$, we show a separation by $\Theta(n)$ multiplicative
-factor. For the class of halfspaces over $\R^n$, we show a separation by
-$\Theta(n/\log n)$ multiplicative factor.
+We quantify the separation between the numbers of labeled examples required to
+learn in two settings: Settings \emph{with} and \emph{without} the knowledge of
+the distribution of the unlabeled data. More specifically, we prove a separation
+by $\Theta(\log n)$ multiplicative factor for that the class of projections over
+the Boolean hypercube of dimension $n$.
 
 Learning with the knowledge of the distribution (a.k.a. \emph{fixed-distribution
 learning}) can be viewed as an idealized scenario of semi-supervised learning
@@ -115,6 +87,8 @@ distribution is known exactly. For this reason, we call the separation the
 \end{abstract}
 
 \input{introduction}
+\input{related-work}
+\input{preliminaries}
 
 \bibliography{biblio}
 \bibliographystyle{icml2019}

@@ -1,0 +1,111 @@
+\section{Preliminaries}
+\label{section:preliminaries}
+
+Let $\X$ be a non-empty set. We denote by $\{0,1\}^\X$ the class of all
+functions from $\X$ to $\{0,1\}$. A \emph{concept class over a domain $\X$} is a
+subset $C \subseteq \{0,1\}^\X$. A \emph{labeled example} is a pair $(x,y) \in
+\X \times \{0,1\}$.
+
+A \emph{distribution-independent learning algorithm} is a function
+$A:\bigcup_{m=0}^\infty \left(\X \times \{0,1\} \right)^m \to \{0,1\}^\X$. In
+other words, the algorithm gets as input a sequence of labeled examples $(x_1,
+y_1), (x_2, y_2), \dots, (x_m, y_m)$ and outputs a function from $\X$ to
+$\{0,1\}$. We allow the algorithm to output function that does not belong to
+$C$, i.e., the algorithm can be improper. A \emph{distribution-dependent
+algorithm} is a function that maps any probability distribution over $\X$ to a
+distribution-independent algorithm.
+
+Let $P$ be a probability distribution over a domain $\X$. For any two functions
+$f:\X \to \{0,1\}$, $g:\X \to \{0,1\}$ we define the disagreement pseudo-metric
+$$
+d_P(f,g) = \Pr_{X \sim P}[f(X) \neq g(X)] \; .
+$$
+Let $C$ be concept class over $\X$, let $c \in C$, let $\epsilon, \delta \in (0,1)$.
+Let  $X_1, X_2, \dots, X_m$ be an i.i.d. sample from $P$. We define the corresponding
+labeled sample $T = ((X_1, c(X_1)), (X_2, c(X_2)), \dots, (X_m, c(X_m)))$.
+We say that an algorithm $A$, \emph{$\epsilon$-learns} target $c$ from $m$ samples
+with probability at least $1 - \delta$ if
+$$
+\Pr \left[d_P(c,A(T)) \le \epsilon \right]  \ge 1 - \delta \; .
+$$
+
+We recall the standard definitions from learning theory. For any concept $c:\X
+\to \{0,1\}$ and any $S \subseteq \X$ we define $\pi(c,S) = \{x \in S ~:~ c(x) =
+1 \}$. In other words, $\pi(c,S)$ is the set of examples in $S$ which $c$ labels
+$1$. A set $S \subseteq \X$ is \emph{shattered} by a concept class $C$ if for
+any subset $S' \subseteq S$ there exists a classifier $c \in C$ such that
+$\pi(c,S) = S'$. \emph{Vapnik-Chervonenkis dimension} of a concept class $C$ is
+the size of the largest set $S \subseteq \X$ shattered by $C$. A subset $C'$ of
+a concept class $C$ is an \emph{$\epsilon$-cover} of $C$ for a probability
+distribution $P$ if for any $c \in C$ there exists $c' \in C'$ such that
+$d_P(c,c') \le \epsilon$.
+
+To prove our lower bounds we need three general probabilistic results. The first
+one is the standard Hoeffding bound. The other two are simple and intuitive
+propositions. The first proposition says that if average error $d_P(c,A(T))$ is
+high, the algorithm fails to $\epsilon$-learn with high probability. The second
+proposition says that the best algorithm for predicting a bit based on some side
+information, is to compute conditional expectation of the bit and thresholds it
+at $1/2$.
+
+\begin{theorem}[Hoeffding bound]
+Let $X_1, X_2, \dots, X_n$ be i.i.d. random variables that lie in interval
+$[a,b]$ with probability one and let $p=\frac{1}{n}\sum_{i=1}^n \Exp[X_i]$.
+Then, for any $t \ge 0$,
+\begin{align*}
+\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \ge p + t \right] \le e^{ - 2n t^2/(a-b)^2} \; , \\
+\Pr \left[{\frac {1}{n}} \sum_{i=1}^n X_i \le p - t \right] \le e^{ - 2n t^2/(a-b)^2}  \; .
+\end{align*}
+\end{theorem}
+
+\begin{proposition}[Error probability vs. Expected error]
+\label{proposition:error-probability-vs-expected-error}
+Let $Z$ be a random variable such that $Z \le 1$ with probability one.
+Then,
+$$
+\Pr[Z > t] \ge \frac{\Exp[Z] - t}{1 - t} \qquad \text{for any $t \in [0, 1)$.}
+$$
+\end{proposition}
+
+\begin{proof}
+We have
+\begin{align*}
+\Exp[Z]
+& \le t \cdot \Pr[Z \le t] + 1 \cdot \Pr[Z > t] \\
+& = t \cdot (1 - \Pr[Z > t]) + \Pr[Z > t] \; .
+\end{align*}
+Solving for $\Pr[Z > t]$ finishes the proof.
+\end{proof}
+
+\begin{proposition}[Predicting Single Bit]
+\label{proposition:single-bit}
+Let $\U$ be a finite non-empty set. Let $U,V$ be random variables (possibly
+correlated) such that $U \in \U$ and $V \in \{0,1\}$ with probability one. Let
+$f:\U \to \{0,1\}$ be a predictor. Then,
+$$
+\Pr\left[ f(U) \neq V \right]
+\ge \sum_{u \in \U} \left( \frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[V \, \middle| \, U = u\right] \right| \right) \cdot \Pr[U = u] \; .
+$$
+\end{proposition}
+
+\begin{proof}
+We have
+$$
+\Pr \left[ f(U) \neq V \right] = \sum_{u \in \U} \Pr \left[ f(U) \neq V \, \middle| \, U = u \right] \cdot \Pr[U = u] \; .
+$$
+It remains to show that
+$$
+\Pr\left[ f(U) \neq V \, \middle| \, U = u \right]
+\ge
+\frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[V \, \middle| \, U = u \right] \right| \; .
+$$
+Since if  $U=u$, the value $f(U) = f(u)$ is fixed, and hence
+\begin{align*}
+& \Pr\left[ f(U) \neq V \, \middle| \, U = u \right] \\
+& \qquad \ge \min\left\{ \Pr \left[ V = 1 \, \middle| \, U = u \right], \ \Pr \left[ V = 0 \, \middle| \, U = u \right] \right\} \\
+& \qquad = \min\left\{ \Exp \left[ V  \, \middle| \, U = u \right], \ 1 - \Exp \left[ V \, \middle| \, U = u \right] \right\} \\
+& \qquad = \frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[ V  \, \middle| \, U = u \right] \right|
+\end{align*}
+We used the fact that $\min\{x, 1 - x\} = \frac{1}{2} - \left| \frac{1}{2} - x \right|$ for all $x \in \R$
+which can be easily verified by considering two cases: $x \ge \frac{1}{2}$ and $x < \frac{1}{2}$.
+\end{proof}
