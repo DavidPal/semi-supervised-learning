@@ -1,0 +1,46 @@
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{subfigure}
+\usepackage{todonotes}
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=blue]{hyperref}
+%\usepackage{icml2019}
+\usepackage[accepted]{icml2019}
+
+% autoref fix for Chapter
+\addto\extrasenglish{%
+  \renewcommand{\sectionautorefname}{Section}%
+}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}[proposition]{Lemma}
+\newtheorem{corollary}[proposition]{Corollary}
+\newtheorem{theorem}[proposition]{Theorem}
+
+\newcommand{\R}{\mathbb{R}}
+
+\renewcommand{\P}{\mathcal{P}}
+\newcommand{\U}{\mathcal{U}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\indicator}[1]{\mathbf{1}\left[{#1}\right]}
+\newcommand{\x}{\mathbf{x}}
+\newcommand{\KL}[2]{D\left(#1 \middle\| #2 \right)}
+\newcommand{\norm}[1]{\left\| #1 \right\|}
+\newcommand{\ip}[2]{\left\langle #1, #2 \right\rangle}
+
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator{\err}{err}
+\DeclareMathOperator{\Exp}{\mathbf{E}}
+\DeclareMathOperator{\VC}{VC}
+
+\newcommand{\todoBalazs}[1]{\todo[backgroundcolor=blue]{Balazs: #1}}
+\newcommand{\todoDavid}[1]{\todo[backgroundcolor=green]{David: #1}}
+\newcommand{\todoSasha}[1]{\todo[backgroundcolor=orange]{Sasha: #1}}
+
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{The information-theoretic value of unlabeled data in semi-supervised learning}

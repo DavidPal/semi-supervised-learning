@@ -207,7 +207,7 @@ This allows us to compute the conditional probability
 0 & \text{if $i \not \in k(x,y)$.} \\
 \end{cases}
 \end{align*}
-Let
+For any $z \in \{0,1\}^n$, let
 $$
 s(x,y,z) = \{ i \in k(x,y) ~:~ z[i] = 1 \} \; .
 $$
@@ -229,7 +229,8 @@ Hence,
 & \quad = \Pr \left[ Z[I] = 1 \, \middle| \, X = x, Y = y, Z = z \right] \\
 & \quad = \frac{\displaystyle \Pr \left[ Z[I] = 1, Z = z \, \middle| \, X = x, Y = y \right]}{\displaystyle \Pr \left[ Z = z \, \middle| \, X = x, Y = y \right]} \\
 & \quad = \frac{\displaystyle \sum_{i=1}^n \Pr \left[ I = i, Z[i] = 1, Z = z \, \middle| \, X = x, Y = y \right]}{\displaystyle \Pr \left[ Z = z \, \middle| \, X = x, Y = y \right]} \\
-& \quad = \frac{\displaystyle \frac{|s(x,y,z)|}{2|k(x,y)|} \cdot \epsilon^{\norm{z} - 1} (1 - \epsilon)^{n - \norm{z}}}{\displaystyle \frac{\epsilon^{\norm{z} - 1} (1 - \epsilon)^{n - 1 - \norm{z}}}{2|k(x,y)|} \cdot \left( |s(x,y,z)| \cdot (1 - 2\epsilon) + |k(x,y,z)| \cdot \epsilon \right) } \\
+& \quad = \frac{\displaystyle \frac{|s(x,y,z)|}{2|k(x,y)|} \cdot \epsilon^{\norm{z} - 1} (1 - \epsilon)^{n - \norm{z}}}{\displaystyle \frac{\epsilon^{\norm{z} - 1} (1 - \epsilon)^{n - 1 - \norm{z}}}{2|k(x,y)|}} \\
+& \qquad \cdot \frac{1}{\left( |s(x,y,z)| \cdot (1 - 2\epsilon) + |k(x,y,z)| \cdot \epsilon \right) } \\
 & \quad = \frac{\displaystyle |s(x,y,z)| \cdot (1 - \epsilon)}{\displaystyle |s(x,y,z)| \cdot (1 - 2\epsilon) + |k(x,y)| \cdot \epsilon } \\
 & \quad = \frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + \frac{|k(x,y)| \cdot \epsilon}{|s(x,y,z)|}} \\
 \end{align*}
