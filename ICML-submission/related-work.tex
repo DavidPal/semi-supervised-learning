@@ -20,13 +20,13 @@ Vapnik-Chervonenkis dimension.
 
 The question was studied in earnest by \citet{Darnstadt-Simon-Szorenyi-2013} who
 showed two major results. First, they show that for any non-trivial concept
-class $C$ and for every distribution the ratio of the labeled sample
+class $C$ and for every distribution, the ratio of the labeled sample
 complexities between distribution-independent and distribution-dependent
 algorithms is bounded by the Vapnik-Chervonenkis dimension. Second, they show
 that for the class of projections over $\{0,1\}^n$, there are distributions
 where the ratio grows to infinity as a function of $n$.
 
-In learning theory, the disagreement metric and $\epsilon$-cover was  introduced
+In learning theory, the disagreement metric and $\epsilon$-cover were introduced
 by \citet{Benedek-Itai-1991} but the ideas are much older; see
 e.g.~\citet{Dudley-1978, Dudley-1984}. The $O(1/\epsilon)^{O(d)}$ upper bound on
 size of the smallest $\epsilon$-cover is by \citet[Lemma 7.13]{Dudley-1978}; see
@@ -34,7 +34,7 @@ also \citet[Chapter 4]{Devroye-Lugosi-2000} and \citet{Haussler-1995}.
 
 For any distribution-independent algorithm and any class $C$ of
 Vapnik-Chervonenkis dimension $d \ge 2$ and any $\epsilon \in (0,1)$ and $\delta
-\in (0,1)$ there exists a distribution over the domain and a concept which
+\in (0,1)$, there exists a distribution over the domain and a concept which
 requires at least $\Omega \left(\frac{d + \log(1/\delta)}{\epsilon}\right)$
 labeled examples to $\epsilon$-learn with probability at least $1 - \delta$;
 see~\citet[Theorem 5.3]{Anthony-Bartlett-1999} and

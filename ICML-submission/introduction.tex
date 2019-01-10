@@ -44,7 +44,7 @@ complexity that matches (or nearly matches) the optimal distribution-specific
 sample complexity for \emph{every} distribution, we could conclude that the
 knowledge of unlabeled data distribution is completely useless.
 
-As \citet{Darnstadt-Simon-Szorenyi-2013} showed this not the case. They showed
+As \citet{Darnstadt-Simon-Szorenyi-2013} showed this is not the case. They showed
 that \emph{any} algorithm for learning projections over $\{0,1\}^n$ that does
 not receive the unlabeled distribution as input, requires, for some data
 unlabeled distributions, more labeled examples than the Benedek-Itai bound.
@@ -67,10 +67,10 @@ In contrast, we show that for the class of \emph{all} functions (on any domain)
 there is no gap between the two settings. In other words, for learning
 a target from the class of all functions, unlabeled data are in fact useless.
 This illustrates the point that the gap depends in a non-trivial way on
-the combinatorial structure of the function class.
+the combinatorial structure of the function class (rather than just on the Vapnik-Chervonenkis dimension).
 
 It remains an open problem to quantify the gap for other function
-classes, such as halfspaces over $\R^n$, disjuctions, conjuctions, etc.
+classes, such as halfspaces over $\R^n$, disjunctions, conjunctions, etc.
 
 \begin{figure}
 \centering
@@ -98,8 +98,7 @@ The paper is organized as follows. In \autoref{section:related-work} we review
 prior work. \autoref{section:preliminaries} gives the necessary definitions and
 basic probabilistic tools. In \autoref{section:projections} we give the proof of
 the separation result for projections. In \autoref{section:all-functions} we
-prove that there is no gap for the class of all functions. For completeness, in
-in the supplementary material, we give a proof of a simple upper bound
+prove that there is no gap for the class of all functions. For completeness, in the supplementary material, we give a proof of a simple upper bound
 $(e/\epsilon)^d$ on the size of the minimum $\epsilon$-cover and the proof of
 Benedek-Itai's $O \left( \frac{\log N_{\epsilon/2} + \log
 (1/\delta)}{\epsilon}\right)$ sample complexity upper bound.

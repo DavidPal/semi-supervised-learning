@@ -59,9 +59,9 @@ has $2\epsilon$-cover of size $2$.
 Consider a distribution $P_i \in \P_{n,\epsilon}$ for some $i \in \{1,2,\dots,n\}$.
 Let $j$ be an arbitrary index in $\{1,2,\dots,n\} \setminus \{i\}$.
 Consider the projections $c_i, c_j \in C_n$. We claim that $C' = \{c_i, c_j\}$
-an $2\epsilon$-cover of $C_n$.
+is a $2\epsilon$-cover of $C_n$.
 
-To see that $C'$ is an $2\epsilon$-cover of $C_n$, consider any $c_k \in C_n$.
+To see that $C'$ is a $2\epsilon$-cover of $C_n$, consider any $c_k \in C_n$.
 We need to show that $d_{P_i}(c_i, c_k) \le 2\epsilon$ or $d_{P_i}(c_j, c_k)
 \le 2\epsilon$. If $k = i$ or $k = j$, the condition is trivially satisfied.
 Consider $k \in \{1,2,\dots,n\} \setminus \{i,j\}$. Let $X \sim P_i$. Then,
@@ -121,8 +121,8 @@ The rows of the matrix corresponds to unlabeled examples and the vector encodes
 the labels. The output of the $A$ is any function from $\{0,1\}^n \to \{0,1\}$.
 
 We demonstrate the existence of a pair $(P,c) \in \P_{n,\epsilon} \times C_n$ which
-cannot be learned with $m$ samples by probabilistic method. Let $I$ be chosen
-uniformly at random from $\{1,2,\dots,n\}$. We consider distribution $P_I \in
+cannot be learned with $m$ samples by the probabilistic method. Let $I$ be chosen
+uniformly at random from $\{1,2,\dots,n\}$. We consider the distribution $P_I \in
 \P_{n,\epsilon}$ and target $c_I \in C_n$. Let $X_1, X_2, \dots, X_m$ be an i.i.d.
 sample from $P_I$ and let $Y_1 = c_I(X_1), Y_2 = c_I(X_2), \dots, Y_m =
 c_I(X_m)$ be the target labels. Let $X$ be the $m \times n$ matrix with entries
@@ -209,7 +209,7 @@ This allows us to compute the conditional probability
 \end{align*}
 For any $z \in \{0,1\}^n$, let
 $$
-s(x,y,z) = \{ i \in k(x,y) ~:~ z[i] = 1 \} \; .
+s(x,y,z) = \{ i \in k(x,y) ~:~ z[i] = 1 \} \; ,
 $$
 and note that $s(x,y,z) \subseteq k(x,y)$.
 Then,
@@ -350,5 +350,5 @@ Since $K \ge \frac{n^{2/3}}{2}$ and $n \ge \frac{12}{\epsilon^{3/2}}$ we have $K
 $$
 \frac{3}{4} \epsilon - t < \frac{S}{K} < \frac{3}{4} \epsilon + \frac{\epsilon}{5} + t \; .
 $$
-Since $t = \epsilon/4$, condition \eqref{equation:ratio-condition} follows.
+Since $t = \epsilon/4$, the condition \eqref{equation:ratio-condition} follows.
 \end{proof}

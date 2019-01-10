@@ -8,6 +8,7 @@
 *.toc
 *.spl
 main.pdf
+*.gz
 
 # Vim temporary files
 *.swp
