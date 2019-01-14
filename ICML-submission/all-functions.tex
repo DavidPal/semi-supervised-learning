@@ -6,8 +6,10 @@ A learner $A$ is said to be \emph{consistent} if, given some labeled sample $T =
 In this section we show that consistent distribution independent learners are almost as powerful for $C = \{0,1\}^\X$ as any distribution independent learner.
 
 Before we state and prove the result formally, we introduce some further notations.
-Given some distribution $P$ over $\X$,
-let $m_B(P,\epsilon,\delta)$ denote the smallest number $m$ with $\inf_{c \in C} \Pr_{T_c}[d_P(B(T_c),c) \geq \epsilon] \leq \delta$, where, for $c \in C$, $T_c(m) = T_c = \{(X_1,c(X_1)), \dots, (X_m,c(X_m))\}$ with $X_1, \dots, X_m$ being i.i.d. samples from $P$, as described in Section~\ref{section:preliminaries}.
+Given some distribution $P$ over $\X$ and a learner $A$,
+let $m_A(P,\epsilon,\delta)$ denote the smallest number $m$ with $\sup_{c \in C} \Pr_{T_c}[d_P(A(T_c),c) \geq \epsilon] \leq \delta$, where, for $c \in C$, $T_c(m) = T_c = ((X_1,c(X_1)), \dots, (X_m,c(X_m)))$ with $X_1, \dots, X_m$ being i.i.d. samples from $P$, as described in Section~\ref{section:preliminaries}. 
+
+Also, for a fixed distribution $P$ over $\X$ and a sample $T = (x_1,y_1), \dots,(x_m,y_m) \subseteq (\X \times \{0,1\})^m$, by $z(T)=\Pr_x[x\not\in \{x_1,\ldots,x_m\}]$ we denote the probability that a random sample from $P$ does \emph{not} belong to $T$.
 
 
 \begin{theorem}
@@ -79,19 +81,19 @@ where
 \begin{itemize}
 \item 
 \eqref{eq: switch to 2epsilon} follows
-because, for any $c'$, denoting the conjugate of $c'$ by $\overline{c'}$, we have
+because, for any $c'$, denoting the complement of $c'$ by $\overline{c'}$, we have
 \(
-  d_P\left(f,c'+{T} \right) 
+  d_P\left(f,c'\circ{T} \right) 
   +
-  d_P\left(f,\overline{c'}+{T} \right)
+  d_P\left(f,\overline{c'}\circ{T} \right)
   =
   z\left({T}\right)
 \)
-for any $f \in \{0,1\}^\X$ and sample $T$, and thus $(1/2)z(T) \geq \epsilon$ holds only when for any $c'$ at least one of $d_P\left(f,c'+{T} \right) \geq \epsilon$ and $d_P\left(f,\overline{c'}+{T} \right) \geq \epsilon$ also holds,
+for any $f \in \{0,1\}^\X$ and sample $T$. Thus, $(1/2)z(T) \geq \epsilon$ holds only when for any $c'$ at least one of $d_P\left(f,c'\circ{T} \right) \geq \epsilon$ and $d_P\left(f,\overline{c'}\circ{T} \right) \geq \epsilon$ also holds;
 \item
-\eqref{eq: switch back to sup} follows because $z(T)$ does not depend on the labels in $T$,
+\eqref{eq: switch back to sup} follows because $z(T)$ does not depend on the labels in $T$;
 \item
-and \eqref{eq: use the relation of d(A(T),c) and z(T)} follows by \eqref{eq: relate dP(A,c) to z(Tc)}.
+and \eqref{eq: use the relation of d(A(T),c) and z(T)} follows from \eqref{eq: relate dP(A,c) to z(Tc)}.
 \end{itemize}
 The statement of the theorem follows.
 \end{proof}
