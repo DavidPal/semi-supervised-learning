@@ -28,6 +28,9 @@ with probability at least $1 - \delta$ if
 $$
 \Pr \left[d_P(c,A(T)) \le \epsilon \right]  \ge 1 - \delta \; .
 $$
+The smallest non-negative integer $m$ such that for any target $c \in C$,
+the algorithm $A$, $\epsilon$-learns the target $c$ from $m$ samples
+with probability at least $1-\delta$ is denoted by $m(A,C,P,\epsilon,\delta)$.
 
 We recall the standard definitions from learning theory. For any concept $c:\X
 \to \{0,1\}$ and any $S \subseteq \X$ we define $\pi(c,S) = \{x \in S ~:~ c(x) =

@@ -33,13 +33,13 @@ $\frac{\epsilon}{2}$-cover of size $2$ for any positive $\epsilon$.
 However, an algorithm does not need to receive the unlabeled distribution in
 order to enjoy low sample complexity. For example, empirical risk minimization
 (ERM) algorithm needs significantly less labeled examples to learn any target
-under some unlabeled distributions. For instance, if a distribution is
-concentrated on a single point, ERM needs only one labeled example to learn it.
-One could be lead to believe that there exists an algorithm that does \emph{not}
-receive the unlabeled distribution as input and achieves Benedek-Itai bound (or
-a slightly worse bound) for \emph{every} distribution. In fact, one could think
-that ERM or Hanneke's algorithm could be such algorithms. If ERM, Hanneke's
-algorithm, or some other distribution-independent algorithm had sample
+under some unlabeled distributions. For instance, if the distribution is
+concentrated on a single point, ERM needs only one labeled example to learn any
+target. One could be lead to believe that there exists an algorithm that does
+\emph{not} receive the unlabeled distribution as input and achieves Benedek-Itai
+bound (or a slightly worse bound) for \emph{every} distribution. In fact, one
+could think that ERM or Hanneke's algorithm could be such algorithms. If ERM,
+Hanneke's algorithm, or some other distribution-independent algorithm had sample
 complexity that matches (or nearly matches) the optimal distribution-specific
 sample complexity for \emph{every} distribution, we could conclude that the
 knowledge of unlabeled data distribution is completely useless.
@@ -64,13 +64,11 @@ the class of projections over $\{0,1\}^n$ in
 Figure~\ref{figure:sample-complexity}.
 
 In contrast, we show that for the class of \emph{all} functions (on any domain)
-there is no gap between the two settings. In other words, for learning
-a target from the class of all functions, unlabeled data are in fact useless.
-This illustrates the point that the gap depends in a non-trivial way on
-the combinatorial structure of the function class rather than just on the Vapnik-Chervonenkis dimension.
-
-It remains an open problem to quantify the gap for other function
-classes, such as halfspaces over $\R^n$, disjunctions, conjunctions, etc.
+there is no gap between the two settings. In other words, for learning a target
+from the class of all functions, unlabeled data are in fact useless. This
+illustrates the point that the gap depends in a non-trivial way on the
+combinatorial structure of the function class rather than just on the
+Vapnik-Chervonenkis dimension.
 
 \begin{figure}
 \centering
@@ -98,7 +96,8 @@ The paper is organized as follows. In \autoref{section:related-work} we review
 prior work. \autoref{section:preliminaries} gives the necessary definitions and
 basic probabilistic tools. In \autoref{section:projections} we give the proof of
 the separation result for projections. In \autoref{section:all-functions} we
-prove that there is no gap for the class of all functions. For completeness, in the supplementary material, we give a proof of a simple upper bound
+prove that there is no gap for the class of all functions. For completeness, in
+the supplementary material, we give a proof of a simple upper bound
 $(e/\epsilon)^d$ on the size of the minimum $\epsilon$-cover and the proof of
 Benedek-Itai's $O \left( \frac{\log N_{\epsilon/2} + \log
 (1/\delta)}{\epsilon}\right)$ sample complexity upper bound.
