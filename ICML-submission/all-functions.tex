@@ -41,25 +41,8 @@ for any $c \in C_{\text{all}}$,
 d_P(A(T_c),c) \leq Z \;.
 \end{equation}
 Let $\widetilde c$ be chosen uniformly at random from
-$C_{\text{all}}$, independently of $X, X_1, X_2, \dots, X_m$. We have
-\begin{align}
-& \sup_{c \in C_{\text{all}}} \Pr[d_P(B(T_c),c) \ge \epsilon] \notag \\
-& = \sup_{c \in C_{\text{all}}} \Exp \left[ \indicator{d_P \left(B\left( T_c\right), c \right) \ge \epsilon} \right] \notag \\
-& \ge \Exp \left[ \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} \right] \notag \\
-& = \Exp \left[ \Exp \left[ \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} ~\middle|~ T_{\widetilde{c}} \right] \right] \notag \\
-& \ge \Exp \left[ \Exp \left[ \frac{1}{2} \indicator{Z \ge 2 \epsilon} ~\middle|~ T_{\widetilde{c}} \right] \right] \label{equation:switch-to-Z} \\
-& = \frac{1}{2} \Exp \left[ \indicator{Z \ge 2 \epsilon} \right] \notag \\
-& = \frac{1}{2} \Pr \left[ Z \ge 2 \epsilon \right] \notag \\
-& = \frac{1}{2} \sup_{c \in C} \Pr \left[ Z \ge 2 \epsilon \right] \notag \\
-& \ge \frac{1}{2} \sup_{c \in C} \Pr \left[ d_P(A(T_c), c) \ge 2 \epsilon \right] \label{equation:use-dP-to-Z} \; .
-\end{align}
-To justify inequality \eqref{equation:switch-to-Z}, consider a fixed
-$T_{\widetilde{c}}$. The classifier $B(T_{\widetilde{c}})$ is fixed and thus the
-distance $d_P(B(T_{\widetilde{c}}), \widetilde{c})$ depends only on
-$\widetilde{c}$ and, in particular, it depends only on the values
-that $\widetilde{c}$ assigns to points in $\X \setminus \{X_1, X_2,
-\dots, X_n\}$. The values of $c(x)$ for $x \in \X \setminus \{X_1, X_2, \dots, X_n\}$ are i.i.d. Bernoulli random variables
-with parameter $1/2$. Define $\widehat c \in C_{\text{all}}$ as
+$C_{\text{all}}$, independently of $X, X_1, X_2, \dots, X_m$. 
+Additionally, define $\widehat c \in C_{\text{all}}$ as
 $$
 \widehat c(x) =
 \begin{cases}
@@ -67,8 +50,30 @@ $$
 1 - \widetilde{c}(x) & \text{otherwise}.
 \end{cases}
 $$
-and note that $T_{\widetilde{c}} = T_{\widehat{c}}$.
-Since the classifiers $\widetilde{c}$ and $\widehat{c}$ disagree on the missing mass,
+and note that $\widehat c$ and $\widetilde c$ are distributed identically and $T_{\widetilde{c}} = T_{\widehat{c}}$, and  thus
+\begin{align}
+&\Exp \left[ \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} ~\middle|~ T_{\widetilde{c}} \right] \notag\\
+&=\Exp \left[ \indicator{d_P \left(B\left( T_{\widehat c} \right), \widehat c \right) \ge \epsilon} ~\middle|~ T_{\widetilde{c}} \right]
+\label{eq: widehatc and widetildec are identically distributed}
+\end{align}
+We have
+\begin{align}
+\sup_{c \in C_{\text{all}}} &\Pr[d_P(B(T_c),c) \ge \epsilon] \notag \\
+= & \sup_{c \in C_{\text{all}}} \Exp \left[ \indicator{d_P \left(B\left( T_c\right), c \right) \ge \epsilon} \right] \notag \\
+\ge & \Exp \left[ \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} \right] \notag \\
+= & \Exp \left[ \Exp \left[ \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} ~\middle|~ T_{\widetilde{c}} \right] \right] \notag \\
+= & \Exp \bigg[\Exp \bigg[\frac{1}{2}  \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} \notag\\
+&~~~~~~~~~~~~~ + \frac{1}{2} \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} ~\bigg|~ T_{\widetilde{c}} \bigg] \bigg] 
+  \label{eq: applying that widehatc and widetildec are identically distributed}\\
+\ge & \Exp \left[ \Exp \left[ \frac{1}{2} \indicator{Z \ge 2 \epsilon} ~\middle|~ T_{\widetilde{c}} \right] \right] \label{equation:switch-to-Z} \\
+= & \frac{1}{2} \Exp \left[ \indicator{Z \ge 2 \epsilon} \right] \notag \\
+= & \frac{1}{2} \Pr \left[ Z \ge 2 \epsilon \right] \notag \\
+= & \frac{1}{2} \sup_{c \in C} \Pr \left[ Z \ge 2 \epsilon \right] \notag \\
+\ge & \frac{1}{2} \sup_{c \in C} \Pr \left[ d_P(A(T_c), c) \ge 2 \epsilon \right] \label{equation:use-dP-to-Z} \; .
+\end{align}
+Equation \eqref{eq: applying that widehatc and widetildec are identically distributed} follows from \eqref{eq: widehatc and widetildec are identically distributed}.
+To justify inequality \eqref{equation:switch-to-Z}, note that since
+the classifiers $\widetilde{c}$ and $\widehat{c}$ disagree on the missing mass,
 if $Z \ge 2\epsilon$ then $d_P(B(T_{\widetilde{c}}), \widetilde{c})
 \ge \epsilon$ or $d_P(B(T_{\widehat c}), \widehat c) \ge \epsilon$ or both.
 By symmetry between $\widetilde{c}$ and $\widehat{c}$, if $Z \ge 2\epsilon$
