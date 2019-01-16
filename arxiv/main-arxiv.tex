@@ -142,7 +142,7 @@ Vapnik-Chervonenkis dimension.
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.8]{figure}
+\includegraphics[scale=1.0]{figure}
 \caption{\small The graph shows sample complexity bounds of learning a class of
 projections over the domain $\{0,1\}^n$ under various unlabeled distributions.
 We assume that $\epsilon$ and $\delta$ are constant, say, $\epsilon = \delta =
@@ -301,7 +301,7 @@ $$
 We have
 \begin{align*}
 \Exp[Z]
-\le t \cdot \Pr[Z \le t] + 1 \cdot \Pr[Z > t] 
+\le t \cdot \Pr[Z \le t] + 1 \cdot \Pr[Z > t]
 = t \cdot (1 - \Pr[Z > t]) + \Pr[Z > t] \; .
 \end{align*}
 Solving for $\Pr[Z > t]$ finishes the proof.
@@ -331,7 +331,7 @@ $$
 $$
 Since if  $U=u$, the value $f(U) = f(u)$ is fixed, and hence
 \begin{align*}
-\Pr\left[ f(U) \neq V \, \middle| \, U = u \right] 
+\Pr\left[ f(U) \neq V \, \middle| \, U = u \right]
 & \ge \min\left\{ \Pr \left[ V = 1 \, \middle| \, U = u \right], \ \Pr \left[ V = 0 \, \middle| \, U = u \right] \right\} \\
 & = \min\left\{ \Exp \left[ V  \, \middle| \, U = u \right], \ 1 - \Exp \left[ V \, \middle| \, U = u \right] \right\} \\
 & = \frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[ V  \, \middle| \, U = u \right] \right|
@@ -509,7 +509,7 @@ vectors, it will be just the number of ones.)
 
 For any $i \in \{1,2,\dots,n\}$,
 $$
-\Pr \left[I = i, X = x, Y = y \right] 
+\Pr \left[I = i, X = x, Y = y \right]
 =
 \begin{cases}
 \frac{1}{n} \left( \frac{1}{2} \right)^m \epsilon^{\norm{x} - \norm{y}} (1 - \epsilon)^{mn - \norm{x} + \norm{y}} & \text{if $i \in k(x,y)$,} \\
@@ -531,7 +531,7 @@ Therefore, for any $i \in \{1,2,\dots,n\}$,
 Conditioned on $I$, the variables $Z$ and $(X,Y)$ are independent. Thus,
 for any $x \in \{0,1\}^n$, and $i = 1,2,\dots,n$,
 \begin{align*}
-\Pr \left[Z = z \, \middle| \, I = i, X = x, Y = y \right] 
+\Pr \left[Z = z \, \middle| \, I = i, X = x, Y = y \right]
 & = \Pr \left[Z = z \, \middle| \, I = i \right] \\
 & =
 \begin{cases}
@@ -587,7 +587,7 @@ $$
 and
 \begin{align*}
 \frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + \frac{|k(x,y)| \cdot \epsilon}{|s(x,y,z)|}}
-\le \frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + 5/6} 
+\le \frac{\displaystyle 1 - \epsilon}{\displaystyle 1 - 2\epsilon + 5/6}
 \le \frac{\displaystyle 1}{\displaystyle 1 - 1/2 + 5/6} = \frac{3}{4} \; .
 \end{align*}
 We now substitute this into the \eqref{equation:projections-expected-error-lower-bound}. We have
@@ -626,7 +626,7 @@ Conditioned on $Y = y$ and $I=i$, the random variable $K - 1 = |k(X,Y) \setminus
 a sum of $n-1$ Bernoulli variables with parameter $\epsilon^{\norm{y}} (1 - \epsilon)^{m - \norm{y}}$, one for each column except for column $i$.
 Hoeffding bound with $t = \epsilon^m/2$ and the loose lower bound $\epsilon^{\norm{y}} (1 - \epsilon)^{m - \norm{y}} \ge \epsilon^m$ gives
 \begin{align*}
-\Pr \left[ \frac{K - 1}{n - 1} > \frac{\epsilon^m}{2}  \, \middle| \,  Y = y, I = i  \right] 
+\Pr \left[ \frac{K - 1}{n - 1} > \frac{\epsilon^m}{2}  \, \middle| \,  Y = y, I = i  \right]
 & = \Pr \left[ \frac{K - 1}{n - 1} > \epsilon^m - t  \, \middle| \,  Y = y, I = i  \right] \\
 & \ge \Pr \left[ \frac{K - 1}{n - 1} > \epsilon^{\norm{y}} (1 - \epsilon)^{m - \norm{y}} - t  \, \middle| \,  Y = y, I = i  \right] \\
 & \ge 1 - e^{-2(n-1) t^2} \; .
@@ -735,7 +735,7 @@ for any $c \in C_{\text{all}}$,
 d_P(A(T_c),c) \leq Z \;.
 \end{equation}
 Let $\widetilde c$ be chosen uniformly at random from
-$C_{\text{all}}$, independently of $X, X_1, X_2, \dots, X_m$. 
+$C_{\text{all}}$, independently of $X, X_1, X_2, \dots, X_m$.
 Additionally, define $\widehat c \in C_{\text{all}}$ as
 $$
 \widehat c(x) =
@@ -752,11 +752,11 @@ and note that $\widehat c$ and $\widetilde c$ are distributed identically and $T
 \end{align}
 We have
 \begin{align}
-\sup_{c \in C_{\text{all}}} \Pr[d_P(B(T_c),c) \ge \epsilon] 
+\sup_{c \in C_{\text{all}}} \Pr[d_P(B(T_c),c) \ge \epsilon]
 = & \sup_{c \in C_{\text{all}}} \Exp \left[ \indicator{d_P \left(B\left( T_c\right), c \right) \ge \epsilon} \right] \notag \\
 \ge & \Exp \left[ \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} \right] \notag \\
 = & \Exp \left[ \Exp \left[ \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} ~\middle|~ T_{\widetilde{c}} \right] \right] \notag \\
-= & \Exp \bigg[\Exp \bigg[\frac{1}{2}  \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon}  + \frac{1}{2} \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} ~\bigg|~ T_{\widetilde{c}} \bigg] \bigg] 
+= & \Exp \bigg[\Exp \bigg[\frac{1}{2}  \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon}  + \frac{1}{2} \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} ~\bigg|~ T_{\widetilde{c}} \bigg] \bigg]
   \label{eq: applying that widehatc and widetildec are identically distributed}\\
 \ge & \Exp \left[ \Exp \left[ \frac{1}{2} \indicator{Z \ge 2 \epsilon} ~\middle|~ T_{\widetilde{c}} \right] \right] \label{equation:switch-to-Z} \\
 = & \frac{1}{2} \Exp \left[ \indicator{Z \ge 2 \epsilon} \right] \notag \\
