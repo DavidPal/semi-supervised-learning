@@ -1,0 +1,193 @@
+Paper ID573
+Paper TitleThe information-theoretic value of unlabeled data in semi-supervised learning
+
+**************************************************************
+Reviewer #1
+Questions
+1. Please enter a detailed review describing the strengths and weaknesses of the submission.
+A natural question in learning is under what conditions
+semi-supervised learning is more powerful than supervised learning.
+In the limit of infinitely much unlabeled data, the question is: how
+much does knowing the distribution of unlabeled data x help in PAC
+learning?
+
+This paper shows an instance wherein learning from an unknown
+distribution takes Theta(log n) factor more samples than from a known
+distribution. It considers the class of projections over {0, 1}^n --
+i.e., y = x_j for some unknown j. Suppose that x is drawn from a
+product distribution, where some x_i is uniform {0,1} and all the
+others x_{i'} are 0 with probability 1-eps. Then every function in
+your class other than y = x_i is eps-close to the zero function; hence
+a PAC learner that knows the distribution on x can just test the two
+hypotheses (x_i and 0). If the learner doesn't know the distribution
+on X, it needs to consider all n possible functions, which takes log n
+rather than O(1) samples.
+
+That is really the whole paper; the body of the paper takes an
+incredible amount of algebra to prove something pretty obvious. With
+< (1/3) log_{1/eps} n samples, there will w.h.p. be more than sqrt(n)
+coordinates that match the output on every sample. The learning
+algorithm has to guess which one is the right answer, because from its
+perspective they are indistinguishable; its chance of guessing right
+is 1/sqrt(n) << .1.
+
+But I'm not aware of a comparable result! It wouldn't surprise me if
+there is one, but my cursory literature search didn't find one. The
+submission cites a previous work showing an omega(1) gap for a very
+similar hard instance, but getting a quantitative (albeit small) gap
+is obviously nice.
+2. Please provide an overall score for the submission.
+Weak Accept: Borderline, tending to accept
+3. Please enter a 2-3 sentence summary of your review explaining your overall score.
+The result is pretty easy and the proof is overly complicated, but -- if the result really is novel -- it's a nice one.
+5. Please rate your confidence in the score assigned.
+High: Reviewer has understood the main arguments in the paper, and has made high level checks of the proofs.
+
+
+
+**************************************************************
+Reviewer #2
+Questions
+1. Please enter a detailed review describing the strengths and weaknesses of the submission.
+The contribution of the authors is two-fold. First, they provide an example when a distribution dependent algorithm can learn a concept from less data than any distribution independent algorithm. The example is constructed on the domain of Hamming cube of length n, concept class consists of n coordinate-wise projectors and there are n possible distribution over X.
+Second, they show that once all the functions are considered as possible, there is reason to consider distribution dependent algorithm.
+
+The work seems to be fundamental for the learning community and the main arguments for Corollary 6 are easy to understand which is appealing.
+
+Concerning Theorem 7: I would be immediately convinced by the claims of the authors if instead of log(n) / log(1 / \eps) the bound would be log(n) / \eps. log(n) / log(1 / \eps) is extremely small compared to log(n) / \eps, is it fair to conclude that the log(n) separation is present? I would suggest to postpone the proof of Theorem 7 to appendix and provide only a sketch of the proof in the main body.
+
+I understand that the framework considered by the authors is idealized semi-supervised learning, but would it be possible to quantify how many i.i.d. unlabeled point we need to achieve the log(n) separation? Quantification can be both theoretical and empirical: one may think of a simple experiment to evaluate this gap using empirical coverings and the algorithm of Bedek-Itai.
+
+2. Please provide an overall score for the submission.
+Weak Reject: Borderline, tending to reject
+3. Please enter a 2-3 sentence summary of your review explaining your overall score.
+I am not an expert in the field and have some doubts concerning the relevance of the work to ICML community. 
+I find that the formatting is poorly made and could be improved. In the rebuttal phase I would like the authors to address the raised questions and possibly include this in the manuscript as it would help other non-experts like me.
+5. Please rate your confidence in the score assigned.
+Medium: Reviewer has understood the main points in the paper, but skipped the proofs and technical details.
+
+
+
+**************************************************************
+Reviewer #4
+Questions
+1. Please enter a detailed review describing the strengths and weaknesses of the submission.
+1. Strengths, in descending order of importance:
+a. I have not checked the proofs in great detail, but have reviewed the main theorems and the proofs at a high level and they appear correct.
+2. Weaknesses, in descending order of importance:
+a. The importance of this learning setting (learning projections) is not at all clear to me. As I am not an expert in learning theory, I cannot assess the significance of this result in that context. 
+b. Both (i) the significance of the intermediate theorems and (ii) the sophistication of the proof techniques used do not seem to warrant such detailed exposition in the main text of the paper.
+2. Please provide an overall score for the submission.
+Reject: Clearly below the acceptance threshold
+3. Please enter a 2-3 sentence summary of your review explaining your overall score.
+While the authors' proofs appear correct, the lack of clarity on the significance of the result and the questionable independent value of the analysis itself do not warrant acceptance to ICML.
+5. Please rate your confidence in the score assigned.
+Medium: Reviewer has understood the main points in the paper, but skipped the proofs and technical details.
+
+
+
+**************************************************************
+Reviewer #6
+Questions
+1. Please enter a detailed review describing the strengths and weaknesses of the submission.
+The last decade has seen a debate (starting with the paper
+``Does Unlabeled Data Provably Help?'', Ben-David et al., COLT 2008)
+whether it might be conceivable that the label consumption of a
+sufficiently smart purely supervised learner might be as low
+as the label consumption of a semi-supervised learner with access
+to a huge amount of unlabeled data (or, almost equivalently with
+full prior knowledge of the underlying domain distribution P).
+This question has been answered to the negative by Darnstaedt
+et al., STACS 2006, who showed that there exist distributions
+on the Boolean domain {0,1}^n such that both scenarios
+(no versus full prior knowledge of P) lead to a (multiplicative)
+gap between the respective label consumptions that grows with $n$
+to infinity. In this paper, the gap is quantified to be $\log n$.
+(Interestingly, this paper derives the gap for the same concept class,
+namely the projections $x \mapsto x_i$ with $i=1,...,n$, that had
+been used by Darnstaedt et al..) It is furthermore shown, that the
+full prior knowledge is of no information-theoretic value for the
+class of all Boolean functions. Hence the answer to the question
+``Does Unlabeled Data Provably Help?'' depends on the underlying
+concept class in a way that is not yet perfectly understood.
+
+Strengths:
+a) The factor log n for the class of projections over domain {0,1}^n
+is tight. This is a significant step towards finding an answer to the
+question ``Does Unlabeled Data Provably Help?''.
+b) The paper opens the door for new research directions (e.g.,
+characterize concept classes for which unlabeled data do provably
+help).
+Weaknesses:
+a) I am not sure the author have found the simplest way of proving
+Theorem 7. (See the technical comments below for more details.)
+b)The appendix contains a result, Theorem 10, which specifies an
+upper bound on the size of an $\epsilon$-cover for a concept
+class in terms of its VC-dimension. There seems to be a flaw
+in the last line of the proof. I think, the real upper bound
+is slightly larger than the one specified in Theorem 10.
+(This does *not* affect the main results in this paper.)
+Technical Comments:
+a) The fact that projections over {0,1}^n have VC-dimension log n
+(Proposition 4 in this paper) is known, isn't it? Please provide
+the reader with a pointer to the literature.
+b) Typo at the top of the right column of page 4:
+``Bedek-Itai'' -> ``Benedek-Itai''.
+c) Proof of Theorem 7:
+Consider a two-dimensional table with $m$ (= number of examples) rows
+and $n+1$ columns. The $i$-th row corresponds to the $i$-th example.
+For j=1,...,n$, the $j$-th column corresponds to the $j$-th projection.
+Column $n+1$ corresponds to the sequence of labels assigned to the
+instances by the target concept. (Hence column n+1 is identical to
+column $i^*$ if the projection $i^*$ is the target concept). The
+version space of the learner consists of the columns (= projections)
+that coincide with column $n+1$. The proof seems to be based on the
+observation that, on the average, a next instance eliminates at
+most a fraction $1-\epsilon$ of the columns in the current version
+space. In other words, on the average at least an $\epsilon$-fraction
+survives. If too many columns survive, say more than 16, the learner is
+likely to return a bad hypothesis. By rule of thumb, roughly $m$ with
+$(1/\epsilon)^m n \le 16$ examples are needed for successful learning.
+While this crude reasoning is far away from a technically correct proof,
+I still wonder whether it cannot be exploited in a simpler way than
+it is actually done in the paper. Please check whether the proof can be
+presented in a simpler way. Please give the reader an intuition and tell
+her/him more in advance about the global structure of the proof.
+d) Chain of (in-)equations leading from (5) to(8) on page 8:
+d1) The arguments would be easier to understand if the various
+occurrences of ``$\Exp$'' were subscripted with the respective
+random variable over which the expectation is taken. Isn't it
+true that, in the lines starting with ``$\Exp[\Exp ...$'',
+the first expectation is taken over the *unlabeled samples$ $T$,
+and the second expectation, conditioned to $T$, is taken over $\tilde c$?
+($\hat c$ is then determined by $T$ and $\tilde $.) If this is true,
+then the second expectation should be conditioned to $T$ (and not
+to $T_{\tilde c}$).
+d2) Typo in line (6): it seems that the latter two occurrences
+of ``$\tilde c$'' should be ``$\hat c$''.
+e) Typo in the upper part of the right column of page 10:
+``We will chose ...'' -> ``We will choose ...''.
+f) Case distinction at the bottom of the right column of page 10, Case 1:
+What is the meaning of a VC-dimension $-\infty$?
+g) Error in the last line of the proof of Theorem 10:
+Why should $K \ge d/\epsilon$ imply that $(Ke/d)^d \le (e/\epsilon)^d$?
+I would expect that a correct proof will lead to a slightly weaker
+upper bound with an additional logarithmic factor in the base of
+the $d$-th power.
+h) As for the inequality with $D(x||y)$ on the left hand-side,
+please give a pointer to the literature.
+i) Theorem 11 is used as a tool for proving Theorem 12.
+There are simpler-looking multiplicative versions of the Chernoff bound.
+(See, for instance, the appendix of the book on ``Computational Learning
+Theory'' written by Kearns and Vazirani.) It could be worth checking
+whether these simpler bounds already suffice for the purpose of proving
+Theorem 12.
+
+2. Please provide an overall score for the submission.
+Reject: Clearly below the acceptance threshold
+3. Please enter a 2-3 sentence summary of your review explaining your overall score.
+Despite of some minor weaknesses, the paper makes a big step forward
+towards finding an answer to the quite fundamental question of whether
+``unlabeled data do provably help''.
+5. Please rate your confidence in the score assigned.
+Expert: Reviewer is absolutely certain.
