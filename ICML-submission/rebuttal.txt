@@ -1,0 +1,13 @@
+We would like to thank the reviewers for the careful reading and for their helpful comments. Below we address the main concerns of the reviews.
+
+Motivation and relation to semi-supervised learning:
+We will add a discussion to the introduction on how the problem relates to real-world problems and why the problem is fundamental in learning theory. In particular, we will make the connection to semi-supervised learning more clear.
+
+Theorem 7 statement:
+\eps here is parameter of the distribution, not the accuracy parameter of the PAC-learning model. The accuracy and confidence parameters are both set to 1/16. Nevertheless, we agree that working with P_\eps for every possible \eps does not make the result stronger (in fact, the smaller \eps is the smaller the separation we show). In view of this, and to avoid confusion, we will rewrite this result with a fixed value of \eps.
+
+Theorem 7 proof:
+We agree that the proof idea for the proper learning case is simple. In order to make it formal and generalize to the non-proper learning case, we use some calculations. In any case, we will rewrite the proof to make the flow smoother and will check the possibility of simplifying the arguments. Additionally, we will add a more simple analysis for the proper learning case, through which we can explain the details of the argument and the main ideas in a simple and clean form.
+
+Quantifying the advantage of the semi-supervised learner in terms of the amount of unlabeled data:
+Unfortunately, our current results and techniques do not suffice to answer this question. Nevertheless, the question is interesting and definitely worth studying.
