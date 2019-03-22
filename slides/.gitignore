@@ -1,0 +1,12 @@
+slides.pdf
+
+# LaTeX and BibTeX temporary files
+*.aux
+*.bbl
+*.blg
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.spl
