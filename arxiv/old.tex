@@ -40,7 +40,7 @@
 \begin{document}
 
 \title{The information-theoretic value of unlabeled data in semi-supervised learning}
-\author{Alexander Golovnev\thanks{Harvard University, Cambridge, MA, USA. Supported by a Rabin Postdoctoral Fellowship.} \and D\'avid P\'al\thanks{Yahoo Research, New York, NY, USA} \and Bal\'azs Sz\"or\'enyi\footnotemark[2]}
+\author{Alexander Golovnev\thanks{Harvard University, Cambridge, MA, USA} \and D\'avid P\'al\thanks{Yahoo Research, New York, NY, USA} \and Bal\'azs Sz\"or\'enyi\footnotemark[2]}
 
 \maketitle
 
@@ -422,7 +422,7 @@ d_{P_i}(c_j, c_k)
 \end{align*}
 \end{proof}
 
-Using Benedek-Itai bound (Theorem~\ref{theorem:benedek-itai} in
+Using Bedek-Itai bound (Theorem~\ref{theorem:benedek-itai} in
 \autoref{section:fixed-distribution-learning}) we obtain the corollary below.
 The corollary states that the distribution-dependent sample complexity
 of learning target in $C_n$ under any distribution from $P_{n,\epsilon}$
@@ -727,7 +727,7 @@ Z = \Pr[X \not \in \{X_1, X_2, \dots, X_m\} ~|~ X_1, X_2, \dots, X_m] \; .
 $$
 In other words, $Z$ is the probability mass not covered by $X_1, X_2, \dots, X_m$.
 For any $c \in C_{\text{all}}$, let
-$T_c = ((X_1, c(X_1)), (X_2, c(X_2)), \dots, (X_m, c(X_m)))$ be the sample labeled
+$T_c = ((X_1, c(X_1)), (X_2, c(X_2), \dots, (X_m, c(X_m))$ be the sample labeled
 according to $c$. Since $A$ is consistent, with probability one,
 for any $c \in C_{\text{all}}$,
 \begin{equation}
@@ -756,7 +756,7 @@ We have
 = & \sup_{c \in C_{\text{all}}} \Exp \left[ \indicator{d_P \left(B\left( T_c\right), c \right) \ge \epsilon} \right] \notag \\
 \ge & \Exp \left[ \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} \right] \notag \\
 = & \Exp \left[ \Exp \left[ \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} ~\middle|~ T_{\widetilde{c}} \right] \right] \notag \\
-= & \Exp \bigg[\Exp \bigg[\frac{1}{2}  \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon}  + \frac{1}{2} \indicator{d_P \left(B\left( T_{\widehat c} \right), \widehat c \right) \ge \epsilon} ~\bigg|~ T_{\widetilde{c}} \bigg] \bigg]
+= & \Exp \bigg[\Exp \bigg[\frac{1}{2}  \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon}  + \frac{1}{2} \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} ~\bigg|~ T_{\widetilde{c}} \bigg] \bigg]
   \label{eq: applying that widehatc and widetildec are identically distributed}\\
 \ge & \Exp \left[ \Exp \left[ \frac{1}{2} \indicator{Z \ge 2 \epsilon} ~\middle|~ T_{\widetilde{c}} \right] \right] \label{equation:switch-to-Z} \\
 = & \frac{1}{2} \Exp \left[ \indicator{Z \ge 2 \epsilon} \right] \notag \\
@@ -814,8 +814,6 @@ Finally, we believe that studying this question in the agnostic extension of the
 PAC model \citep[Chapter~2]{Anthony-Bartlett-1999} will be of great interest,
 too.
 
-\section*{Acknowledgements}
-We thank the anonymous reviewers for their valuable comments.
 
 \bibliography{biblio}
 \bibliographystyle{plainnat}
@@ -885,7 +883,7 @@ Zorn's lemma, there exists a maximal $\epsilon$-packing.
 
 Let $C'$ be a maximal $\epsilon$-packing. We claim that $C'$ is also an
 $\epsilon$-cover of $C$. Indeed, for any $c \in C$ there exists $c' \in C'$ such
-that $d_P(c,c') \le \epsilon$ since otherwise $C' \cup \{c\}$ would be an
+that $d_P(c,c') \le \epsilon$ since otherwise $C' \cup \{c\}$ would an
 $\epsilon$-packing, which would contradict maximality of $C'$.
 
 It remains to upper bound $|C'|$. Consider any finite subset $C'' \subseteq C'$.
@@ -895,7 +893,7 @@ c_M$ be concepts in $C''$. For any $i,j \in \{1,2,\dots,M\}$, $i < j$, let
 $$
 A_{i,j} = \{ x \in \X ~:~ c_i(x) \neq c_j(x) \} \; .
 $$
-Let $X_1, X_2, \dots, X_K$ be an i.i.d. sample from $P$. We will choose $K$ later.
+Let $X_1, X_2, \dots, X_K$ be an i.i.d. sample from $P$. We will chose $K$ later.
 Since $d_P(c_i, c_j) > \epsilon$,
 $$
 \Pr[X_k \in A_{i,j}] > \epsilon \qquad \qquad \text{for $k=1,2,\dots,K$}.
@@ -948,7 +946,7 @@ M
 \section{Fixed distribution learning}
 \label{section:fixed-distribution-learning}
 
-\begin{theorem}[Chernoff--Hoeffding bound,~\cite{h63}]
+\begin{theorem}[Chernoff bound]
 Let $X_1, X_2, \dots, X_n$ be i.i.d. Bernoulli random variables with $\Exp[X_i] = p$.
 Then, for any $\epsilon \in [0, \min\{p,1-p\})$,
 \begin{align*}

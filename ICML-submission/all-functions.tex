@@ -1,4 +1,4 @@
-\section{All functions}
+\section{All Functions}
 \label{section:all-functions}
 
 Let $\X$ be some finite domain. We say a sample $T = ((x_1,y_1),
@@ -33,7 +33,7 @@ Z = \Pr[X \not \in \{X_1, X_2, \dots, X_m\} ~|~ X_1, X_2, \dots, X_m] \; .
 $$
 In other words, $Z$ is the probability mass not covered by $X_1, X_2, \dots, X_m$.
 For any $c \in C_{\text{all}}$, let
-$T_c = ((X_1, c(X_1)), (X_2, c(X_2), \dots, (X_m, c(X_m))$ be the sample labeled
+$T_c = ((X_1, c(X_1)), (X_2, c(X_2)), \dots, (X_m, c(X_m)))$ be the sample labeled
 according to $c$. Since $A$ is consistent, with probability one,
 for any $c \in C_{\text{all}}$,
 \begin{equation}
@@ -63,7 +63,7 @@ We have
 \ge & \Exp \left[ \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} \right] \notag \\
 = & \Exp \left[ \Exp \left[ \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} ~\middle|~ T_{\widetilde{c}} \right] \right] \notag \\
 = & \Exp \bigg[\Exp \bigg[\frac{1}{2}  \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} \notag\\
-&~~~~~~~~~~~~~ + \frac{1}{2} \indicator{d_P \left(B\left( T_{\widetilde c} \right), \widetilde c \right) \ge \epsilon} ~\bigg|~ T_{\widetilde{c}} \bigg] \bigg] 
+&~~~~~~~~~~~~~ + \frac{1}{2} \indicator{d_P \left(B\left( T_{\widehat c} \right), \widehat c \right) \ge \epsilon} ~\bigg|~ T_{\widetilde{c}} \bigg] \bigg] 
   \label{eq: applying that widehatc and widetildec are identically distributed}\\
 \ge & \Exp \left[ \Exp \left[ \frac{1}{2} \indicator{Z \ge 2 \epsilon} ~\middle|~ T_{\widetilde{c}} \right] \right] \label{equation:switch-to-Z} \\
 = & \frac{1}{2} \Exp \left[ \indicator{Z \ge 2 \epsilon} \right] \notag \\
