@@ -1,10 +1,10 @@
 \section{Size of $\epsilon$-cover}
 \label{section:epsilon-cover}
 
-In this section, we prove an $(e/\epsilon)^d$ upper bound on the size of the
-$\epsilon$-cover of any concept class of Vapnik-Chervonenkis dimension $d$. To
-prove our result, we need Sauer's lemma. Its proof can be found, for example,
-in~\citet[Chapter 3]{Anthony-Bartlett-1999}.
+In this section, we present $(4e/\epsilon)^{d/(1 - 1/e)}$ upper bound on the
+size of the $\epsilon$-cover of any concept class of Vapnik-Chervonenkis
+dimension $d$. To prove our result, we need Sauer's lemma. Its proof can be
+found, for example, in~\citet[Chapter 3]{Anthony-Bartlett-1999}.
 
 \begin{lemma}[Sauer's lemma]
 Let $\X$ be a non-empty domain and let $C \subseteq \{0,1\}^\X$ be a concept class
@@ -35,7 +35,7 @@ class with Vapnik-Chervonenkis dimension $d$. Let $P$ be any distribution over
 $\X$. For any $\epsilon \in (0,1]$, there exists a set $C' \subseteq C$ such that
 \begin{equation}
 \label{equation:theorem-epsilon-cover}
-|C'| \le \left( \frac{e}{\epsilon} \right)^d
+|C'| \le \left( \frac{4e}{\epsilon} \right)^{d/(1-1/e)}
 \end{equation}
 and for any $c \in C$ there exists $c' \in C'$ such that $d_P(c,c') \le \epsilon$.
 \end{theorem}
@@ -90,27 +90,38 @@ Thus by Sauer's lemma
 $$
 M \le \sum_{i=0}^d \binom{K}{i} \; .
 $$
-We now show that this inequality implies that $M \le (e/\epsilon)^d$. We consider five cases.
+We now show that this inequality implies that $M \le (4e/\epsilon)^{d/(1-1/e)}$. We consider several cases.
 
-Case 1: $d = -\infty$. Then, $M \le 0$ and inequality trivially follows.
+Case 1: $d = -\infty$. That is, no set is shattered. That is, $C = \emptyset$.
+Then, $M = 0$ and inequality trivially follows.
 
 Case 2: $d = 0$. Then, $M \le 1$ and the inequality trivially follows.
 
-Case 3: $d \ge 1$ and $M \le 2$. Clearly, $M \le 2 \le e \le e^d \le (e/\epsilon)^d$.
+Case 3a: $d \ge 1$ and $M \le e^d$. Clearly, $M \le e^d \le (4e/\epsilon)^{d/(1 - 1/e)}$.
 
-Case 4: $d \ge 1$ and $M \ge 3$ and $K < d/\epsilon$. Then
-$\left\lceil \frac{\ln \binom{M}{2}}{\epsilon} \right\rceil + 1 < d/\epsilon$
-which implies that $\ln \binom{M}{2} < d$ and hence $\binom{M}{2} \le e^d$.
-Since $M \le \binom{M}{2}$ for $M \ge 3$,
-$$
-M \le \binom{M}{2} \le e^d \le \left( \frac{e}{\epsilon} \right)^d \; .
-$$
-
-Case 5: $d \ge 1$ and $M \ge 3$ and $K \ge d/\epsilon$. Clearly, $K \ge d$ hence by \eqref{equation:sauer-lemma-estimate},
+Case 3b: $d \ge 1$ and $M > e^d$. Then, $K \ge \ln M \ge d$ and
+hence by \eqref{equation:sauer-lemma-estimate},
 \begin{align*}
 M
 \le \sum_{i=0}^d \binom{K}{i}
-\le \left( \frac{Ke}{d} \right)^d
-\le \left( \frac{e}{\epsilon} \right)^d \; .
+\le \left( \frac{Ke}{d} \right)^d \; .
 \end{align*}
+Thus,
+\begin{align*}
+\ln M
+& \le d \ln \left( \frac{Ke}{d} \right) \\
+& \le d \ln \left( \frac{e \left(\left\lceil \frac{\ln \binom{M}{2}}{\epsilon} \right\rceil + 1 \right)}{d} \right) \\
+& \le d \ln \left( \frac{e \left(\frac{\ln \binom{M}{2}}{\epsilon} + 2 \right)}{d} \right) \\
+& \le d \ln \left( \frac{e \left(\frac{\ln \binom{M}{2} + 2}{\epsilon} \right)}{d} \right) \\
+& \le d \ln \left( \frac{e \left(\frac{2\ln M + 2}{\epsilon} \right)}{d} \right) \\
+& \le d \ln \left( \frac{e \left(\frac{4\ln M}{\epsilon} \right)}{d} \right) \\
+& = d \left[ \ln \left( \frac{4e}{\epsilon} \right)  + \ln \left(\frac{\ln M}{d} \right) \right] \\
+& \le d \ln \left( \frac{4e}{\epsilon} \right) + \frac{1}{e} \ln M \; .
+\end{align*}
+where the in last step we used that $\ln x \le x/e$ for any $x > 0$.
+Hence,
+$$
+(1 - 1/e) \ln M \le d \ln \left( \frac{4e}{\epsilon} \right)
+$$
+which implies the lemma.
 \end{proof}

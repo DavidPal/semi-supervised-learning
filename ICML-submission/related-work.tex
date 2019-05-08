@@ -9,9 +9,7 @@ only distributions for which the size of the $\epsilon$-cover is
 $\Theta(1/\epsilon)^{\Theta(d)}$, i.e. the $\epsilon$-cover is as large as it
 can be.\footnote{For any concept class with Vapnik-Chervonenkis dimension $d$
 and any distribution, the size of the smallest $\epsilon$-cover is at most
-$O(1/\epsilon)^{O(d)}$. In fact, as we show in \autoref{section:epsilon-cover}
-in the supplementary material, the size of the smallest $\epsilon$-cover is at
-most $(e/\epsilon)^d$.} In these settings, for constant $\epsilon$ and $\delta$,
+$O(1/\epsilon)^{O(d)}$.} In these settings, for constant $\epsilon$ and $\delta$,
 the separation of labeled sample complexities is at most a constant factor,
 which is exactly what \citet{Ben-David-Lu-Pal-2008} proved. In these settings,
 unlabeled data are indeed useless. However, these results say nothing about
@@ -30,7 +28,9 @@ In learning theory, the disagreement metric and $\epsilon$-cover were introduced
 by \citet{Benedek-Itai-1991} but the ideas are much older; see
 e.g.~\citet{Dudley-1978, Dudley-1984}. The $O(1/\epsilon)^{O(d)}$ upper bound on
 size of the smallest $\epsilon$-cover is by \citet[Lemma 7.13]{Dudley-1978}; see
-also \citet[Chapter 4]{Devroye-Lugosi-2000} and \citet{Haussler-1995}.
+also \citet[Chapter 4]{Devroye-Lugosi-2000} and \citet{Haussler-1995}. We
+present a proof of $O(1/\epsilon)^{O(d)}$ upper bound in
+\autoref{section:epsilon-cover}.
 
 For any distribution-independent algorithm and any class $C$ of
 Vapnik-Chervonenkis dimension $d \ge 2$ and any $\epsilon \in (0,1)$ and $\delta
