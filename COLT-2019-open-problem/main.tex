@@ -1,0 +1,88 @@
+\documentclass[12pt]{colt2019}
+
+% The following packages will be automatically loaded:
+% amsmath, amssymb, natbib, graphicx, url, algorithm2e
+
+\title{The value of unlabeled data}
+\usepackage{times}
+
+\coltauthor{%
+ \Name{Alexander Golovnev} \Email{abc@sample.com}\\
+ \addr Address 1
+ \AND
+ \Name{D\'avid P\'al} \Email{davidko.pal@gmail.com}\\
+ \addr Address 2
+ \AND
+ \Name{Bal\'azs Szorenyi} \Email{??@verizonmedia.com}\\
+ \addr Address 3
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+It has been shown that the amount of labeled examples to probably aproximately
+learn a binary classifier decreases if the algorithm has access to the unlabeled
+data. In particular, for the class of projections over $\{0,1\}^n$ there exists
+a family of probability distributions such that learning any target concept with
+access to unlabeled data requires only constant number examples but requires
+$\Omega(\log n)$ labeled examples in the worst case without the access to
+unlabeled data. It remains an open problem to construct such distributions and
+analyze the gap between the sample complexities for other important concept
+classes such as half-spaces, disjunctions, conjuctions, monotone disjunctions,
+monotone conjuctions and axis parallel rectangles.
+\end{abstract}
+
+\begin{keywords}
+sample complexity, semi-supervised learning, probably approximately correct learning
+\end{keywords}
+
+\section{Introduction}
+
+Worst case sample complexity of probably approximately correct (PAC) learning is
+very well understood~\cite{} and it is known to be $\Theta(\frac{d +
+\log(1/\delta)}{\epsilon})$ where $d$ is the Vapnik-Chervonenkis dimension,
+$\epsilon$ is the accuracy parameter and $\delta$ is the confidence parameter.
+Similarly, the sample complexity of learning under a fixed distribution is
+reasonably well understood~\cite{} and it is between $O(\frac{\log N_\epsilon +
+\log(1/\delta)}{\epsilon})$. and $\Omega(???)$.
+
+Sample complexity of learning under a fixed distribution depends on the
+distribution, while worst case complexity of PAC learning does not. See figure.
+For some distributions the sample complexity of fixed distribution learning is
+much lower than the (worst-case) PAC sample complexity.
+
+%% TODO: Add figure here.
+
+Existing algorithms for learning under a fixed distribution depend in a
+non-trivial way on the distribution in question. On the other hand PAC learning
+algorithms do \emph{not} depend on it. It is thus a natural question whether or
+not the access to unlabeled data is necessary in order to match the lower sample
+complexity with the access to unlabeled data.
+
+This question was studied by \cite{}. They have shown that having access to
+unlabeled data is beneficial for the class of projections over $\{0,1\}^n$. More
+specifically, there exists a family of distributions under which any target
+projection is learnable with constant number of samples, however any learner
+that does not have access to the unlabeled data needs $\Omega(\log n)$ examples
+in the worst case.
+
+It remains an open problem to analyze other concept classes of interest.
+Specifically, it is unknown what is the gap, if any, for the classes of
+half-spaces and axis parallel rectangles over $\R^n$, disjunctions, conjuctions,
+monotone disjunctions and monotone conjuctions over $\{0,1\}^n$. While sample
+complexity depends on the accuracy parameter $\epsilon$ and confidence parameter
+$\delta$, we are more interested in the dependency on dimension
+$n$.\footnote{For the above-mentioned concept classes the Vapnik-Chervonenkis
+dimension is $\Theta(n)$. For projections Vapnik-Chervonenkis dimension is
+$\Theta(\log n)$.}
+
+We conjecture that there is gap at least $\Omega(\log n)$, but it is possible
+that the gap is as high as $\Omega(n^\alpha)$ for some $\alpha \in (0,1]$. In
+order to show the existence of a gap, one must construct a family of
+distributions such that fixed distribution learning has low sample complexity
+but worst-case sample complexity without knowledge of the distribution is
+higher.
+
+\end{document}
