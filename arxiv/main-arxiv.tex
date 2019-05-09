@@ -167,7 +167,7 @@ prior work. \autoref{section:preliminaries} gives the necessary definitions and
 basic probabilistic tools. In \autoref{section:projections} we give the proof of
 the separation result for projections. In \autoref{section:all-functions} we
 prove that there is no gap for the class of all functions. For completeness, in \autoref{section:epsilon-cover} we give a proof of a simple upper bound
-$(e/\epsilon)^d$ on the size of the minimum $\epsilon$-cover, and in \autoref{section:fixed-distribution-learning} we give a proof of
+$O(1/\epsilon)^{O(d)}$ on the size of the minimum $\epsilon$-cover, and in \autoref{section:fixed-distribution-learning} we give a proof of
 Benedek-Itai's $O \left( \frac{\log N_{\epsilon/2} + \log
 (1/\delta)}{\epsilon}\right)$ sample complexity upper bound.
 
@@ -186,8 +186,7 @@ only distributions for which the size of the $\epsilon$-cover is
 $\Theta(1/\epsilon)^{\Theta(d)}$, i.e. the $\epsilon$-cover is as large as it
 can be.\footnote{For any concept class with Vapnik-Chervonenkis dimension $d$
 and any distribution, the size of the smallest $\epsilon$-cover is at most
-$O(1/\epsilon)^{O(d)}$. In fact, as we show in \autoref{section:epsilon-cover}, the size of the smallest $\epsilon$-cover is at
-most $(1/\epsilon)^{O(d)}$.} In these settings, for constant $\epsilon$ and $\delta$,
+$O(1/\epsilon)^{O(d)}$.} In these settings, for constant $\epsilon$ and $\delta$,
 the separation of labeled sample complexities is at most a constant factor,
 which is exactly what \citet{Ben-David-Lu-Pal-2008} proved. In these settings,
 unlabeled data are indeed useless. However, these results say nothing about
