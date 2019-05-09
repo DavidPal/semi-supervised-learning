@@ -9,14 +9,14 @@
 \newcommand{\R}{\mathbb{R}}
 
 \coltauthor{%
- \Name{Alexander Golovnev} \Email{abc@sample.com}\\
- \addr Address 1
+ \Name{Alexander Golovnev} \Email{alexgolovnev@gmail.com}\\
+ \addr Harvard University, Cambridge, MA, USA
  \AND
  \Name{D\'avid P\'al} \Email{davidko.pal@gmail.com}\\
- \addr Address 2
+ \addr Yahoo Research, New York, NY, USA
  \AND
- \Name{Bal\'azs Szorenyi} \Email{??@verizonmedia.com}\\
- \addr Address 3
+ \Name{Bal\'azs Sz\"or\'enyi} \Email{??@verizonmedia.com}\\
+ \addr Yahoo Research, New York, NY, USA
 }
 
 \begin{document}
@@ -28,7 +28,7 @@ It has been shown that the amount of labeled examples to probably aproximately
 learn a binary classifier decreases if the algorithm has access to the unlabeled
 data. In particular, for the class of projections over $\{0,1\}^n$ there exists
 a family of probability distributions such that learning any target concept with
-access to unlabeled data requires only constant number examples but requires
+access to unlabeled data requires only constant number of examples, but it requires
 $\Omega(\log n)$ labeled examples in the worst case without the access to
 unlabeled data. It remains an open problem to construct such distributions and
 analyze the gap between the sample complexities for other important concept
@@ -42,16 +42,17 @@ sample complexity, semi-supervised learning, probably approximately correct lear
 
 \section{Introduction}
 
-Worst case sample complexity of probably approximately correct (PAC) learning is
-very well understood~\cite{} and it is known to be $\Theta(\frac{d +
+The worst case sample complexity of probably approximately correct (PAC) learning is
+very well understood~\cite{Hanneke-2016} and it is known to be $\Theta(\frac{d +
 \log(1/\delta)}{\epsilon})$ where $d$ is the Vapnik-Chervonenkis dimension,
 $\epsilon$ is the accuracy parameter and $\delta$ is the confidence parameter.
 Similarly, the sample complexity of learning under a fixed distribution is
-reasonably well understood~\cite{} and it is between $O(\frac{\log N_\epsilon +
-\log(1/\delta)}{\epsilon})$ and $\Omega(???)$.
+reasonably well understood~\cite{Benedek-Itai-1991} and it is between $O(\frac{\log N_{\epsilon/2} +
+\log(1/\delta)}{\epsilon})$ and $\Omega(???)$, where $N_{\epsilon/2}$ is the size of an $\frac{\epsilon}{2}$-cover
+of $C$ with respect to the disagreement metric $d(f,g) = \Pr[f(x) \neq g(x)]$.
 
-Sample complexity of learning under a fixed distribution depends on the
-distribution, while worst case complexity of PAC learning does not. See figure.
+The sample complexity of learning under a fixed distribution depends on the
+distribution, while the worst case complexity of PAC learning does not. See figure.
 For some distributions the sample complexity of fixed distribution learning is
 much lower than the (worst-case) PAC sample complexity.
 
@@ -63,7 +64,7 @@ algorithms do \emph{not} depend on it. It is thus a natural question to ask
 whether or not the access to unlabeled data is necessary in order to match the
 lower sample complexity attained in the fixed distribution learning setting.
 
-This question was studied by \cite{}. They have shown that having access to
+This question was studied by \cite{Darnstadt-Simon-Szorenyi-2013, gps19}. They have shown that having access to
 unlabeled data is beneficial for the class of projections over $\{0,1\}^n$. More
 specifically, there exists a family of distributions under which any target
 projection is learnable with constant number of samples, however any learner
@@ -86,5 +87,7 @@ order to show the existence of a gap, one must construct a family of
 distributions such that fixed distribution learning has low sample complexity
 but worst-case sample complexity without knowledge of the distribution is
 higher.
+
+\bibliography{biblio}
 
 \end{document}
