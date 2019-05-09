@@ -6,6 +6,8 @@
 \title{The value of unlabeled data}
 \usepackage{times}
 
+\newcommand{\R}{\mathbb{R}}
+
 \coltauthor{%
  \Name{Alexander Golovnev} \Email{abc@sample.com}\\
  \addr Address 1
@@ -46,7 +48,7 @@ very well understood~\cite{} and it is known to be $\Theta(\frac{d +
 $\epsilon$ is the accuracy parameter and $\delta$ is the confidence parameter.
 Similarly, the sample complexity of learning under a fixed distribution is
 reasonably well understood~\cite{} and it is between $O(\frac{\log N_\epsilon +
-\log(1/\delta)}{\epsilon})$. and $\Omega(???)$.
+\log(1/\delta)}{\epsilon})$ and $\Omega(???)$.
 
 Sample complexity of learning under a fixed distribution depends on the
 distribution, while worst case complexity of PAC learning does not. See figure.
@@ -57,9 +59,9 @@ much lower than the (worst-case) PAC sample complexity.
 
 Existing algorithms for learning under a fixed distribution depend in a
 non-trivial way on the distribution in question. On the other hand PAC learning
-algorithms do \emph{not} depend on it. It is thus a natural question whether or
-not the access to unlabeled data is necessary in order to match the lower sample
-complexity with the access to unlabeled data.
+algorithms do \emph{not} depend on it. It is thus a natural question to ask
+whether or not the access to unlabeled data is necessary in order to match the
+lower sample complexity attained in the fixed distribution learning setting.
 
 This question was studied by \cite{}. They have shown that having access to
 unlabeled data is beneficial for the class of projections over $\{0,1\}^n$. More
