@@ -51,10 +51,10 @@ is the confidence parameter. Similarly, the sample complexity of learning under
 a fixed distribution $P$ is reasonably well understood~\citep{Benedek-Itai-1991}
 and it is between $\Omega(\log(M_{2\epsilon}) + \log(1-\delta))$ and $O
 \left(\frac{\log N_{\epsilon/2} + \log(1/\delta)}{\epsilon} \right)$, where
-$M_{2\epsilon}$ is the size of an $2\epsilon$-packing of the concept class with
+$M_{2\epsilon}$ is the size of a $2\epsilon$-packing of the concept class with
 respect to the disagreement metric $d_P(f,g) = \Pr_{x \sim P}[f(x) \neq g(x)]$
 and $N_{\epsilon/2}$ is the size of an $\frac{\epsilon}{2}$-cover of the concept
-class with respect to same metric.
+class with respect to the same metric.
 
 The sample complexity of learning under a fixed distribution depends on the
 distribution, while the worst case complexity of PAC learning does not (see
@@ -85,13 +85,12 @@ separation is indicated by the double arrow.}
 \end{figure}
 
 Existing algorithms for learning under a fixed distribution depend in a
-non-trivial way on the distribution in question. On the other hand PAC learning
+non-trivial way on the distribution in question. On the other hand, PAC learning
 algorithms do \emph{not} depend on it. It is thus a natural question to ask
 whether or not the access to unlabeled data is necessary in order to match the
 lower sample complexity attained in the fixed distribution learning setting.
 To illustrate that this might not be hopeless, note that if a distribution
-is concetrated on a single point, even without knownledge of the unlabeled data,
-and any consistent learner will learn from a single labeled example.
+is concetrated on a single point, even without knownledge of the unlabeled data, any consistent learner will learn from a single labeled example.
 
 This question was studied by~\cite{Darnstadt-Simon-Szorenyi-2013} and
 \cite{Golovnev-Pal-Szorenyi-2019}. They have shown that having access to
