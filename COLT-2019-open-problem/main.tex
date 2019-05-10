@@ -89,6 +89,9 @@ non-trivial way on the distribution in question. On the other hand PAC learning
 algorithms do \emph{not} depend on it. It is thus a natural question to ask
 whether or not the access to unlabeled data is necessary in order to match the
 lower sample complexity attained in the fixed distribution learning setting.
+To illustrate that this might not be hopeless, note that if a distribution
+is concetrated on a single point, even without knownledge of the unlabeled data,
+and any consistent learner will learn from a single labeled example.
 
 This question was studied by~\cite{Darnstadt-Simon-Szorenyi-2013} and
 \cite{Golovnev-Pal-Szorenyi-2019}. They have shown that having access to
@@ -97,20 +100,26 @@ specifically, there exists a family of distributions such that any target
 projection is fixed distribution learnable with constant number of samples,
 however any learner that does not have access to the unlabeled data needs
 $\Omega(\log n)$ examples in the worst case.
+\cite{Darnstadt-Simon-Szorenyi-2013} showed that the the two sample complexities
+does differ by at most multiplicative factor $O(d)$, where $d$ is the
+Vapnik-Chervonenkis dimension.
+
+\section{Open problem}
 
 It remains an open problem to analyze other concept classes of interest.
 Specifically, it is unknown what is the gap, if any, for the classes of
 half-spaces and axis parallel rectangles over $\R^n$, disjunctions, conjuctions,
-monotone disjunctions and monotone conjuctions over $\{0,1\}^n$. While the sample
-complexity depends on the accuracy parameter $\epsilon$ and confidence parameter
-$\delta$, we are primarily interested in the dependency on the dimension $n$. It was whown by~\cite{Darnstadt-Simon-Szorenyi-2013} that as a function of $n$, the gap between these two sample complexities does not exceed $O(d)$, where $d$ is the Vapnik-Chervonenkis dimension of the concept class under consideration.
+monotone disjunctions and monotone conjuctions over $\{0,1\}^n$. While the
+sample complexity depends on the accuracy parameter $\epsilon$ and confidence
+parameter $\delta$, we are primarily interested in the dependency on the
+dimension $n$.
 
-We conjecture that there is gap at least $\Omega(\log n)$, but it is possible
-that the gap is as high as $\Omega(n^\alpha)$ for some $\alpha \in (0,1]$. In
-order to show the existence of a gap, one must construct a family of
-distributions such that fixed distribution learning has low sample complexity
-but worst-case sample complexity without knowledge of the distribution is
-higher.
+We conjecture that the gap, i.e. the ratio of the two sample complexities, is at
+least $\Omega(\log n)$, but it is possible that the gap is as high as
+$\Omega(n^\alpha)$ for some $\alpha \in (0,1]$. In order to show the existence
+of a gap, one must construct a family of distributions such that fixed
+distribution learning has low sample complexity but worst-case sample complexity
+without knowledge of the distribution is higher.
 
 We remark that the Vapnik-Chervonenkis dimension of projections is only
 $\Theta(\log n)$, while the Vapnik-Chervonenkis dimension of the above-mentioned
