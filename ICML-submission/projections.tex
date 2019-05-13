@@ -25,6 +25,8 @@ $$
 The reader should think of $\epsilon$ as a constant that does not depend on $n$,
 say, $\epsilon=\frac{1}{100}$.
 
+The following result is folklore. We include its proof for completeness. 
+
 \begin{proposition}
 \label{proposition:vc-dimension-projections}
 Vapnik-Chervonenkis dimension of $C_n$ is $\lfloor \log_2 n \rfloor$.
@@ -100,8 +102,10 @@ probability at least $1 - \delta$, it $4\epsilon$-learns the target.
 The next theorem states that without knowing the distribution,
 learning a target under a distribution from $\P_{n,\epsilon}$
 requires at least $\Omega(\log n)$ labeled examples.
+It is important to note that $\epsilon$ in this bound is the parameter of the distribution, and not the accuracy of the PAC learning model.
 
 \begin{theorem}[Learning without knowledge of the distribution]
+\label{thm: distribution independent bound}
 For any distribution-independent algorithm, any $\epsilon \in (0,\frac{1}{4})$ and any
 $n \ge 600/\epsilon^3$ there exists a distribution $P \in \P_{n,\epsilon}$ and a target
 concept $c \in C_n$ such that if the algorithm gets
@@ -112,7 +116,11 @@ labeled examples, it fails to $\frac{1}{16}$-learn the target concept with proba
 more than $\frac{1}{16}$.
 \end{theorem}
 
-\begin{proof}
+Before starting the proof note that when the learner is restricted to output some function that belongs to $C_n$ (i.e., the learner is \emph{proper}), the bound is straightforward. Indeed, with high probability, the number  of coordinates that coincide with the target on a random sample is $\Omega(\epsilon n)$, and thus the number of projections that output the same value on each of the $m$ random samples is $\Omega(\epsilon^m n)$. Thus, with high probability, at least one other projection produces the exact same output as the target. Therefore, the learner has to choose randomly, and the probability of choosing the wrong one is at least $1/2$. The bound follows.
+
+However, we prove the above bound for improper learners too, which requires significantly more work.
+
+\begin{proof}[Proof of Theorem~\ref{thm: distribution independent bound}]
 Let $A$ be any learning algorithm. For ease of notation, we formalize it is a function
 $$
 A:\bigcup_{m=0}^\infty \left(\{0,1\}^{m \times n} \times \{0,1\}^m\right) \to \{0,1\}^{\{0,1\}^n} \; .
@@ -200,11 +208,12 @@ for any $x \in \{0,1\}^n$, and $i = 1,2,\dots,n$,
 This allows us to compute the conditional probability
 \begin{align*}
 & \Pr \left[I = i, Z = z \, \middle| \, X = x, Y = y \right] \\
-& \quad = \Pr \left[Z = z \, \middle| \, I = i, X = x, Y = y \right] \cdot \Pr \left[I = i \, \middle| \, X = x, Y = y \right] \\
+& \quad = \Pr \left[Z = z \, \middle| \, I = i, X = x, Y = y \right] 
+\\&\hspace{3cm}\cdot \Pr \left[I = i \, \middle| \, X = x, Y = y \right] \\
 & \quad =
 \begin{cases}
-\frac{1}{2|k(x,y)|} \epsilon^{\norm{z} - 1} (1 - \epsilon)^{n - \norm{z}} & \text{if $i \in k(x,y)$ and $z[i] = 1$,} \\
-\frac{1}{2|k(x,y)|} \epsilon^{\norm{z}} (1 - \epsilon)^{n - 1 - \norm{z}} & \text{if $i \in k(x,y)$ and $z[i] = 0$,} \\
+\frac{ \epsilon^{\norm{z} - 1} (1 - \epsilon)^{n - \norm{z}}}{2|k(x,y)|} & \text{if $i \in k(x,y)$ and $z[i] = 1$,} \\
+\frac{\epsilon^{\norm{z}} (1 - \epsilon)^{n - 1 - \norm{z}}}{2|k(x,y)|}  & \text{if $i \in k(x,y)$ and $z[i] = 0$,} \\
 0 & \text{if $i \not \in k(x,y)$.} \\
 \end{cases}
 \end{align*}
@@ -221,8 +230,9 @@ Then,
 & \quad = \sum_{i \in s(x,y,x)} \Pr \left[Z = z, I = i \, \middle| \, X = x, Y = y \right] \\
 & \qquad + \sum_{i \in k(x,y) \setminus s(x,y,z)} \Pr \left[Z = z, I = i \, \middle| \, X = x, Y = y \right] \\
 & \quad = \frac{1}{2|k(x,y)|} \cdot |s(x,y,z)| \cdot \epsilon^{\norm{z} - 1} (1 - \epsilon)^{n - \norm{z}} \\
-& \qquad + \frac{1}{2|k(x,y)|} \cdot (|k(x,y)| - |s(x,y,z)|) \cdot \epsilon^{\norm{z}} (1 - \epsilon)^{n - 1 - \norm{z}} \\
-& \quad = \frac{\epsilon^{\norm{z} - 1} (1 - \epsilon)^{n - 1 - \norm{z}}}{2|k(x,y)|} \cdot \left( |s(x,y,z)| \cdot (1 - 2\epsilon) + |k(x,y)| \cdot \epsilon \right) \; .
+& \qquad + \frac{ (|k(x,y)| - |s(x,y,z)|) \cdot \epsilon^{\norm{z}} (1 - \epsilon)^{n - 1 - \norm{z}}}{2|k(x,y)|} \\
+& \quad = \frac{\epsilon^{\norm{z} - 1} (1 - \epsilon)^{n - 1 - \norm{z}}}{2|k(x,y)|}\\
+&\hspace{2cm} \cdot \left( |s(x,y,z)| \cdot (1 - 2\epsilon) + |k(x,y)| \cdot \epsilon \right) \; .
 \end{align*}
 Hence,
 \begin{align*}
