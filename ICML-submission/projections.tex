@@ -116,9 +116,7 @@ labeled examples, it fails to $\frac{1}{16}$-learn the target concept with proba
 more than $\frac{1}{16}$.
 \end{theorem}
 
-Before starting the proof note that when the learner is restricted to output some function that belongs to $C_n$ (i.e., the learner is \emph{proper}), the bound is straightforward. Indeed, with high probability, the number  of coordinates that coincide with the target on a random sample is $\Omega(\epsilon n)$, and thus the number of projections that output the same value on each of the $m$ random samples is $\Omega(\epsilon^m n)$. Thus, with high probability, at least one other projection produces the exact same output as the target. Therefore, the learner has to choose randomly, and the probability of choosing the wrong one is at least $1/2$. The bound follows.
-
-However, we prove the above bound for improper learners too, which requires significantly more work.
+The main idea of the proof is the following. Assume that the learner is restricted to output some function that belongs to $C_n$ (i.e., the learner is \emph{proper}). Then with high probability, the number of coordinates that coincide with the target on a random sample is $\Omega(\epsilon n)$, and, thus, the number of projections that output the same value on each of the $m$ random samples is $\Omega(\epsilon^m n)$. Therefore, with high probability, at least one other projection produces the exact same output as the target. In this case, the learner has to choose randomly, and the probability of choosing a wrong answer is at least $1/2$. This implies that a successful learner must see at least $m \ge \Omega(\frac{\ln n}{\ln (1/\epsilon)})$ samples. In the proof below we make this intuition formal, and generalize it to the case of improper learners, too.
 
 \begin{proof}[Proof of Theorem~\ref{thm: distribution independent bound}]
 Let $A$ be any learning algorithm. For ease of notation, we formalize it is a function

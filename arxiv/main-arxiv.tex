@@ -372,6 +372,8 @@ $$
 The reader should think of $\epsilon$ as a constant that does not depend on $n$,
 say, $\epsilon=\frac{1}{100}$.
 
+The following result is folklore. We include its proof for completeness. 
+
 \begin{proposition}
 \label{proposition:vc-dimension-projections}
 Vapnik-Chervonenkis dimension of $C_n$ is $\lfloor \log_2 n \rfloor$.
@@ -442,9 +444,10 @@ probability at least $1 - \delta$, it $4\epsilon$-learns the target.
 
 The next theorem states that without knowing the distribution,
 learning a target under a distribution from $\P_{n,\epsilon}$
-requires at least $\Omega(\log n)$ labeled examples.
+requires at least $\Omega(\log n)$ labeled examples. It is important to note that $\epsilon$ in this bound is the parameter of the distribution, and not the accuracy of the PAC learning model.
 
 \begin{theorem}[Learning without knowledge of the distribution]
+\label{thm: distribution independent bound}
 For any distribution-independent algorithm, any $\epsilon \in (0,\frac{1}{4})$ and any
 $n \ge 600/\epsilon^3$ there exists a distribution $P \in \P_{n,\epsilon}$ and a target
 concept $c \in C_n$ such that if the algorithm gets
@@ -455,7 +458,9 @@ labeled examples, it fails to $\frac{1}{16}$-learn the target concept with proba
 more than $\frac{1}{16}$.
 \end{theorem}
 
-\begin{proof}
+The main idea of the proof is the following. Assume that the learner is restricted to output some function that belongs to $C_n$ (i.e., the learner is \emph{proper}). Then with high probability, the number of coordinates that coincide with the target on a random sample is $\Omega(\epsilon n)$, and, thus, the number of projections that output the same value on each of the $m$ random samples is $\Omega(\epsilon^m n)$. Therefore, with high probability, at least one other projection produces the exact same output as the target. In this case, the learner has to choose randomly, and the probability of choosing a wrong answer is at least $1/2$. This implies that a successful learner must see at least $m \ge \Omega(\frac{\ln n}{\ln (1/\epsilon)})$ samples. In the proof below we make this intuition formal, and generalize it to the case of improper learners, too.
+
+\begin{proof}[Proof of Theorem~\ref{thm: distribution independent bound}]
 Let $A$ be any learning algorithm. For ease of notation, we formalize it is a function
 $$
 A:\bigcup_{m=0}^\infty \left(\{0,1\}^{m \times n} \times \{0,1\}^m\right) \to \{0,1\}^{\{0,1\}^n} \; .
