@@ -85,17 +85,19 @@ Solving for $\Pr[Z > t]$ finishes the proof.
 Let $\U$ be a finite non-empty set. Let $U,V$ be random variables (possibly
 correlated) such that $U \in \U$ and $V \in \{0,1\}$ with probability one. Let
 $f:\U \to \{0,1\}$ be a predictor. Then,
-$$
+\begin{align*}
 \Pr\left[ f(U) \neq V \right]
-\ge \sum_{u \in \U} \left( \frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[V \, \middle| \, U = u\right] \right| \right) \cdot \Pr[U = u] \; .
-$$
+\ge &\sum_{u \in \U} \left( \frac{1}{2} - \left| \frac{1}{2} -  \Exp \left[V \, \middle| \, U = u\right] \right| \right) 
+\\&\hspace{3.5cm}\cdot \Pr[U = u] \; .
+\end{align*}
 \end{proposition}
 
 \begin{proof}
 We have
-$$
-\Pr \left[ f(U) \neq V \right] = \sum_{u \in \U} \Pr \left[ f(U) \neq V \, \middle| \, U = u \right] \cdot \Pr[U = u] \; .
-$$
+\begin{align*}
+\Pr \left[ f(U) \neq V \right] =& \sum_{u \in \U} \Pr \left[ f(U) \neq V \, \middle| \, U = u \right] 
+\\&\hspace{3.5cm}\cdot \Pr[U = u] \; .
+\end{align*}
 It remains to show that
 $$
 \Pr\left[ f(U) \neq V \, \middle| \, U = u \right]
