@@ -1,0 +1,9 @@
+*.aux
+*.bbl
+*.blg
+*.loc
+*.nav
+*.out
+*.toc
+
+poster.pdf
