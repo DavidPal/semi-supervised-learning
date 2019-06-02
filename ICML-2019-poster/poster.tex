@@ -17,24 +17,21 @@
 \newtheorem*{definition}{Definition}
 \newtheorem*{conjecture}{Conjecture}
 
-\DeclareMathOperator*{\minimize}{minimize}
-\DeclareMathOperator*{\Exp}{\mathbf{E}}
-\DeclareMathOperator{\Regret}{Regret}
-\DeclareMathOperator{\Reward}{Reward}
-\DeclareMathOperator{\Wealth}{Wealth}
-\DeclareMathOperator{\polylog}{polylog}
-\DeclareMathOperator*{\argmin}{argmin}
-\DeclareMathOperator*{\argmax}{argmax}
-
 \newcommand{\R}{\mathbb{R}}
-\renewcommand{\H}{\mathcal{H}}
-\newcommand{\indicator}{\mathbf{1}}
-\newcommand{\norm}[1]{\left\|#1\right\|}
-\newcommand{\KL}[2]{\mathrm{KL}\left({#1} \, \middle\| \, {#2}\right)}
-\newcommand{\grad}{\nabla}
-\newcommand{\Breg}{\mathcal{B}}
-\newcommand{\E}{\mathbb{E}}
-\newcommand{\scO}{\mathcal{O}}
+
+\renewcommand{\P}{\mathcal{P}}
+\newcommand{\U}{\mathcal{U}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\indicator}[1]{\mathbf{1}\left[{#1}\right]}
+\newcommand{\x}{\mathbf{x}}
+\newcommand{\KL}[2]{D\left(#1 \middle\| #2 \right)}
+\newcommand{\norm}[1]{\left\| #1 \right\|}
+\newcommand{\ip}[2]{\left\langle #1, #2 \right\rangle}
+
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator{\err}{err}
+\DeclareMathOperator{\Exp}{\mathbf{E}}
+\DeclareMathOperator{\VC}{VC}
 
 \begin{document}
 
@@ -57,263 +54,173 @@
 \setlength{\columnsep}{4cm}
 \begin{multicols}{3}
 
-\section*{Are You Still Tuning Hyperparameters?}
+\section*{The Problem}
 
-Let $f$ be a function that is convex in $w$.
-
-Regularized empirical risk minimization:
-$$
-    \argmin_{w \in \R^d} \ \frac{\lambda}{2} \norm{w}^2 + \sum_{i=1}^T f(w, x_i, y_i)
-$$
 \begin{itemize}
-\item How do you choose the regularizer weight $\lambda$?
+\item Distribution $D$ over a domain $X$
+\item Unknown target function $f$ from a known hypothesis class $H \subseteq \{0,1\}^X$.
+\item Learner receives $S = ((x_1, f(x_1)), (x_2, f(x_2)), \dots, (x_m, f(x_m)))$.
 \end{itemize}
 
 \vspace{1cm}
 
-Stochastic approximation:
-$$
-    w_t = w_{t-1} - \eta_t \grad f(w_{t-1}, x_t, y_t)
-$$
+\textbf{Does knowing $D$ help?}
+
+\section*{Sample Complexity}
+
 \begin{itemize}
-\item How do you choose the learning rate $\eta_t$?
+\item Learning algorithm outputs a classifier $g=A(S)$.
+\item Its error is
+$$
+\err_D(g) = \Pr_{x \sim D}[f(x)\neq g(x)]
+$$
+\item Sample complexity is the smallest $m = m(\epsilon,\delta,D)$ such that for any target $f \in H$,
+with probability $\ge 1 - \delta$
+$$
+\err_D(g) \le \epsilon
+$$
 \end{itemize}
+
+\section*{Known Results}
+
+\begin{itemize}
+\item Without knowing $D$ the sample complexity is
+$$
+O \left( \frac{\VC(H) + \log(1/\delta)}{\epsilon} \right)
+$$
+Modulo log factors this by any constistent algorithm, i.e. ERM.
 
 \vspace{1cm}
 
-\begin{itemize}
-\item Why is the algorithm not able to select $\lambda$ and/or $\eta_t$ automatically?
-\end{itemize}
-
-\section*{Online Learning and Coin Betting}
-
-Let $V,V^*$ be a pair of dual vector spaces.
+\item With knowledge of $D$, the sample complexity is at most
+$$
+O(\log N_{D,\epsilon/2})
+$$
+where $N_{D,\epsilon/2}$ is $\frac{\epsilon}{2}$-covering number
+of $H$ under the metric
+$$
+d(f,g) = \Pr_{x \sim D}[f(x) \neq g(x)] \; .
+$$
 
 \vspace{1cm}
 
-\setlength{\fboxrule}{5pt}
-\setlength{\fboxsep}{10pt}
-\begin{center}
-Online Linear Optimization
-\vspace{0.3cm}
-
-\colorbox[rgb]{0.80,0.55,0.98}{\fbox{
-\begin{minipage}{0.8\linewidth}
-\begin{algorithmic}
-{
-\REQUIRE{Non-empty closed convex \emph{decision set} $K \subseteq V$}
-\FOR{$t=1,2,3,\dots$}
-\STATE Pick $w_t \in K$
-\STATE Observe reward vector $g_t \in V^*$
-\STATE Gain reward $\langle g_t, w_t \rangle$
-\ENDFOR
-}
-\end{algorithmic}
-\end{minipage}
-}}
-\end{center}
-
-\vspace{0.5cm}
-
+\item There exists a distribution $D$ such that even with knowledge of $D$,
+any algorithm needs
 $$
-\Regret_T(u) = \sum_{t=1}^T \langle g_t, u \rangle - \sum_{t=1}^T \langle g_t, w_t \rangle\; .
+\Omega \left( \frac{\VC(H) + \log(1/\delta)}{\epsilon} \right)
 $$
+labeled examples.
 
-\vspace{0.5cm}
+\vspace{1cm}
 
-\setlength{\fboxrule}{5pt}
-\setlength{\fboxsep}{10pt}
-\begin{center}
-Coin Betting
-\vspace{0.3cm}
-
-\colorbox[rgb]{0.80,0.55,0.98}{\fbox{
-\begin{minipage}{0.8\linewidth}
-\begin{algorithmic}
-{
-\STATE $\Wealth_0 \leftarrow 1$
-\FOR{$t=1,2,3,\dots$}
-\STATE $\beta_t \leftarrow \frac{1}{t} \sum_{i=1}^{t-1} c_i$ \quad (KT estimator)
-\STATE Bet $w_t = \beta_t \Wealth_{t-1}$
-\STATE Observe coin flip $c_t \in \{+1, -1\}$
-\STATE $\Wealth_t \leftarrow \Wealth_{t-1} \ + \ c_t \cdot w_t$
-\ENDFOR
-}
-\end{algorithmic}
-\end{minipage}
-}}
-\end{center}
-
-Krichevsky-Trofimov showed that
-$$
-\Wealth_T \ge \exp\left( T \cdot \KL{\frac{1}{2} + \frac{\sum_{t=1}^T c_t}{2T} }{\frac{1}{2}} \right)
-$$
+\item There are distributions $D$ such that any constistent algorithm
+has sample complexity $O(\log(1/\delta)/\epsilon)$.
+\end{itemize}
 
 \columnbreak
 
-\section*{Parameter-Free Algorithms for Hilbert Spaces}
+\section*{Summary of Known Results}
 
-Let $\H$ be a Hilbert space. Let $K=\H$ and assume $\norm{g_t} \le 1$.
-Gradient Ascent with learning rate $\eta$ satisfies
-$$
-\forall u \in \H \qquad \Regret_T(u) \le O \left( \frac{\norm{u}^2}{\eta} + \eta T \right) \; .
-$$
-With learning rate $\eta=D/\sqrt{T}$, it satisfies
-$$
-\forall u : \norm{u} \le D  \qquad \Regret_T(u) \le D \sqrt{T} \; .
-$$
-Can we get
-$$
-\forall u \in \H \qquad \Regret_T(u) \le \norm{u} \sqrt{T} \; ?
-$$
-
-Addressed in Streeter\&McMahan (2012), Orabona (2013), McMahan\&Abernethy (2013), McMahan\&Orabona (2014), Orabona (2014).
-
-But no intuition is given in previous contructions.
+Fix $\epsilon$ and $\delta$.
 
 \vspace{1cm}
 
-\begin{lemma}
-Let $\Reward_T = \sum_{t=1}^T \langle g_t, w_t \rangle$.
-Let $F:K \to \R$ be convex.
-$$
-\big( \forall u \in K \quad \Regret_T(u) \le F(u) \big)
-\quad \text{if and only if} \quad
-\Reward_T \ge F^*\left(\sum_{t=1}^T g_t\right) \; .
-$$
-\end{lemma}
-
-
-
-\vspace{0.5cm}
-
-\setlength{\fboxrule}{5pt}
-\setlength{\fboxsep}{10pt}
 \begin{center}
-Coin Betting for Hilbert Spaces
-\vspace{0.3cm}
-
-\colorbox[rgb]{0.80,0.55,0.98}{\fbox{
-\begin{minipage}{0.8\linewidth}
-\begin{algorithmic}
-{
-\STATE $\Wealth_0 \leftarrow 1$
-\FOR{$t=1,2,3,\dots$}
-\STATE $\beta_t \leftarrow \frac{1}{t} \sum_{i=1}^{t-1} g_i$
-\STATE Predict $w_t = \beta_t \Wealth_{t-1}$
-\STATE Observe $g_t \in \H$ such that $\norm{g_t} \le 1$
-\STATE $\Wealth_t \leftarrow \Wealth_{t-1} \ + \ \langle g_t, w_t \rangle$
-\ENDFOR
-}
-\end{algorithmic}
-\end{minipage}
-}}
+\includegraphics[width=0.3\textwidth]{figure-1}
 \end{center}
 
-Generalizing Krichevsky-Trofimov,
+\textbf{How big is the gap between the black and green curve?}
+
+\section*{Projections}
+
+Domain is $X = \{0,1\}^n$ and hypothesis class $H = \{h_1, h_2, \dots, h_n\}$
+where
 $$
-1 + \Reward_T = \Wealth_T \ge \exp\left( T \cdot \KL{\frac{1}{2} + \frac{\norm{\sum_{t=1}^T g_t}}{2T} }{\frac{1}{2}} \right)
+h_i(x) = h(x[1], x[2], \dots, x[n]) = x[i]
 $$
-Using the Lemma, we get $\Regret_T(u) \le \norm{u} \sqrt{T \ln(1 + 24 T^2 \norm{u}^2)} + 1$.
-
-\vspace{0.5cm}
-
-\begin{theorem}[Orabona 2014]
-Setting $g_t=\grad f(w_t,x_t,y_t)$ and online-to-batch conversion gives in expectation
-$$
-\E_{x,y} \left[f\left(\hat{w}, x,y\right)\right]
-\leq O\left(\min_{u} {\color{red}{\min_{\lambda>0}}} \ \E_{x,y}\left[f\left(u, x, y\right)\right] + \lambda \norm{u}^2 +\frac{\ln(T)}{\lambda \, T} \right)
-$$
-\end{theorem}
-
-
-\columnbreak
-
-\section*{Parameter-Free Algorithms for Learning with Expert Advice}
-
-Let $K=\Delta_N$ and assume $g_t \in [0,1]^N$.
-Hedge with learning rate $\eta$ satisfies
-\[
-\forall u \in \Delta_N \qquad
-\Regret_T(u) \leq O \left(\tfrac{\KL{u}{\pi}}{\eta} + \eta T \right)
-\]
-With learning rate $\eta = D/\sqrt{T}$, it satisfies
-$$
-\forall u : \KL{u}{\pi} \le D  \qquad \Regret_T(u) \le \sqrt{T \cdot D} \; .
-$$
-Can we get
-$$
-\forall u \in \Delta_N \qquad \Regret_T(u) \le \sqrt{T \cdot \KL{u}{\pi}} \; ?
-$$
-
-Addressed in Chaudhuri~et~al.~(2009), Chernov\,\&\,Vovk~(2010), Luo\,\&\,Schapire~(2014,~2015), Koolen\,\&\,van~Erven~(2015), Foster~et~al.~(2015).
-But no intuition is given in previous contructions.
-
-\vspace{.8cm}
-
-\begin{center}
-Learning with Expert Advice
-\vspace{0.3cm}
-
-\colorbox[rgb]{0.80,0.55,0.98}{\fbox{
-\begin{minipage}{0.8\linewidth}
-\begin{algorithmic}
-{
-\REQUIRE{\#experts $N$, prior $\pi \in \Delta_N$, \#rounds $T$}
-\FOR{$t=1,2,\dots,T$}
-\STATE{For each $i \in [N]$, set $w_{t,i} \leftarrow \tfrac{\sum_{j=1}^{t-1} \widetilde g_{j,i}}{t+T/2} \left(1 + \sum_{j=1}^{t-1} \widetilde g_{j,i} w_{j,i} \right)$}
-\STATE{For each $i \in [N]$, set $\widehat{p}_{t,i} \leftarrow \pi_i [w_{t,i}]_+$}
-\STATE{Predict with $p_t \leftarrow
-\begin{cases}
-\widehat{p}_t/\norm{\widehat{p_t}}_1 & \text{if $\norm{\widehat p_t}_1 > 0$} \\
-\pi & \text{if $\norm{\widehat p_t}_1 = 0$}
-\end{cases}$}
-\STATE{Receive reward vector $g_t \in [0,1]^N$}
-\STATE{For each $i \in [N]$, set $\widetilde g_{t,i} \leftarrow \begin{cases}
-g_{t,i} - \langle g_t, p_t \rangle & \text{if $w_{t,i} > 0$} \\
-[g_{t,i} - \langle g_t, p_t \rangle]_+ & \text{if $w_{t,i} \le 0$}
-\end{cases}$}
-\ENDFOR
-}
-\end{algorithmic}
-\end{minipage}
-}}
-\end{center}
+Vapnik-Chervonenkis dimension is $\VC(H) = \left \lfloor \log_2(n) \right \rfloor$.
 
 \vspace{1cm}
 
 \begin{theorem}
-The algorithm
-for any $g_1, g_2, \dots, g_T \in [0,1]^N$ satisfies
-\[
-\forall u \in \Delta_N \qquad \qquad \Regret_T(u) \le \sqrt{3T (3 + \KL{u}{\pi})} \; .
-\]
+Fix $\epsilon$ and $\delta$. There are distributions $D_1, D_2, \dots, D_n$ such that
+\begin{enumerate}
+\item With knowledge of the distribution $D_i$, sample complexity is $O(1)$.
+\item Without knowledge of $D_i$, sample complexity is $\Omega(\log n)$.
+\end{enumerate}
 \end{theorem}
 
-\section*{Empirical Evaluation}
+\vspace{1cm}
 
-\centering{
-\begin{tabular}{ccc}
-%\includegraphics[width=0.30\linewidth]{../NIPS-2016-camera-ready/figs/yearpredictionmsd_kt-crop.pdf} &
-%\includegraphics[width=0.30\linewidth]{../NIPS-2016-camera-ready/figs/cpusmall_kt-crop.pdf} &
-%\includegraphics[width=0.30\linewidth]{../NIPS-2016-camera-ready/figs/cadata_kt-crop.pdf}
-\end{tabular}
+\begin{center}
+\includegraphics[width=0.3\textwidth]{figure-2}
+\end{center}
 
-\footnotesize{Total loss versus learning rate parameter of OGD, compared with parameter-free algorithms.}
+\vspace{1cm}
 
-\vspace{0.2cm}
 
-\begin{tabular}{ccc}
-%\includegraphics[width=0.30\linewidth]{../NIPS-2016-camera-ready/figs/fig1-crop.pdf} &
-%\includegraphics[width=0.30\linewidth]{../NIPS-2016-camera-ready/figs/fig2-crop.pdf} &
-%\includegraphics[width=0.30\linewidth]{../NIPS-2016-camera-ready/figs/fig3-crop.pdf}
-\end{tabular}
+Each $D_i$ is a product distribution such that
+$$
+\Pr_{x \sim D_i}[x[j] = 1] =
+\begin{cases}
+1/2 & \text{if $i = j$,} \\
+\epsilon & \text{if $i \neq j$.}
+\end{cases}
+$$
 
-\footnotesize{Regrets to the best expert after $T = 32768$ rounds,
-versus learning rate parameter of Hedge. The ``good'' experts
-are $\epsilon=0.025$ better than the others. $\pi_i=1/N$ for all
-algorithms.}
-}
+\columnbreak
+
+\section*{Sketch of Proof}
+
+\begin{itemize}
+\item $D_i$ has $2\epsilon$-cover of size $1$. Thus $O(\log(1/\delta)/\epsilon) = O(1)$
+samples are enough to $4\epsilon$-learn if $D_i$ is known to the learner.
+
+\vspace{1cm}
+
+\item Choose $i \in \{1,2,\dots,n\}$ at random.
+
+\item Choose distribution $D_i$ and the target to be the projection $h_i$.
+
+\item Algorithm that does \textbf{not} know $D_i$ and $h_i$, sees only the matrix
+$$
+\left(
+\begin{array}{cccc|c}
+x_{1}[1] & x_{1}[2] & \cdots & x_{1}[n] \  & \ y_1 \\
+x_{2}[1] & x_{2}[2] & \cdots & x_{2}[n] \ & \ y_2 \\
+\vdots & \vdots & \ddots & \vdots \ & \vdots \\
+x_{m}[1] & x_{m}[2] & \cdots & x_{m}[n] \ & \ y_m \\
+\end{array}
+\right) \; .
+$$
+
+\item Column $x[i]$ matches column $y$.
+
+\item If $m \le \log(n)$ then with constant probability at least one other column $x[j]$
+matches column $y$.
+
+\item Learner has to pick a column $i$ or $j$.
+\end{itemize}
+
+\vspace{1cm}
+
+\textbf{For non-proper learners, the proof is more complicated.}
+
+\section*{Conclusions}
+
+\begin{itemize}
+\item Unlabeled data help for projections.
+\item For the class of \textbf{all functions}, unlabeled data do \textbf{not} help.
+\item The problem is open for halfspaces, disjunctions, axis-aligned rectangles.
+\end{itemize}
+
+%%%%%%%%%%
+
+\nocite{Benedek-Itai-1991,Ben-David-Lu-Pal-2008,Darnstadt-Simon-Szorenyi-2013,Hanneke-2016}
+\bibliographystyle{plain}
+\bibliography{biblio}
+
+
 \end{multicols}
 
 \end{document}
