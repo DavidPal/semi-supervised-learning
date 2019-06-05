@@ -90,11 +90,11 @@ O \left( \frac{\VC(H) + \log(1/\delta)}{\epsilon} \right)
 $$
 Modulo log factors this is achieved by any constistent algorithm, i.e. ERM.
 
-\vspace{1cm}
+\vspace{0.5cm}
 
 \item With knowledge of $D$, the sample complexity is at most
 $$
-O(\log N_{D,\epsilon/2})
+O\left(\frac{\log N_{D,\epsilon/2} + \log(1/\epsilon)}{\delta} \right)
 $$
 where $N_{D,\epsilon/2}$ is $\frac{\epsilon}{2}$-covering number
 of $H$ under the metric
@@ -102,19 +102,26 @@ $$
 d(f,g) = \Pr_{x \sim D}[f(x) \neq g(x)] \; .
 $$
 
-\vspace{1cm}
+\vspace{0.5cm}
 
-\item There exists a distribution $D$ such that even with knowledge of $D$,
-any algorithm needs
+\item Covering number upper bound
+$$
+N_{D,\epsilon} \le \left( \frac{4e}{\epsilon} \right)^{\displaystyle \frac{VC(H)}{1 - 1/e}}
+$$
+
+\vspace{0.5cm}
+
+\item There exists a distribution $D$ such that \textbf{even with knowledge of $D$},
+any algorithm needs at least
 $$
 \Omega \left( \frac{\VC(H) + \log(1/\delta)}{\epsilon} \right)
 $$
 labeled examples.
 
-\vspace{1cm}
+\vspace{0.5cm}
 
 \item There are distributions $D$ such that any constistent algorithm
-has sample complexity $O(\log(1/\delta)/\epsilon)$.
+has sample complexity only $O(\log(1/\delta)/\epsilon)$.
 \end{itemize}
 
 \columnbreak
@@ -129,11 +136,11 @@ Fix $\epsilon$ and $\delta$.
 \includegraphics[width=0.3\textwidth]{figure-1}
 \end{center}
 
-\textbf{How big is the gap between the black and green curve?}
+\textbf{How big is the gap between the black and the green curve?}
 
 \section*{Projections}
 
-Domain is $X = \{0,1\}^n$ and hypothesis class $H = \{h_1, h_2, \dots, h_n\}$
+Domain is $X = \{0,1\}^n$ and hypothesis class is $H = \{h_1, h_2, \dots, h_n\}$
 where
 $$
 h_i(x) = h(x[1], x[2], \dots, x[n]) = x[i]
@@ -164,7 +171,7 @@ $$
 \Pr_{x \sim D_i}[x[j] = 1] =
 \begin{cases}
 1/2 & \text{if $i = j$,} \\
-\epsilon & \text{if $i \neq j$.}
+\epsilon/4 & \text{if $i \neq j$.}
 \end{cases}
 $$
 
@@ -173,8 +180,8 @@ $$
 \section*{Sketch of Proof}
 
 \begin{itemize}
-\item $D_i$ has $2\epsilon$-cover of size $2$. Thus $O(\log(1/\delta)/\epsilon) = O(1)$
-samples are enough to $4\epsilon$-learn if $D_i$ is known to the learner.
+\item $D_i$ has $\epsilon/2$-cover of size $2$. Thus $O\left(\frac{\log N_{D,\epsilon/2} + \log(1/\delta)}{\epsilon} \right) = O(1)$
+samples are enough to $\epsilon$-learn if $D_i$ is known to the learner.
 
 \vspace{1cm}
 
@@ -211,7 +218,9 @@ matches column $y$.
 \begin{itemize}
 \item Unlabeled data help for projections.
 \item For the class of \textbf{all functions}, unlabeled data do \textbf{not} help.
-\item The problem is open for halfspaces, disjunctions, axis-aligned rectangles.
+\item The problem is open for halfspaces and axis-aligned rectangles in $\R^n$,
+and conjuctions and disjuctions in $\{0,1\}^n$. They have $\VC(H) = \Theta(n)$. \\
+The gap could be potentially as big as $\Omega(n)$.
 \end{itemize}
 
 %%%%%%%%%%
